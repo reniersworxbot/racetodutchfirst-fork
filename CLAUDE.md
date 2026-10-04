@@ -40,7 +40,7 @@ site/                        static, no build step, no framework, no CDN scripts
   tokens.css                 copied UNCHANGED from Bmiest/bmiest_wow_streaming_theme css/tokens.css
   data/race.json             sample data; CI regenerates it into the Pages artifact only
   robots.txt, sitemap.xml    sitemap = every season in NL and EN (test_prerender checks it matches guilds.toml)
-.github/workflows/site.yml   raid evenings every 30 min, else every 2 h, + main pushes + manual: fetch, share image, deploy
+.github/workflows/site.yml   every 2 h; every 15 min on raid evenings (Sun, Mon, Wed, Thu, 17-22 UTC); + main pushes + manual
 .github/workflows/test.yml   PRs and main: ruff, pytest, node --check
 .github/dependabot.yml       weekly grouped update PRs for uv.lock and the SHA-pinned Actions
 ```
@@ -217,6 +217,9 @@ Read `DESIGN.md` before UI work: it records the visual system (tokens, component
 - "Nu aan het raiden" (`liveState`) is derived in the browser: the last pull on the current
   boss or the latest kill within 60 min of `generatedAt`, *and* race.json itself under 60 min
   old; otherwise "Raidde om 21:57" for 12 h. Badges repaint every 30 s without new data.
+- Voortgang: after a guild's last kill its line rises within the tread with every new best pull on
+  its current boss (`currentProgress()`: (100 - best %) / 100 of a tread), and the line end reads
+  "6/9 · 73%" (the legend on phones). Without pull times only the best % shows, as one rise at the end.
 - Voortgang starts in the week of the first Mythic kill (weeks counted from `tier.start`, so
   ticks stay on the reset), not at the tier start.
 

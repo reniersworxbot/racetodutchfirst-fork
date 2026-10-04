@@ -3,15 +3,18 @@ name: Race site
 # Fetches fresh race data and deploys site/ to GitHub Pages, in one run.
 # No data branch and no write token: the data only lives in the Pages artifact.
 # If Raider.IO fails, the fetcher exits 1, nothing deploys, and the live site keeps
-# its last good data (its "Bijgewerkt" line turns gold once it's over 150 min old).
+# its last good data (its update line says when it was fetched and when the next run is due).
 # Only schedule, manual and main-push triggers: never pull_request here.
 on:
   schedule:
-    # Raid evenings (17-23 UTC = 19-01 h in summer, 18-00 h in winter): every 30 min.
-    # The rest of the day nothing changes, so every 2 h. Off the hour, since GitHub
-    # delays :00 runs the most. ~23 runs a day, ~80 Raider.IO requests each.
-    - cron: "7,37 17-23 * * *"
-    - cron: "7 0-16/2 * * *"
+    # Every 2 h, all week. On the guilds' raid evenings (Sun, Mon, Wed, Thu; 17-22 UTC =
+    # 19-00 h in summer, 18-23 h in winter) every 15 min, for the raiding badges and
+    # Nu live: the two lines below add :07 on the odd hours and :22/:37/:52 on every hour,
+    # so no minute is scheduled twice. Off the hour, since GitHub delays :00 runs the most;
+    # GitHub may still start a run late or skip it. ~80 Raider.IO requests a run.
+    - cron: "7 */2 * * *"
+    - cron: "7 17-21/2 * * 0,1,3,4"
+    - cron: "22,37,52 17-22 * * 0,1,3,4"
   workflow_dispatch:
   push:
     branches: [main]

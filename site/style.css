@@ -156,6 +156,7 @@ details[open] > .disclose::before { transform: rotate(45deg); }
 .svg-star { fill: var(--gold); stroke: var(--ink-850); stroke-width: 1.5; }
 .svg-end { fill: var(--guild); font: 700 14px var(--f-display); }
 .svg-end__n { fill: var(--paper-dim); font: 500 12px var(--f-mono); }
+.svg-end__pct { fill: var(--ink-300); font: 500 12px var(--f-mono); }
 .timeline-chart { background: var(--ink-850); border: 1px solid var(--ink-700); padding: 14px 0 4px; }
 /* The line ends carry the names on wide screens; the legend is for phones. */
 @media (min-width: 600px) { #timelineLegend { display: none; } }

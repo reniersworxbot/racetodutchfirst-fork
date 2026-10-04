@@ -13,9 +13,9 @@ const DATA_URL = 'data/race.json';
 const SITE_URL = 'https://racetodutchfirst.bmiest.be/';
 const SEASON_FILE = /^data\/[a-z0-9-]+\.json$/; // an archived season's file, from race.json's `seasons`
 const REFRESH_MS = 5 * 60 * 1000;
-// The fetcher's schedule: a copy of the cron lines in .github/workflows/site.yml (UTC, minute and
-// hour fields only; test_site.py keeps them equal). GitHub may start a run late or skip it.
-const CRON = ['7,37 17-23 * * *', '7 0-16/2 * * *'];
+// The fetcher's schedule: a copy of the cron lines in .github/workflows/site.yml (UTC; minute,
+// hour and weekday fields; test_site.py keeps them equal). GitHub may start a run late or skip it.
+const CRON = ['7 */2 * * *', '7 17-21/2 * * 0,1,3,4', '22,37,52 17-22 * * 0,1,3,4'];
 const LIVE_MIN = 60;   // a pull or kill this close to the fetch = raiding now
 const RECENT_H = 12;   // "raided at 21:57" for this long afterwards
 const FEED_SIZE = 8;
@@ -347,6 +347,24 @@ function raidDays(data) {
 }
 const STAR = 'M0,-7 L2,-2.2 7,-2 3.2,1.3 4.4,6.5 0,3.6 -4.4,6.5 -3.2,1.3 -7,-2 -2,-2.2Z';
 
+/* How far a guild is through its current boss: each new best pull since its last kill, as
+ * { at, frac } with frac = (100 - best %) / 100, so the step rises by that share of a tread.
+ * Without pull times (an archive, WCL-only) only the best % is known: one rise at the end. */
+function currentProgress(g) {
+  const cur = g.current;
+  if (!cur || g.ceKilledAt || cur.bestPercent === null || cur.bestPercent === undefined) return { steps: [], frac: 0, cur };
+  const after = Math.max(0, ...killsOf(g).map(k => k.at));
+  const pulls = (Array.isArray(cur.pulls) ? cur.pulls : [])
+    .map(p => ({ at: Date.parse(p.at), pct: p.percent }))
+    .filter(p => Number.isFinite(p.at) && p.at >= after && typeof p.pct === 'number')
+    .sort((a, b) => a.at - b.at);
+  const steps = [];
+  let best = 100;
+  for (const p of pulls) if (p.pct < best) { best = p.pct; steps.push({ at: p.at, frac: (100 - best) / 100 }); }
+  return { steps, frac: (100 - cur.bestPercent) / 100, cur };
+}
+const progressPct = frac => `${Math.round(frac * 100)}%`;
+
 function drawTimeline(el, data) {
   const total = data.tier.totalBosses;
   const start = timelineStart(data);
@@ -361,7 +379,7 @@ function drawTimeline(el, data) {
     // and the legend below (#timelineLegend shows on phones only).
     const narrow = w < 560;
     const H = narrow ? 280 : 380;
-    const m = { l: narrow ? 36 : 46, r: narrow ? 42 : 210, t: 12, b: 26 };
+    const m = { l: narrow ? 36 : 46, r: narrow ? 42 : 250, t: 12, b: 26 };
     const x = tm => m.l + ((tm - start) / (end - start)) * (w - m.l - m.r);
     const y = k => m.t + (1 - k / total) * (H - m.t - m.b);
     const svg = s('svg', { width: w, height: H, viewBox: `0 0 ${w} ${H}`, role: 'img' });
@@ -399,6 +417,10 @@ function drawTimeline(el, data) {
       const kills = killsOf(g);
       let d = `M${x(start)},${y(0) + off}`;
       kills.forEach((k, n) => { d += ` H${x(k.at)} V${y(n + 1) + off}`; });
+      // Within the current tread: up with every new best pull on the current boss.
+      const prog = currentProgress(g);
+      for (const p of prog.steps) d += ` H${x(Math.min(Math.max(p.at, start), end))} V${y(kills.length + p.frac) + off}`;
+      if (prog.frac && !prog.steps.length) d += ` H${x(end)} V${y(kills.length + prog.frac) + off}`;
       d += ` H${x(end)}`;
       const line = s('path', { d, class: 'svg-step', 'stroke-width': g.name === lead ? 3 : 2.25 });
       line.style.setProperty('--guild', colour(g.colour));
@@ -413,7 +435,7 @@ function drawTimeline(el, data) {
           svg.append(dot);
         }
       });
-      ends.push({ g, y: y(kills.length) + off });
+      ends.push({ g, y: y(kills.length + prog.frac) + off, prog });
     });
     // Line-end labels, pushed apart where guilds share a count.
     const gap = narrow ? 15 : 19;
@@ -423,7 +445,10 @@ function drawTimeline(el, data) {
       const label = s('text', { class: 'svg-end', x: x(end) + 10, y: e.y + 5 },
         narrow ? '' : `${e.g.name} `,
         s('tspan', { class: 'svg-end__n', text: `${e.g.mythicKills}/${total}` }),
-        svgTitle(tr('timeline.end', { guild: e.g.name, n: e.g.mythicKills })));
+        e.prog.frac && !narrow ? s('tspan', { class: 'svg-end__pct', text: ` · ${progressPct(e.prog.frac)}` }) : null,
+        svgTitle(e.prog.frac
+          ? tr('timeline.endPct', { guild: e.g.name, n: e.g.mythicKills, boss: e.prog.cur.name, pct: progressPct(e.prog.frac), best: pct(e.prog.cur.bestPercent) })
+          : tr('timeline.end', { guild: e.g.name, n: e.g.mythicKills })));
       label.style.setProperty('--guild', colour(e.g.colour));
       svg.append(label);
     }
@@ -435,11 +460,13 @@ function renderTimeline(data) {
   drawTimeline($('#timeline'), data);
   $('#timelineLegend').replaceChildren(...data.guilds.map(g => setGuild(h('li', {},
     h('span', { class: 'swatch', 'aria-hidden': 'true' }),
-    `${g.name}: ${g.mythicKills}/${data.tier.totalBosses}`), g)));
+    `${g.name}: ${g.mythicKills}/${data.tier.totalBosses}${currentProgress(g).frac ? ` · ${progressPct(currentProgress(g).frac)}` : ''}`), g)));
 
   const rows = data.guilds.map(g => h('tr', {},
     h('th', { scope: 'row', text: g.name }),
-    h('td', { text: killsOf(g).map(k => `${k.name} (${day(k.iso)})`).join(', ') || tr('timeline.none') })));
+    h('td', { text: [killsOf(g).map(k => `${k.name} (${day(k.iso)})`).join(', ') || tr('timeline.none'),
+      currentProgress(g).frac ? tr('timeline.nowAt', { boss: g.current.name, pct: progressPct(currentProgress(g).frac) }) : null]
+      .filter(Boolean).join(' · ') })));
   $('#timelineTable').replaceChildren(
     h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: tr('timeline.thGuild') }), h('th', { scope: 'col', text: tr('timeline.thKills') }))),
     h('tbody', {}, rows));
@@ -591,9 +618,10 @@ function cronValues(field, max) {
 function nextRun(from) {
   let best = null;
   for (const line of CRON) {
-    const [mins, hours] = line.split(' ');
-    const ms = cronValues(mins, 59), hs = cronValues(hours, 23);
+    const [mins, hours, , , dows] = line.split(' ');
+    const ms = cronValues(mins, 59), hs = cronValues(hours, 23), ds = cronValues(dows, 6);
     for (let d = 0; d < 2; d++) {
+      if (!ds.has((from.getUTCDay() + d) % 7)) continue;
       for (const hr of hs) for (const mi of ms) {
         const t = Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), from.getUTCDate() + d, hr, mi);
         if (t > from.getTime() && (best === null || t < best)) best = t;
