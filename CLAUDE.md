@@ -238,6 +238,12 @@ Read `DESIGN.md` before UI work: it records the visual system (tokens, component
   the screen, via the Fullscreen API where the browser has it for elements, else as a fixed overlay
   (iPhone); the chart then takes the box's height and redraws on width *and* height changes; Esc,
   the button or leaving full screen closes it; on a phone it asks for landscape where allowed.
+- Motion on change (app.js `renderWithMotion()`): `load()` diffs the new race.json against the one on screen
+  (`diffRace()`, same season, visible tab only) and plays the news once: board bars via a registered
+  `--w` (on a kill to full, then down), the kill count rising in, FLIP for swapped rows, `tk--new` in
+  the ticker (gold `tk--first`), the new stretch of a Voortgang line (`drawLineFrom()`), and a View
+  Transition (`hero-art`) when the hero boss changes. Nothing moves on load or on NL | EN; reduced
+  motion keeps only the colour cues.
 - Voortgang starts in the week of the first Mythic kill (weeks counted from `tier.start`, so
   ticks stay on the reset), not at the tier start.
 

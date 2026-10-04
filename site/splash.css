@@ -21,6 +21,15 @@
   background: linear-gradient(transparent, var(--ink-900) 92%);
 }
 
+/* A new hero boss (app.js motion, View Transition): only the art moves, the page stays put.
+   The old render fades and blurs out, the new one rises in. */
+.sp__art { view-transition-name: hero-art; }
+::view-transition-old(root), ::view-transition-new(root) { animation: none; }
+::view-transition-old(hero-art) { animation: 280ms cubic-bezier(.4, 0, 1, 1) both hero-out; }
+::view-transition-new(hero-art) { animation: 720ms cubic-bezier(.16, 1, .3, 1) both hero-in; }
+@keyframes hero-out { to { opacity: 0; filter: blur(6px); } }
+@keyframes hero-in { from { opacity: 0; transform: translateY(24px); } }
+
 /* ---- top --------------------------------------------------------------- */
 .sp__top {
   position: relative; z-index: 3; max-width: 1320px; margin: 0 auto; padding: 26px 24px 0;
@@ -254,10 +263,21 @@
 @media (prefers-reduced-motion: reduce) {
   .ticker__list { animation: none; flex: 1 1 auto; width: auto; overflow-x: auto; }
   .ticker__list .tk[aria-hidden="true"] { display: none; }
+  /* The new-kill light is colour only, so it stays (style.css cuts every other animation). */
+  .tk--new, .tk--new b { animation-duration: 3.2s !important; }
 }
 .tk { flex: 0 0 auto; padding: 0 26px; font-size: 15px; color: var(--paper-dim); white-space: nowrap; }
 .tk b { color: var(--paper); font-weight: 700; }
 .tk--empty { color: var(--ink-300); }
+/* A kill that arrived while the page was open (app.js motion): the item lights up once and fades
+   back; the guild in jade, or gold for the race's first kill. Colour only, so it stays under
+   reduced motion too. */
+.tk--new { animation: tk-new 3.2s ease-out 1; }
+.tk--new b { animation: tk-new-b 3.2s ease-out 1; }
+.tk--first b { animation-name: tk-first-b; }
+@keyframes tk-new { from { background: var(--ink-750); color: var(--paper); } }
+@keyframes tk-new-b { from { color: var(--jade); } }
+@keyframes tk-first-b { from { color: var(--gold); } }
 
 /* ---- responsive ------------------------------------------------------------------------------- */
 /* Narrower than the board plus a real art column: the boss gets its own band above the title,

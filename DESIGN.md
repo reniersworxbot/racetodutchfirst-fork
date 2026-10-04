@@ -423,6 +423,18 @@ Square ink-800 panels with a 1px ink-700 border (live cards; live cards lift to 
 ### Current-boss card (rcard) [family, not shipped here]
 The overlay's angled card (1px outline, ink-800 body, 22px notch at the bottom right, caps on the top edge) stays a component of the family, but the race site no longer ships it: the hero board and the Per guild pull strip carry each guild's current boss. Take its spec from the overlay, not from this page.
 
+## Motion
+
+[race] The page doesn't move on load; it moves when the race does. When the 5-minute refresh of an open, visible page brings news for the season on screen, the change plays once:
+- a guild's raid-frame bar runs from its old to its new best (on a kill: to full, then down to the next boss), about 0.9–1.4 s;
+- its kill count rises in once the bar is full;
+- guilds that swap places slide to their new row (FLIP, 650 ms);
+- new kills light up in the ticker (the guild in jade; gold for the race's first kill);
+- only the new stretch of a Voortgang line draws;
+- a new hero boss crossfades in through a View Transition: the old render fades and blurs out in 280 ms, the new one rises in over 720 ms, and nothing else on the page moves.
+
+Easing is `cubic-bezier(0.16, 1, 0.3, 1)`: no bounce. Constant motion stays limited to the LIVE dot and the ticker. Under reduced motion only the colour cues remain (the ticker's light, the count's jade flash); the hero swaps without transition.
+
 ## Do's and Don'ts
 
 ### Do:

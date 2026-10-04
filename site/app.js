@@ -229,6 +229,12 @@ function renderRaceDay(data) {
   el.title = tr('hero.dayTitle', { n, date: day(data.tier.start) });
 }
 
+/* The boss the hero shows: the leader's current boss, or the CE boss once someone won. */
+function heroBossName(data) {
+  const g = data.guilds.find(x => x.name === leaderName(data));
+  return data.winner ? data.tier.ceBoss.name : g && g.current ? g.current.name : null;
+}
+
 function renderHero(data) {
   const total = data.tier.totalBosses;
   const lead = leaderName(data);
@@ -236,8 +242,7 @@ function renderHero(data) {
   // LIVE only while a guild is really raiding (same rule as the per-guild badges).
   $('#bugLive').hidden = !data.guilds.some(x => liveState(x, data) === 'live');
   renderRaceDay(data);
-  const cur = g && g.current;
-  const bossName = data.winner ? data.tier.ceBoss.name : cur ? cur.name : null;
+  const bossName = heroBossName(data);
 
   // The hero boss.
   const art = $('#heroArt');
@@ -276,9 +281,9 @@ function renderHero(data) {
         h('span', { class: 'rib__acc mono', text: String(x.rank), 'aria-label': tr('tile.place', { n: x.rank }) }),
         url ? h('a', { class: 'rib__val', href: url, rel: 'noopener', text: x.name }) : h('span', { class: 'rib__val', text: x.name }))));
     rib.style.setProperty('--acc', colour(x.colour));
-    return setGuild(h('li', { class: `row${isLead ? ' row--lead' : ''}` },
+    return setGuild(h('li', { class: `row${isLead ? ' row--lead' : ''}`, 'data-guild': x.name },
       rib,
-      h('span', { class: 'row__kills mono' }, String(x.mythicKills), h('small', { text: `/${total}` })),
+      h('span', { class: 'row__kills mono' }, h('span', { class: 'row__n', text: String(x.mythicKills) }), h('small', { text: `/${total}` })),
       h('div', { class: 'row__fight' },
         // The raiding badge sits on the label line, so it never squeezes the guild name.
         h('div', { class: 'row__top' }, h('span', { class: 'row__label', text: label }), worldRankTag(data, x, 'row__wr'), liveBadge(x, 'row__live')),
@@ -315,7 +320,8 @@ function renderFeed(data) {
     return;
   }
   // Ticker items: "Guild · boss · date", plus "first kill" for the race's first.
-  const item = (k, copy) => h('li', { class: 'tk', 'aria-hidden': copy ? 'true' : null },
+  const fresh = motionNow ? motionNow.newKills : null;
+  const item = (k, copy) => h('li', { class: `tk${fresh && fresh.has(`${k.g.name}|${k.raid}/${k.slug}`) ? ` tk--new${isFirstKill(data, k, k.g) ? ' tk--first' : ''}` : ''}`, 'aria-hidden': copy ? 'true' : null },
     h('b', { text: k.g.name }),
     ` · ${k.name} · `,
     h('time', { datetime: k.iso, title: dayTime(k.iso), text: day(k.iso) }),
@@ -438,6 +444,7 @@ function drawTimeline(el, data) {
     }
 
     const ends = [];
+    const drawFrom = [];
     order.forEach((g, i) => {
       const off = (i - (order.length - 1) / 2) * 2; // keep equal lines apart
       const kills = killsOf(g);
@@ -458,6 +465,8 @@ function drawTimeline(el, data) {
       const line = s('path', { d, class: 'svg-step', 'stroke-width': g.name === lead ? 3 : 2.25 });
       line.style.setProperty('--guild', colour(g.colour));
       svg.append(line);
+      const since = motionNow && motionNow.guilds.get(g.name);
+      if (since && since.lastAt) drawFrom.push({ line, fromX: cx(since.lastAt) });
       kills.forEach((k, n) => {
         const title = svgTitle(tr('timeline.point', { guild: g.name, boss: k.name, date: day(k.iso), n: n + 1 }));
         if (isFirstKill(data, k, g)) {
@@ -486,6 +495,7 @@ function drawTimeline(el, data) {
       svg.append(label);
     }
     el.replaceChildren(svg);
+    for (const f of drawFrom) drawLineFrom(f.line, f.fromX);
   });
 }
 
@@ -713,6 +723,99 @@ function nextRun(from) {
   return best === null ? null : new Date(best).toISOString();
 }
 
+/* ---- motion: news arriving while the page is open ---------------------------------------
+ * Nothing moves on load. When a refresh (every 5 min) brings news for the season already on
+ * screen, the change plays once: a guild's raid-frame bar runs to its new best (on a kill: to
+ * full, then down to the next boss) and its kill count rises in; guilds that swap places slide
+ * there (FLIP); the new kills light up in the ticker (the race's first kill in gold); only the
+ * new stretch of a Voortgang line draws; and a new hero boss crossfades in (View Transition).
+ * Reduced motion keeps the colour cues and drops the movement. A hidden tab plays nothing. */
+let motionNow = null;
+const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
+const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
+if (window.CSS && CSS.registerProperty) {
+  try { CSS.registerProperty({ name: '--w', syntax: '<percentage>', inherits: false, initialValue: '0%' }); } catch (_) { /* already */ }
+}
+
+const barPct = (data, g) => {
+  const won = data.winner && data.winner.guild === g.name;
+  const c = g.current;
+  return won ? 100 : c && c.bestPercent !== null ? 100 - c.bestPercent : 0;
+};
+// The latest moment a guild's line already showed: its last kill or its last new best.
+function lastShownAt(g) {
+  const pullsAt = g.current && Array.isArray(g.current.pulls) ? g.current.pulls.map(p => Date.parse(p.at)) : [];
+  return Math.max(0, ...killsOf(g).map(k => k.at), ...pullsAt.filter(Number.isFinite));
+}
+
+function diffRace(prev, data) {
+  const out = { guilds: new Map(), newKills: new Set(), heroSwap: heroBossName(prev) !== heroBossName(data) };
+  for (const g of data.guilds) {
+    const o = prev.guilds.find(x => x.name === g.name);
+    if (!o) continue;
+    const had = new Set(killsOf(o).map(k => `${k.raid}/${k.slug}`));
+    const fresh = killsOf(g).filter(k => !had.has(`${k.raid}/${k.slug}`));
+    fresh.forEach(k => out.newKills.add(`${g.name}|${k.raid}/${k.slug}`));
+    const moved = g.racePosition !== o.racePosition || fresh.length > 0;
+    if (moved) out.guilds.set(g.name, { oldW: barPct(prev, o), newW: barPct(data, g), killed: fresh.length > 0, lastAt: lastShownAt(o) });
+  }
+  return out;
+}
+
+function renderWithMotion(prev, data) {
+  const same = prev && !isArchive(data) && prev.season?.id === data.season?.id && !document.hidden;
+  const motion = same ? diffRace(prev, data) : null;
+  if (!motion || (!motion.guilds.size && !motion.newKills.size && !motion.heroSwap)) { render(data); return; }
+  const tops = new Map([...document.querySelectorAll('#lowerThirds .row')].map(li => [li.dataset.guild, li.getBoundingClientRect().top]));
+  const go = () => {
+    motionNow = motion;
+    try { render(data); } finally { motionNow = null; }
+    playBoard(motion, tops);
+  };
+  if (motion.heroSwap && document.startViewTransition && !reducedMotion()) document.startViewTransition(go);
+  else go();
+}
+
+function playBoard(motion, tops) {
+  const reduced = reducedMotion();
+  for (const li of document.querySelectorAll('#lowerThirds .row')) {
+    const name = li.dataset.guild;
+    const m = motion.guilds.get(name);
+    // Places swapped: slide from the old row to the new one.
+    const top = tops.get(name);
+    const dy = top === undefined ? 0 : top - li.getBoundingClientRect().top;
+    if (dy && !reduced) li.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 650, easing: EASE_OUT });
+    if (!m) continue;
+    const fill = li.querySelector('.row__hp i');
+    const n = li.querySelector('.row__n');
+    if (reduced) {
+      if (m.killed && n) n.animate([{ color: 'var(--jade)' }, {}], { duration: 1600, easing: 'ease-out' });
+      continue;
+    }
+    // On a kill the bar runs to full, then falls back to the next boss's best; else old → new.
+    const frames = m.killed ? [{ '--w': `${m.oldW}%` }, { '--w': '100%', offset: 0.55 }, { '--w': `${m.newW}%` }]
+      : [{ '--w': `${m.oldW}%` }, { '--w': `${m.newW}%` }];
+    if (fill) fill.animate(frames, { duration: m.killed ? 1400 : 900, easing: m.killed ? 'ease-in-out' : EASE_OUT });
+    if (m.killed && n) {
+      n.animate([{ transform: 'translateY(45%)', opacity: 0 }, { transform: 'none', opacity: 1 }],
+        { duration: 500, delay: 700, easing: EASE_OUT, fill: 'backwards' });
+    }
+  }
+}
+
+// Draw a Voortgang line from horizontal position fromX to its end (the part new since the last view).
+function drawLineFrom(line, fromX) {
+  if (reducedMotion() || typeof line.getTotalLength !== 'function') return;
+  const L = line.getTotalLength();
+  let lo = 0, hi = L;
+  for (let i = 0; i < 18; i++) { const mid = (lo + hi) / 2; if (line.getPointAtLength(mid).x < fromX) lo = mid; else hi = mid; }
+  const rest = L - lo;
+  if (rest < 2) return;
+  line.style.strokeDasharray = `${L}`;
+  const a = line.animate([{ strokeDashoffset: rest }, { strokeDashoffset: 0 }], { duration: 1100, easing: EASE_OUT });
+  a.onfinish = a.oncancel = () => { line.style.strokeDasharray = ''; };
+}
+
 /* ---- load ------------------------------------------------------------------------------------- */
 
 function $(sel) { return document.querySelector(sel); }
@@ -801,10 +904,11 @@ async function load() {
       data = await fetchRace(entry.file);
     }
     const fresh = !race || race.generatedAt !== data.generatedAt || race.season?.id !== data.season?.id;
+    const prev = race;
     race = data;
     loadError = null;
     showError('');
-    if (fresh) render(data);
+    if (fresh) renderWithMotion(prev, data);
   } catch (err) {
     if (!race) {
       loadError = err.message;
