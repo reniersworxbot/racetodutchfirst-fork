@@ -143,7 +143,95 @@
     document.body.classList.add('is-onair');
   }
 
-  document.addEventListener('race:data', e => { data = e.detail; render(); });
-  if (typeof race !== 'undefined' && race) { data = race; render(); }
-  setInterval(() => { if (data) render(); }, 60 * 1000);
+  /* ---- "Streamers" in the top bar: every listed channel, grouped by guild in race order ----
+   * A button in the bug's flush blocks (a red "● n live" block in front while someone is live and
+   * the check is fresh) opens a panel: per guild its channels as links to Twitch, each with its
+   * status. A stale check never says "live": every status then reads "unknown". Esc, a click
+   * outside or the close button shut it, and focus goes back to the button. */
+  const fresh = st => !!st && (Date.now() - Date.parse(st.checkedAt)) / 60000 <= STALE_MIN;
+
+  function status(ch, isFresh) {
+    if (!isFresh || ch.live === null || ch.live === undefined) return h('span', { class: 'streamers__st', text: tr('streams.unknown') });
+    if (!ch.live) return h('span', { class: 'streamers__st', text: tr('streams.offline') });
+    return h('span', { class: 'streamers__st' },
+      h('span', { class: 'streamers__tag' }, h('span', { class: 'live-dot', 'aria-hidden': 'true' }), tr('streams.live')));
+  }
+
+  // A live channel's game, viewers and start, on a line of its own under the name.
+  function liveMeta(ch, isFresh) {
+    if (!isFresh || ch.live !== true) return null;
+    const bits = [ch.game, Number.isInteger(ch.viewers) ? tn('live.viewers', ch.viewers) : null,
+      ch.startedAt ? tr('live.since', { time: clock(ch.startedAt) }) : null].filter(Boolean);
+    return bits.length ? h('span', { class: 'streamers__meta', text: bits.join(' · ') }) : null;
+  }
+
+  function channelRow(ch, isFresh) {
+    const name = login(ch);
+    return h('li', { class: 'streamers__row' },
+      h('a', { class: 'streamers__ch', href: ch.url, rel: 'noopener', target: '_blank', 'aria-label': tr('streams.open', { name: ch.twitch }) },
+        h('span', { class: 'streamers__name', text: name }), icon('out')),
+      status(ch, isFresh),
+      liveMeta(ch, isFresh));
+  }
+
+  function renderStreamers() {
+    const wrap = $('#streamers');
+    if (!wrap) return;
+    const st = data && data.streams;
+    const channels = st ? st.channels.filter(c => login(c)) : [];
+    wrap.hidden = !channels.length;
+    if (!channels.length) { closeStreamers(false); return; }
+    const isFresh = fresh(st);
+    const live = isFresh ? channels.filter(c => c.live === true) : [];
+    $('#streamersLive').hidden = !live.length;
+    $('#streamersLiveN').textContent = tr('streams.liveN', { n: live.length });
+
+    // Guilds in race order, then channels without a guild.
+    const groups = [];
+    for (const g of data.guilds) {
+      const own = channels.filter(c => c.guild === g.name);
+      if (own.length) groups.push({ g, own });
+    }
+    const loose = channels.filter(c => !c.guild || !data.guilds.some(g => g.name === c.guild));
+    const checked = new Date(st.checkedAt);
+    const sameDay = checked.toDateString() === new Date().toDateString();
+    const close = h('button', { type: 'button', class: 'streamers__close', 'aria-label': tr('streams.close') },
+      s('svg', { viewBox: '0 0 16 16', 'aria-hidden': 'true' }, s('path', { d: 'M3 3l10 10M13 3L3 13' })));
+    close.addEventListener('click', () => closeStreamers(true));
+    $('#streamersPanel').replaceChildren(
+      h('div', { class: 'streamers__head' },
+        h('h2', { id: 'streamersTitle', class: 'streamers__h', tabindex: '-1', text: tr('streams.h') }), close),
+      h('p', { class: 'streamers__cap', text: tr('streams.cap') }),
+      ...groups.map(({ g, own }) => setGuild(h('section', { class: 'streamers__grp' },
+        h('h3', { class: 'streamers__guild' }, h('i', { 'aria-hidden': 'true' }), h('span', { text: g.name })),
+        h('ul', {}, own.map(c => channelRow(c, isFresh)))), g)),
+      loose.length ? h('section', { class: 'streamers__grp streamers__grp--loose' },
+        h('h3', { class: 'streamers__guild' }, h('span', { text: tr('streams.noGuild') })),
+        h('ul', {}, loose.map(c => channelRow(c, isFresh)))) : null,
+      h('p', { class: 'streamers__foot' },
+        sameDay ? tr('streams.checked', { time: clock(st.checkedAt) }) : tr('streams.checkedDay', { day: day(st.checkedAt), time: clock(st.checkedAt) }),
+        isFresh ? null : h('span', { class: 'streamers__stale', text: ` ${tr('streams.stale')}` })));
+  }
+
+  function openStreamers() {
+    $('#streamersPanel').hidden = false;
+    $('#streamersBtn').setAttribute('aria-expanded', 'true');
+    $('#streamersTitle').focus();
+  }
+  function closeStreamers(refocus) {
+    const panel = $('#streamersPanel');
+    if (!panel || panel.hidden) return;
+    panel.hidden = true;
+    $('#streamersBtn').setAttribute('aria-expanded', 'false');
+    if (refocus) $('#streamersBtn').focus();
+  }
+  if ($('#streamersBtn')) {
+    $('#streamersBtn').addEventListener('click', () => ($('#streamersPanel').hidden ? openStreamers() : closeStreamers(true)));
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#streamersPanel').hidden) closeStreamers(true); });
+    document.addEventListener('click', e => { if (!e.target.closest('#streamers')) closeStreamers(false); });
+  }
+
+  document.addEventListener('race:data', e => { data = e.detail; render(); renderStreamers(); });
+  if (typeof race !== 'undefined' && race) { data = race; render(); renderStreamers(); }
+  setInterval(() => { if (data) { render(); renderStreamers(); } }, 60 * 1000);
 })();

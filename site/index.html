@@ -39,6 +39,13 @@
     </div>
     <div class="sp__end">
       <p id="updated" class="updated sp__upd" data-i18n="footer.loading">Data laden…</p>
+      <div id="streamers" class="streamers" hidden>
+        <button id="streamersBtn" type="button" class="streamers__btn" aria-expanded="false" aria-controls="streamersPanel" aria-haspopup="dialog">
+          <span id="streamersLive" class="streamers__live" hidden><span class="live-dot" aria-hidden="true"></span><span id="streamersLiveN"></span></span>
+          <span class="streamers__label" data-i18n="streams.btn">Streamers</span>
+        </button>
+        <div id="streamersPanel" class="streamers__panel" role="dialog" aria-labelledby="streamersTitle" hidden></div>
+      </div>
       <div id="seasonSwitch" class="lang-switch season-switch" role="group" data-i18n-aria-label="season.label" aria-label="Seizoen" hidden></div>
       <div class="lang-switch" role="group" data-i18n-aria-label="lang.label" aria-label="Taal">
         <button type="button" data-lang="nl" aria-pressed="true" lang="nl">NL</button>

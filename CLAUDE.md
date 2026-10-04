@@ -171,6 +171,12 @@ click Twitch's embed (player.twitch.tv, `parent` = location.hostname). The CSP a
 those two hosts (img-src, frame-src); without them the page still works, minus the embed. A
 loaded player survives data refreshes and NL | EN redraws (it is only rebuilt when the
 featured channel changes), so a stream never restarts under the viewer.
+The top bar has a **Streamers** button (`#streamers`, live.js `renderStreamers()`), in the bug's flush
+blocks, with a broadcast-red "● n live" block in front while someone is live and the check is under
+75 min old. It opens a panel with every listed channel, grouped by guild in race order (channels
+without a known guild last), each a link to Twitch with its status: LIVE (game, viewers, since),
+offline, or unknown (a failed check, or a stale one: a stale check never says live). Esc, a click
+outside or its close button shut it; it hides when race.json has no streams (an archive).
 Raider.IO's published `raiding/boss-rankings` also carries per-guild `streamers` (count +
 top stream), but only for a realm's top 50 guilds per boss; Lelijkerds and RoyalTeam never
 appear, so it isn't used (see issue #6). Warcraft Logs' API has no stream data.

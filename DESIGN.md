@@ -368,6 +368,9 @@ Flat. No drop shadows anywhere. Depth comes from the ink ramp (ink-900 ground, i
 ### Broadcast bug [race]
 Flush square blocks at 40px (34px under 900px), no gaps: LIVE (live-red, pulsing dot, hidden unless a guild is raiding), the name on ink-900, "Dag N" in jade (tier start = day 1, stops on the winning day). The update line sits beside it in paper-dim: when the data was fetched ("Bijgewerkt om 13:42") and when the schedule normally fetches next ("volgende normaal om 14:07"), never coloured.
 
+### Streamers [race]
+A button in the bug's flush blocks next to NL | EN: STREAMERS on ink-900 (jade with ink text while open), and in front a broadcast-red "● n live" block while a listed channel is live on a fresh check. It opens a flat ink-850 panel (1px ink-700 border, no shadow) under the bar, the full bar's width on phones: the title, a one-line caption, then per guild in race order a slanted guild chip with the guild name in label type and its channels as paper links to Twitch with a drawn out-arrow; on the right the status: a broadcast-red LIVE tag, or "Offline" / "Status onbekend" in ink-300; a live channel's game, viewers and start on a line under it in paper-dim; at the foot when it was checked (a stale check in rose, never live).
+
 ### Language switch [race]
 NL | EN as two flush blocks at the bug's height, label type at 13px/800; the active one solid jade with ink text, the other ink-900 with ink-300 text (paper on hover). Dutch is the default.
 
