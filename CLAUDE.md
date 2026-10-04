@@ -26,6 +26,7 @@ tests/
   test_wcl.py                the WCL merge
   test_site.py               frontend contracts: same keys in nl + en, no innerHTML, no inline style
   fixtures/api/              older single responses from the first version (unused but kept)
+  test_fixtures.py           --record never writes outside its directory (src/racetodutchfirst/fixtures.py)
 scripts/og-image.sh          headless Chrome: site/og.html → site/og.png (run by site.yml)
 site/                        static, no build step, no framework, no CDN scripts
   index.html                 splash hero (top bar, title, Nu live when someone streams, board, kills ticker), then Voortgang, Per guild, Hall of fame, footer
@@ -41,6 +42,7 @@ site/                        static, no build step, no framework, no CDN scripts
   robots.txt, sitemap.xml    sitemap = every season in NL and EN (test_prerender checks it matches guilds.toml)
 .github/workflows/site.yml   raid evenings every 30 min, else every 2 h, + main pushes + manual: fetch, share image, deploy
 .github/workflows/test.yml   PRs and main: ruff, pytest, node --check
+.github/dependabot.yml       weekly grouped update PRs for uv.lock and the SHA-pinned Actions
 ```
 
 ## Run and test

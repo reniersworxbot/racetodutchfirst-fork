@@ -30,6 +30,7 @@ from typing import Any, Protocol
 import httpx
 
 from .config import Guild
+from .fixtures import fixture_path, name_part
 
 TOKEN_URL = "https://www.warcraftlogs.com/oauth/token"
 API_URL = "https://www.warcraftlogs.com/api/v2/client"
@@ -160,8 +161,8 @@ def dedupe(fights: list[dict]) -> list[dict]:
 def fixture_name(body: dict) -> str:
     v = body.get("variables") or {}
     if "reportData" in body.get("query", ""):
-        return f"wcl__reports__{v['g']}__{v['z']}__p{v['p']}.json"
-    return f"wcl__guild__{v['s']}__{v['n'].lower().replace(' ', '-')}.json"
+        return f"wcl__reports__{name_part(v['g'])}__{name_part(v['z'])}__p{name_part(v['p'])}.json"
+    return f"wcl__guild__{name_part(v['s'])}__{name_part(v['n'])}.json"
 
 
 class RecordingTransport:
@@ -175,6 +176,6 @@ class RecordingTransport:
     def post(self, url: str, **kwargs: Any) -> Any:
         resp = self._inner.post(url, **kwargs)
         if url == API_URL and resp.status_code == 200:
-            path = self._dir / fixture_name(kwargs["json"])
+            path = fixture_path(self._dir, fixture_name(kwargs["json"]))
             path.write_text(json.dumps(resp.json(), ensure_ascii=False) + "\n")
         return resp

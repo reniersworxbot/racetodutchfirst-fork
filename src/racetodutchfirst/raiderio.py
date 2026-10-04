@@ -17,6 +17,7 @@ from urllib.parse import parse_qs, quote, urlencode, urlsplit
 import httpx
 
 from .config import Guild
+from .fixtures import fixture_path, name_part
 
 BASE_URL = "https://raider.io/api/v1"
 USER_AGENT = "RaceToDutchFirst/0.1 (+https://github.com/reniersworx/racetodutchfirst)"
@@ -133,7 +134,7 @@ def fixture_name(url: str) -> str:
     bits = [_ENDPOINTS[path], q["realm"], q.get("name") or q["guild"]]
     if "raid" in q:
         bits += [q["raid"], q["boss"]]
-    return "__".join(b.lower().replace(" ", "-") for b in bits) + ".json"
+    return "__".join(name_part(b) for b in bits) + ".json"
 
 
 class RecordingHTTP:
@@ -153,6 +154,6 @@ class RecordingHTTP:
             data = resp.json()
             if isinstance(data, dict) and data.get("roster"):
                 data = {**data, "roster": [_trim_member(m) for m in data["roster"]]}
-            path = self._dir / fixture_name(url)
+            path = fixture_path(self._dir, fixture_name(url))
             path.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n")
         return resp
