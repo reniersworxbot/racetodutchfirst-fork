@@ -198,7 +198,8 @@
     const close = h('button', { type: 'button', class: 'streamers__close', 'aria-label': tr('streams.close') },
       s('svg', { viewBox: '0 0 16 16', 'aria-hidden': 'true' }, s('path', { d: 'M3 3l10 10M13 3L3 13' })));
     close.addEventListener('click', () => closeStreamers(true));
-    $('#streamersPanel').replaceChildren(
+    // replaceChildren is the DOM's own and, unlike h(), turns a null into the text "null".
+    $('#streamersPanel').replaceChildren(...[
       h('div', { class: 'streamers__head' },
         h('h2', { id: 'streamersTitle', class: 'streamers__h', tabindex: '-1', text: tr('streams.h') }), close),
       h('p', { class: 'streamers__cap', text: tr('streams.cap') }),
@@ -210,7 +211,8 @@
         h('ul', {}, loose.map(c => channelRow(c, isFresh)))) : null,
       h('p', { class: 'streamers__foot' },
         sameDay ? tr('streams.checked', { time: clock(st.checkedAt) }) : tr('streams.checkedDay', { day: day(st.checkedAt), time: clock(st.checkedAt) }),
-        isFresh ? null : h('span', { class: 'streamers__stale', text: ` ${tr('streams.stale')}` })));
+        isFresh ? null : h('span', { class: 'streamers__stale', text: ` ${tr('streams.stale')}` })),
+    ].filter(Boolean));
   }
 
   function openStreamers() {
