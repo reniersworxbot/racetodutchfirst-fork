@@ -1,0 +1,165 @@
+{
+ "guild": {
+  "id": 2118172,
+  "name": "Kelderklasse",
+  "displayName": "Kelderklasse",
+  "faction": "horde",
+  "realm": {
+   "id": 579,
+   "connectedRealmId": 308,
+   "wowRealmId": 506,
+   "wowConnectedRealmId": 1403,
+   "name": "Draenor",
+   "altName": null,
+   "slug": "draenor",
+   "altSlug": "draenor",
+   "locale": "en_GB",
+   "isConnected": false,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/draenor/Kelderklasse",
+  "logo": "https://cdn.raiderio.net/images/site/horde_icon4.png",
+  "color": "#93009f",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 16915,
+  "difficulty": "mythic",
+  "name": "The Venomous Abyss",
+  "short_name": "VA",
+  "wowInstanceId": 3004,
+  "slug": "the-venomous-abyss",
+  "icon_url": "/images/wow/icons/large/8039569.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197166,
+  "wowEncounterId": 3497,
+  "name": "The Lost Explorers",
+  "slug": "the-lost-explorers",
+  "ordinal": 2,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/inv_121_raid_achievement_tortollans.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2894.png"
+ },
+ "count": 8,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-09-06T20:10:41.954Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 210464,
+    "encounter_health": {
+     "overall_percent": 0.524462
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-06T20:16:24.265Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 240894,
+    "encounter_health": {
+     "overall_percent": 0.471908
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-06T20:22:17.194Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 176955,
+    "encounter_health": {
+     "overall_percent": 0.54021
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-06T20:28:08.116Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 149119,
+    "encounter_health": {
+     "overall_percent": 0.650078
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-06T20:32:33.182Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 240988,
+    "encounter_health": {
+     "overall_percent": 0.438873
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-06T20:37:33.856Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 236663,
+    "encounter_health": {
+     "overall_percent": 0.44868
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-06T20:42:39.553Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 188526,
+    "encounter_health": {
+     "overall_percent": 0.520793
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-06T20:47:00.661Z",
+    "is_reset": false,
+    "is_success": true,
+    "duration_ms": 411377,
+    "encounter_health": {
+     "overall_percent": 0
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

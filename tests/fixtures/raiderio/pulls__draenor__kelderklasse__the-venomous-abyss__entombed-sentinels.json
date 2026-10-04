@@ -1,0 +1,286 @@
+{
+ "guild": {
+  "id": 2118172,
+  "name": "Kelderklasse",
+  "displayName": "Kelderklasse",
+  "faction": "horde",
+  "realm": {
+   "id": 579,
+   "connectedRealmId": 308,
+   "wowRealmId": 506,
+   "wowConnectedRealmId": 1403,
+   "name": "Draenor",
+   "altName": null,
+   "slug": "draenor",
+   "altSlug": "draenor",
+   "locale": "en_GB",
+   "isConnected": false,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/draenor/Kelderklasse",
+  "logo": "https://cdn.raiderio.net/images/site/horde_icon4.png",
+  "color": "#93009f",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 16915,
+  "difficulty": "mythic",
+  "name": "The Venomous Abyss",
+  "short_name": "VA",
+  "wowInstanceId": 3004,
+  "slug": "the-venomous-abyss",
+  "icon_url": "/images/wow/icons/large/8039569.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197164,
+  "wowEncounterId": 3445,
+  "name": "Entombed Sentinels",
+  "slug": "entombed-sentinels",
+  "ordinal": 1,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/inv_121_raid_achievement_golems.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2874.png"
+ },
+ "count": 18,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T17:56:22.909Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 5,
+    "encounter_health": {
+     "overall_percent": 1
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:07:51.312Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 92176,
+    "encounter_health": {
+     "overall_percent": 0.811014
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:11:15.048Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 105463,
+    "encounter_health": {
+     "overall_percent": 0.745632
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:14:41.204Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 79973,
+    "encounter_health": {
+     "overall_percent": 0.77809
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:17:29.462Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 161404,
+    "encounter_health": {
+     "overall_percent": 0.568583
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:21:49.558Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 83138,
+    "encounter_health": {
+     "overall_percent": 0.787031
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:24:30.833Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 86236,
+    "encounter_health": {
+     "overall_percent": 0.781942
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:27:01.415Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 189167,
+    "encounter_health": {
+     "overall_percent": 0.531459
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:31:44.967Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 208450,
+    "encounter_health": {
+     "overall_percent": 0.522076
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:39:11.379Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 279208,
+    "encounter_health": {
+     "overall_percent": 0.355267
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:46:02.694Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 294058,
+    "encounter_health": {
+     "overall_percent": 0.363647
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:52:12.390Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 182969,
+    "encounter_health": {
+     "overall_percent": 0.60828
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T18:56:57.646Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 272068,
+    "encounter_health": {
+     "overall_percent": 0.35929
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T19:04:34.349Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 321943,
+    "encounter_health": {
+     "overall_percent": 0.319832
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T19:11:32.729Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 394638,
+    "encounter_health": {
+     "overall_percent": 0.0872497
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T19:20:03.207Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 118372,
+    "encounter_health": {
+     "overall_percent": 0.703401
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T19:23:14.951Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 84308,
+    "encounter_health": {
+     "overall_percent": 0.77882
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T19:26:05.234Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 76552,
+    "encounter_health": {
+     "overall_percent": 0.790087
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-13T19:39:15.795Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 427624,
+    "encounter_health": {
+     "overall_percent": 0.0199722
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

@@ -1,0 +1,362 @@
+{
+ "guild": {
+  "id": 47949,
+  "name": "Lelijkerds",
+  "displayName": "Lelijkerds",
+  "faction": "horde",
+  "realm": {
+   "id": 579,
+   "connectedRealmId": 308,
+   "wowRealmId": 506,
+   "wowConnectedRealmId": 1403,
+   "name": "Draenor",
+   "altName": null,
+   "slug": "draenor",
+   "altSlug": "draenor",
+   "locale": "en_GB",
+   "isConnected": false,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/draenor/Lelijkerds",
+  "logo": "https://cdn.raiderio.net/images/site/horde_icon4.png",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 16340,
+  "difficulty": "mythic",
+  "name": "MN Tier 1 (VS / DR / MQD)",
+  "short_name": "VS/DR/MQD",
+  "wowInstanceId": 2912,
+  "slug": "tier-mn-1",
+  "icon_url": "/images/wow/icons/large/inv_achievement_raid_darkwell.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197135,
+  "wowEncounterId": 3178,
+  "name": "Vaelgor & Ezzorak",
+  "slug": "vaelgor-ezzorak",
+  "ordinal": 3,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/inv_120_raid_voidspire_dragonduo.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2735.png"
+ },
+ "count": 25,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T19:06:53.439Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 7163,
+    "encounter_health": {
+     "overall_percent": 0.999872
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T19:28:52.399Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 72233,
+    "encounter_health": {
+     "overall_percent": 0.829767
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T19:33:32.057Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 32196,
+    "encounter_health": {
+     "overall_percent": 0.897286
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T19:35:18.882Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 140255,
+    "encounter_health": {
+     "overall_percent": 0.652364
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T19:39:12.216Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 152243,
+    "encounter_health": {
+     "overall_percent": 0.685919
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T19:44:46.244Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 168225,
+    "encounter_health": {
+     "overall_percent": 0.61919
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T19:50:12.992Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 177696,
+    "encounter_health": {
+     "overall_percent": 0.64132
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T19:55:42.871Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 176251,
+    "encounter_health": {
+     "overall_percent": 0.611879
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T20:01:16.297Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 284272,
+    "encounter_health": {
+     "overall_percent": 0.575081
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T20:08:36.121Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 254258,
+    "encounter_health": {
+     "overall_percent": 0.528517
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T20:15:20.629Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 227788,
+    "encounter_health": {
+     "overall_percent": 0.567082
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T20:21:19.446Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 128246,
+    "encounter_health": {
+     "overall_percent": 0.656763
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-30T20:25:06.356Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 188268,
+    "encounter_health": {
+     "overall_percent": 0.658621
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T18:14:56.018Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 84224,
+    "encounter_health": {
+     "overall_percent": 0.841873
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T18:18:45.453Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 194262,
+    "encounter_health": {
+     "overall_percent": 0.617214
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T18:23:22.390Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 246262,
+    "encounter_health": {
+     "overall_percent": 0.508408
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T18:29:41.435Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 274251,
+    "encounter_health": {
+     "overall_percent": 0.475465
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T18:36:44.632Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 106205,
+    "encounter_health": {
+     "overall_percent": 0.711177
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T18:39:48.550Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 172222,
+    "encounter_health": {
+     "overall_percent": 0.64171
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T18:46:32.185Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 302283,
+    "encounter_health": {
+     "overall_percent": 0.380079
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T18:53:42.281Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 330279,
+    "encounter_health": {
+     "overall_percent": 0.422389
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T19:00:37.489Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 108261,
+    "encounter_health": {
+     "overall_percent": 0.698791
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T19:03:36.566Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 149085,
+    "encounter_health": {
+     "overall_percent": 0.589183
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T19:07:58.646Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 156259,
+    "encounter_health": {
+     "overall_percent": 0.659691
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T19:23:13.769Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 429131,
+    "encounter_health": {
+     "overall_percent": 0.218143
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-05-04T19:32:06.468Z",
+    "is_reset": false,
+    "is_success": true,
+    "duration_ms": 463570,
+    "encounter_health": {
+     "overall_percent": 0
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

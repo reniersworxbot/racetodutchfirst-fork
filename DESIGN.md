@@ -337,7 +337,7 @@ WoW's class colours are game data, like the guild colours: held in halloffame.js
 
 **The Compared Number Rule.** A number a visitor compares across guilds is JetBrains Mono with tabular figures.
 
-**The One-Line Caption Rule.** A section caption is one line that names the marks ("Trede = kill · tussenstap = beste pull op de huidige boss · ster = eerste kill van de race"); the explanation lives in the marks themselves, not in a paragraph.
+**The One-Line Caption Rule.** A section caption is one line that names the marks ("Trede = kill · tussenstap = nieuwe beste pull · ster = eerste kill van de race"); the explanation lives in the marks themselves, not in a paragraph.
 
 ## Layout
 
@@ -387,7 +387,7 @@ A 52px ink-900 band spanning the viewport, with only a 2px jade top edge (no sid
 Headline type behind a slanted jade cap (14px wide, 0.9em tall), 8px above a one-line caption. Subsections use headline-sub with an 11px cap.
 
 ### Voortgang chart [race]
-A step line per guild in its colour (3px for the leader, drawn last, 2.25px for the rest) in an ink-850 well with a 1px ink-700 border. Raid nights (days with a pull or kill in race.json) are shaded jade columns; the grid is ink-700, its top line the CE finish dashed in jade-deep (4 5); axes in mono 11px ink-300 with "x/9" and "CE". The race's first kills are gold stars (ink-850 stroke), other kills hollow nodes (ink-850 fill, 2px guild-colour ring). After its last kill a line rises within the tread with each new best pull on the current boss ((100 - best %) / 100 of a tread), so it ends where the guild really stands. On wide screens each line ends in the guild name (14px/700, guild colour) and its x/9 (mono 12px/500, paper-dim) plus " · 73%" through the current boss (mono 12px/500, ink-300); on phones a legend replaces them. "Toon als tabel" discloses the same data as a table.
+A step line per guild in its colour (3px for the leader, drawn last, 2.25px for the rest) in an ink-850 well with a 1px ink-700 border. Raid nights (days with a pull or kill in race.json) are shaded jade columns; the grid is ink-700, its top line the CE finish dashed in jade-deep (4 5); axes in mono 11px ink-300 with "x/9" and "CE". The race's first kills are gold stars (ink-850 stroke), other kills hollow nodes (ink-850 fill, 2px guild-colour ring). Within every tread a line rises with each new best pull on the boss it was working on ((100 - best %) / 100 of a tread, from race.json's `progress` per killed boss and the current boss's pulls), so it shows the way to each kill and ends where the guild really stands. On wide screens each line ends in the guild name (14px/700, guild colour) and its x/9 (mono 12px/500, paper-dim) plus " · 73%" through the current boss (mono 12px/500, ink-300); on phones a legend replaces them. "Toon als tabel" discloses the same data as a table.
 
 ### Per guild sheet [race]
 One table row per guild:

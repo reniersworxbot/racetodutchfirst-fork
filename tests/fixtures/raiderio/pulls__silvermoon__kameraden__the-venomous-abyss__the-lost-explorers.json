@@ -1,0 +1,241 @@
+{
+ "guild": {
+  "id": 2320417,
+  "name": "Kameraden",
+  "displayName": "Kameraden",
+  "faction": "alliance",
+  "realm": {
+   "id": 704,
+   "connectedRealmId": 355,
+   "wowRealmId": 549,
+   "wowConnectedRealmId": 3391,
+   "name": "Silvermoon",
+   "altName": null,
+   "slug": "silvermoon",
+   "altSlug": "silvermoon",
+   "locale": "en_GB",
+   "isConnected": false,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/silvermoon/Kameraden",
+  "logo": "https://cdn.raiderio.net/images/site/alliance_icon4.png",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 16915,
+  "difficulty": "mythic",
+  "name": "The Venomous Abyss",
+  "short_name": "VA",
+  "wowInstanceId": 3004,
+  "slug": "the-venomous-abyss",
+  "icon_url": "/images/wow/icons/large/8039569.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197166,
+  "wowEncounterId": 3497,
+  "name": "The Lost Explorers",
+  "slug": "the-lost-explorers",
+  "ordinal": 2,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/inv_121_raid_achievement_tortollans.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2894.png"
+ },
+ "count": 15,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:12:43.832Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 122235,
+    "encounter_health": {
+     "overall_percent": 0.726381
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:15:23.769Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 25079,
+    "encounter_health": {
+     "overall_percent": 0.999967
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:17:41.390Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 88530,
+    "encounter_health": {
+     "overall_percent": 0.771805
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:20:34.914Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 75690,
+    "encounter_health": {
+     "overall_percent": 0.795363
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:23:34.676Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 154249,
+    "encounter_health": {
+     "overall_percent": 0.661113
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:28:00.933Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 189028,
+    "encounter_health": {
+     "overall_percent": 0.639237
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:33:02.706Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 84458,
+    "encounter_health": {
+     "overall_percent": 0.770821
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:35:22.200Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 136123,
+    "encounter_health": {
+     "overall_percent": 0.670263
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:38:45.961Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 246674,
+    "encounter_health": {
+     "overall_percent": 0.541694
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:44:11.413Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 154457,
+    "encounter_health": {
+     "overall_percent": 0.627686
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:48:15.300Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 101771,
+    "encounter_health": {
+     "overall_percent": 0.724868
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-10T20:51:03.758Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 414954,
+    "encounter_health": {
+     "overall_percent": 0.204472
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-14T18:10:01.186Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 976,
+    "encounter_health": {
+     "overall_percent": 0.999953
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-14T18:11:33.377Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 126862,
+    "encounter_health": {
+     "overall_percent": 0.668299
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-14T18:16:14.890Z",
+    "is_reset": false,
+    "is_success": true,
+    "duration_ms": 450489,
+    "encounter_health": {
+     "overall_percent": 0
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

@@ -1,0 +1,153 @@
+{
+ "guild": {
+  "id": 1327250,
+  "name": "Knikkerende Krijgers",
+  "displayName": "Knikkerende Krijgers",
+  "faction": "alliance",
+  "realm": {
+   "id": 716,
+   "connectedRealmId": 265,
+   "wowRealmId": 628,
+   "wowConnectedRealmId": 1597,
+   "name": "Sylvanas",
+   "altName": null,
+   "slug": "sylvanas",
+   "altSlug": "sylvanas",
+   "locale": "en_GB",
+   "isConnected": true,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/sylvanas/Knikkerende%20Krijgers",
+  "logo": "https://cdn.raiderio.net/images/site/alliance_icon4.png",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 8062,
+  "difficulty": "mythic",
+  "name": "Sporefall",
+  "short_name": "SF",
+  "wowInstanceId": 1592,
+  "slug": "sporefall",
+  "icon_url": "/images/wow/icons/large/inv_1207_achievement_raid_fungariangiant_fungalgiant.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197162,
+  "wowEncounterId": 3159,
+  "name": "Rotmire",
+  "slug": "rotmire",
+  "ordinal": 0,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/inv_1207_achievement_raid_fungariangiant_fungalgiant.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2711.png"
+ },
+ "count": 6,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-06-17T18:04:55.453Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 27573,
+    "encounter_health": {
+     "overall_percent": 0.999436
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-06-17T18:10:37.672Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 49715,
+    "encounter_health": {
+     "overall_percent": 0.830577
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-06-17T18:12:49.337Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 137319,
+    "encounter_health": {
+     "overall_percent": 0.660614
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-06-17T18:16:24.490Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 57041,
+    "encounter_health": {
+     "overall_percent": 0.806391
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-06-17T18:18:38.336Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 143762,
+    "encounter_health": {
+     "overall_percent": 0.665892
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-06-17T18:23:13.299Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 395962,
+    "encounter_health": {
+     "overall_percent": 0.229728
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-06-17T18:31:16.853Z",
+    "is_reset": false,
+    "is_success": true,
+    "duration_ms": 476337,
+    "encounter_health": {
+     "overall_percent": 0
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

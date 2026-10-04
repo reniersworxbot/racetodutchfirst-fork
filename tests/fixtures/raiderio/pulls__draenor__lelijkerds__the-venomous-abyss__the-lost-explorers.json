@@ -1,0 +1,307 @@
+{
+ "guild": {
+  "id": 47949,
+  "name": "Lelijkerds",
+  "displayName": "Lelijkerds",
+  "faction": "horde",
+  "realm": {
+   "id": 579,
+   "connectedRealmId": 308,
+   "wowRealmId": 506,
+   "wowConnectedRealmId": 1403,
+   "name": "Draenor",
+   "altName": null,
+   "slug": "draenor",
+   "altSlug": "draenor",
+   "locale": "en_GB",
+   "isConnected": false,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/draenor/Lelijkerds",
+  "logo": "https://cdn.raiderio.net/images/site/horde_icon4.png",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 16915,
+  "difficulty": "mythic",
+  "name": "The Venomous Abyss",
+  "short_name": "VA",
+  "wowInstanceId": 3004,
+  "slug": "the-venomous-abyss",
+  "icon_url": "/images/wow/icons/large/8039569.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197166,
+  "wowEncounterId": 3497,
+  "name": "The Lost Explorers",
+  "slug": "the-lost-explorers",
+  "ordinal": 2,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/inv_121_raid_achievement_tortollans.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2894.png"
+ },
+ "count": 19,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T19:12:58.325Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 6,
+    "encounter_health": {
+     "overall_percent": 1
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T19:16:01.662Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 80151,
+    "encounter_health": {
+     "overall_percent": 0.810378
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T19:18:47.593Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 78223,
+    "encounter_health": {
+     "overall_percent": 0.803504
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T19:22:03.621Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 134247,
+    "encounter_health": {
+     "overall_percent": 0.709887
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T19:34:44.596Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 101027,
+    "encounter_health": {
+     "overall_percent": 0.765955
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T19:38:20.944Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 158039,
+    "encounter_health": {
+     "overall_percent": 0.655263
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T19:42:46.456Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 237075,
+    "encounter_health": {
+     "overall_percent": 0.502603
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T19:48:49.217Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 256288,
+    "encounter_health": {
+     "overall_percent": 0.464399
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T19:54:40.869Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 148424,
+    "encounter_health": {
+     "overall_percent": 0.646497
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T19:59:24.620Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 443314,
+    "encounter_health": {
+     "overall_percent": 0.11916
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T20:09:00.669Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 158249,
+    "encounter_health": {
+     "overall_percent": 0.632283
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T20:13:12.778Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 155298,
+    "encounter_health": {
+     "overall_percent": 0.63983
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T20:16:47.841Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 97440,
+    "encounter_health": {
+     "overall_percent": 0.728916
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T20:19:37.826Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 137653,
+    "encounter_health": {
+     "overall_percent": 0.664698
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T20:23:05.931Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 258533,
+    "encounter_health": {
+     "overall_percent": 0.422394
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-21T20:28:48.511Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 448686,
+    "encounter_health": {
+     "overall_percent": 0.0856699
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-24T19:17:57.479Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 2394,
+    "encounter_health": {
+     "overall_percent": 0.999957
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-24T19:21:22.361Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 356534,
+    "encounter_health": {
+     "overall_percent": 0.309078
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-24T19:28:56.279Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 129021,
+    "encounter_health": {
+     "overall_percent": 0.639098
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-24T19:42:15.761Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 349003,
+    "encounter_health": {
+     "overall_percent": 0.168562
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-24T19:49:39.767Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 81292,
+    "encounter_health": {
+     "overall_percent": 0.725702
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

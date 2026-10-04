@@ -156,6 +156,55 @@ def _pulls(resp: dict) -> list[dict]:
     return out
 
 
+def best_steps(pulls: list[dict], until: str | None = None) -> list[dict]:
+    """The moments a guild got a boss lower than ever before, up to (not including) the kill:
+    [{"at", "best"}], best % falling. Voortgang draws a guild's way through each tread from them."""
+    steps: list[dict] = []
+    best = 100.0
+    for p in sorted(pulls, key=lambda p: p["at"]):
+        if until and p["at"] >= until:
+            break
+        pct = p.get("percent")
+        if p.get("success") or not isinstance(pct, (int, float)) or pct >= best:
+            continue
+        best = pct
+        steps.append({"at": p["at"], "best": pct})
+    return steps
+
+
+def _valid_steps(steps: object) -> list[dict] | None:
+    """Steps read back from an earlier race.json, or None when they don't look like ours."""
+    if not isinstance(steps, list):
+        return None
+    out = []
+    for s in steps:
+        if not (isinstance(s, dict) and isinstance(s.get("at"), str)
+                and isinstance(s.get("best"), (int, float)) and 0 <= s["best"] <= 100):
+            return None
+        out.append({"at": s["at"], "best": float(s["best"])})
+    return out
+
+
+def history_from(previous: dict | None, tier: Tier) -> dict[str, dict[str, dict]]:
+    """Per guild name, per boss key: the progress steps and kill time an earlier race.json of the
+    same season already holds. Killed bosses never change, so a run only fetches pulls for bosses
+    killed since. Anything that doesn't match (another season, a missing field) is ignored."""
+    if not isinstance(previous, dict) or (previous.get("season") or {}).get("id") != tier.id:
+        return {}
+    out: dict[str, dict[str, dict]] = {}
+    for g in previous.get("guilds") or []:
+        if not isinstance(g, dict) or not isinstance(g.get("name"), str):
+            continue
+        for b in g.get("bosses") or []:
+            if not isinstance(b, dict) or not b.get("defeatedAt"):
+                continue
+            steps = _valid_steps(b.get("progress"))
+            if steps is not None:
+                out.setdefault(g["name"].casefold(), {})[f"{b.get('raid')}/{b.get('slug')}"] = {
+                    "defeatedAt": b["defeatedAt"], "progress": steps}
+    return out
+
+
 def _iso(ms: float) -> str:
     return datetime.fromtimestamp(ms / 1000, UTC).isoformat(timespec="milliseconds").replace(
         "+00:00", "Z")
@@ -206,7 +255,7 @@ def race_position(mythic_kills: int, current: dict | None) -> float:
 
 
 def fetch_guild(rio: RaiderIO, guild: Guild, tier: Tier, wcl_fights: list[dict] | None = None,
-                wcl_id: int | None = None) -> dict:
+                wcl_id: int | None = None, history: dict[str, dict] | None = None) -> dict:
     profile = rio.profile(guild)
     progression = profile.get("raid_progression") or {}
     rankings = profile.get("raid_rankings") or {}
@@ -274,6 +323,21 @@ def fetch_guild(rio: RaiderIO, guild: Guild, tier: Tier, wcl_fights: list[dict] 
             "bestPercent": st["bestPercent"], "pullCount": st["pullCount"] or 0,
             "pullSource": st["pullSource"], "pulls": pulls,
         }
+    # How the guild got through each boss it killed: the new-best moments up to the kill. Taken
+    # from the previous race.json when it already has them (a kill never changes), else from the
+    # boss's pulls: Raider.IO's, or the WCL fights when only Warcraft Logs saw them.
+    history = history or {}
+    for key, st in states.items():
+        if not st["defeatedAt"]:
+            continue
+        known = history.get(key)
+        if known and known["defeatedAt"] == st["defeatedAt"]:
+            st["progress"] = known["progress"]
+        elif st["pullSource"] == "warcraftlogs" and st.get("_wcl"):
+            st["progress"] = best_steps(_wcl_pulls(st["_wcl"]), st["defeatedAt"])
+        else:
+            st["progress"] = best_steps(_pulls(rio.boss_pulls(guild, st["raid"], st["slug"])),
+                                        st["defeatedAt"])
     rosters = {}
     for key, st in states.items():
         st.pop("_wcl", None)
@@ -422,13 +486,16 @@ def season_index(config: Config) -> list[dict]:
 
 def build_race(rio: RaiderIO, config: Config, now: datetime, log=print,
                wcl: WarcraftLogs | None = None, decapi: DecAPI | None = None,
-               seasons: list[dict] | None = None) -> dict:
-    """seasons: the switch list (season_index of guilds.toml); defaults to this config's own."""
+               seasons: list[dict] | None = None, previous: dict | None = None) -> dict:
+    """seasons: the switch list (season_index of guilds.toml); defaults to this config's own.
+    previous: an earlier race.json of this season, to reuse the progress of bosses already killed."""
+    history = history_from(previous, config.tier)
     guilds = []
     for i, guild in enumerate(config.guilds, start=1):
         log(f"[{i}/{len(config.guilds)}] {guild.name} ({guild.realm})")
         gid, fights = wcl_fights_for(wcl, guild, config.tier) if wcl else (guild.wcl_id, [])
-        guilds.append(fetch_guild(rio, guild, config.tier, wcl_fights=fights, wcl_id=gid))
+        guilds.append(fetch_guild(rio, guild, config.tier, wcl_fights=fights, wcl_id=gid,
+                                  history=history.get(guild.name.casefold())))
     ranked = rank_guilds(guilds)
     firsts = first_kills(ranked)
     fame = hall_of_fame(ranked, config.tier)

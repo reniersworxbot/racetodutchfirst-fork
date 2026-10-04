@@ -45,7 +45,9 @@ jobs:
           # Optional: without them (or when WCL fails) the site runs on Raider.IO alone.
           WCL_CLIENT_ID: ${{ secrets.WCL_CLIENT_ID }}
           WCL_CLIENT_SECRET: ${{ secrets.WCL_CLIENT_SECRET }}
-        run: uv run --no-sync python -m racetodutchfirst
+        # --history: the live race.json, so bosses killed before keep their progress and their
+        # pulls aren't fetched again (if it can't be read, every killed boss's pulls are fetched).
+        run: uv run --no-sync python -m racetodutchfirst --history https://racetodutchfirst.bmiest.be/data/race.json
 
       - name: Standings in the HTML
         # The board and tier pills written into index.html for crawlers (app.js replaces

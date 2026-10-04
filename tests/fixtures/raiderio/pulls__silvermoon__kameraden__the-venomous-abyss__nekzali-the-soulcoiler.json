@@ -1,0 +1,175 @@
+{
+ "guild": {
+  "id": 2320417,
+  "name": "Kameraden",
+  "displayName": "Kameraden",
+  "faction": "alliance",
+  "realm": {
+   "id": 704,
+   "connectedRealmId": 355,
+   "wowRealmId": 549,
+   "wowConnectedRealmId": 3391,
+   "name": "Silvermoon",
+   "altName": null,
+   "slug": "silvermoon",
+   "altSlug": "silvermoon",
+   "locale": "en_GB",
+   "isConnected": false,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/silvermoon/Kameraden",
+  "logo": "https://cdn.raiderio.net/images/site/alliance_icon4.png",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 16915,
+  "difficulty": "mythic",
+  "name": "The Venomous Abyss",
+  "short_name": "VA",
+  "wowInstanceId": 3004,
+  "slug": "the-venomous-abyss",
+  "icon_url": "/images/wow/icons/large/8039569.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197163,
+  "wowEncounterId": 3470,
+  "name": "Nek'zali the Soulcoiler",
+  "slug": "nekzali-the-soulcoiler",
+  "ordinal": 0,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/inv_121_raid_achievement_priestess.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2888.png"
+ },
+ "count": 9,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-08-31T20:02:06.047Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 173988,
+    "encounter_health": {
+     "overall_percent": 0.706016
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-08-31T20:07:10.202Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 261385,
+    "encounter_health": {
+     "overall_percent": 0.534432
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-08-31T20:13:41.376Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 447107,
+    "encounter_health": {
+     "overall_percent": 0.282728
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-08-31T20:23:30.424Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 176202,
+    "encounter_health": {
+     "overall_percent": 0.67811
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-08-31T20:27:34.118Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 154445,
+    "encounter_health": {
+     "overall_percent": 0.720695
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-08-31T20:31:23.164Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 347628,
+    "encounter_health": {
+     "overall_percent": 0.441519
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-08-31T20:39:05.869Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 317210,
+    "encounter_health": {
+     "overall_percent": 0.484855
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-08-31T20:45:32.773Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 37317,
+    "encounter_health": {
+     "overall_percent": 0.958604
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-08-31T20:47:43.812Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 386321,
+    "encounter_health": {
+     "overall_percent": 0.41243
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

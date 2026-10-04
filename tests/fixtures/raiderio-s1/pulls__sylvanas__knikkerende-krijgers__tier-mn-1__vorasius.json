@@ -1,0 +1,318 @@
+{
+ "guild": {
+  "id": 1327250,
+  "name": "Knikkerende Krijgers",
+  "displayName": "Knikkerende Krijgers",
+  "faction": "alliance",
+  "realm": {
+   "id": 716,
+   "connectedRealmId": 265,
+   "wowRealmId": 628,
+   "wowConnectedRealmId": 1597,
+   "name": "Sylvanas",
+   "altName": null,
+   "slug": "sylvanas",
+   "altSlug": "sylvanas",
+   "locale": "en_GB",
+   "isConnected": true,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/sylvanas/Knikkerende%20Krijgers",
+  "logo": "https://cdn.raiderio.net/images/site/alliance_icon4.png",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 16340,
+  "difficulty": "mythic",
+  "name": "MN Tier 1 (VS / DR / MQD)",
+  "short_name": "VS/DR/MQD",
+  "wowInstanceId": 2912,
+  "slug": "tier-mn-1",
+  "icon_url": "/images/wow/icons/large/inv_achievement_raid_darkwell.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197133,
+  "wowEncounterId": 3177,
+  "name": "Vorasius",
+  "slug": "vorasius",
+  "ordinal": 1,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/inv_120_raid_voidspire_kaiju.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2734.png"
+ },
+ "count": 16,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:40:07.921Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 2178,
+    "encounter_health": {
+     "overall_percent": 0.999981
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:42:18.199Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 126047,
+    "encounter_health": {
+     "overall_percent": 0.712171
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:45:55.398Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 180001,
+    "encounter_health": {
+     "overall_percent": 0.629666
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:50:15.207Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 226998,
+    "encounter_health": {
+     "overall_percent": 0.571215
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:55:47.155Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 291761,
+    "encounter_health": {
+     "overall_percent": 0.506111
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T21:02:08.826Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 8371,
+    "encounter_health": {
+     "overall_percent": 0.999943
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-08T19:47:34.118Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 902,
+    "encounter_health": {
+     "overall_percent": 0.999999
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-08T19:54:49.360Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 161007,
+    "encounter_health": {
+     "overall_percent": 0.658898
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-08T19:59:50.091Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 373958,
+    "encounter_health": {
+     "overall_percent": 0.238916
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-08T20:09:28.708Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 235999,
+    "encounter_health": {
+     "overall_percent": 0.478166
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-08T20:14:37.907Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 150159,
+    "encounter_health": {
+     "overall_percent": 0.643774
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-08T20:18:29.444Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 121454,
+    "encounter_health": {
+     "overall_percent": 0.708134
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-08T20:21:46.179Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 250012,
+    "encounter_health": {
+     "overall_percent": 0.483014
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-08T20:28:06.097Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 374058,
+    "encounter_health": {
+     "overall_percent": 0.179731
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-12T17:50:56.278Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 966,
+    "encounter_health": {
+     "overall_percent": 0.999983
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-12T18:01:41.167Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 1129,
+    "encounter_health": {
+     "overall_percent": 0.999982
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-12T18:03:56.204Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 987,
+    "encounter_health": {
+     "overall_percent": 0.999982
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-12T18:30:23.199Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 382369,
+    "encounter_health": {
+     "overall_percent": 0.0648945
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-12T18:53:24.988Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 234641,
+    "encounter_health": {
+     "overall_percent": 0.400804
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-12T19:04:58.769Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 235174,
+    "encounter_health": {
+     "overall_percent": 0.415028
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-12T19:10:40.203Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 351225,
+    "encounter_health": {
+     "overall_percent": 0.138247
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-12T19:29:50.974Z",
+    "is_reset": false,
+    "is_success": true,
+    "duration_ms": 358822,
+    "encounter_health": {
+     "overall_percent": 0
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

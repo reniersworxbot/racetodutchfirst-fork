@@ -34,6 +34,21 @@ def write_atomic(path: Path, data: dict) -> None:
     os.replace(tmp, path)
 
 
+def read_history(client, where: str) -> dict | None:
+    """An earlier race.json, or None: a missing or broken one only means more requests."""
+    try:
+        if where.startswith("https://"):
+            resp = client.get(where, headers={"Cache-Control": "no-cache"})
+            resp.raise_for_status()
+            data = resp.json()
+        else:
+            data = json.loads(Path(where).read_text(encoding="utf-8"))
+    except Exception as exc:  # noqa: BLE001 - any failure: fetch everything instead
+        print(f"Geschiedenis: {where} niet gelezen ({exc}); alle pulls worden opgehaald.")
+        return None
+    return data if isinstance(data, dict) else None
+
+
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(prog="racetodutchfirst", description=__doc__)
     ap.add_argument("--config", type=Path, default=ROOT / "guilds.toml")
@@ -41,6 +56,9 @@ def main(argv: list[str] | None = None) -> int:
                     help="default site/data/race.json; required with --tier")
     ap.add_argument("--tier", type=Path, metavar="FILE",
                     help="an earlier season's tier file (seasons/*.toml) instead of guilds.toml's")
+    ap.add_argument("--history", metavar="FILE_OR_URL",
+                    help="an earlier race.json of this season (a path or an https URL, e.g. the live "
+                         "site's): bosses killed in it keep their progress, so their pulls aren't fetched again")
     ap.add_argument("--record", type=Path, metavar="DIR",
                     help="also save every Raider.IO response here (test fixtures)")
     args = ap.parse_args(argv)
@@ -78,9 +96,10 @@ def main(argv: list[str] | None = None) -> int:
             wcl = WarcraftLogs(transport, wcl_id, wcl_secret)
         decapi = None if args.tier else DecAPI(
             RecordingDecAPI(client, args.record) if args.record else client)
+        previous = read_history(client, args.history) if args.history else None
         try:
             race = build_race(rio, config, datetime.now(UTC), wcl=wcl, decapi=decapi,
-                              seasons=seasons)
+                              seasons=seasons, previous=previous)
         except FetchError as exc:
             print(f"Raider.IO: {exc}. {args.output} blijft ongewijzigd.", file=sys.stderr)
             return 1

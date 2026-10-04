@@ -96,7 +96,7 @@ i18n.add({
 
     'feed.h': 'Laatste kills',
     'timeline.h': 'Voortgang',
-    'timeline.cap': 'Trede = kill · tussenstap = beste pull op de huidige boss · ster = eerste kill van de race',
+    'timeline.cap': 'Trede = kill · tussenstap = nieuwe beste pull · ster = eerste kill van de race',
     'timeline.asTable': 'Toon als tabel',
     'guild.h': 'Per guild',
     'guild.cap': 'Per boss de killdatum of de beste pull; rechts elke pull op de huidige boss.',
@@ -238,7 +238,7 @@ i18n.add({
 
     'feed.h': 'Latest kills',
     'timeline.h': 'Progress',
-    'timeline.cap': 'Step = kill · part step = best pull on the current boss · star = the race\'s first kill',
+    'timeline.cap': 'Step = kill · part step = a new best pull · star = the race\'s first kill',
     'timeline.asTable': 'Show as table',
     'guild.h': 'By guild',
     'guild.cap': 'Per boss the kill date or the best pull; on the right every pull on the current boss.',

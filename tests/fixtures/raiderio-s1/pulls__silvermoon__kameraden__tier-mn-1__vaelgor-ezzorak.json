@@ -1,0 +1,538 @@
+{
+ "guild": {
+  "id": 2320417,
+  "name": "Kameraden",
+  "displayName": "Kameraden",
+  "faction": "alliance",
+  "realm": {
+   "id": 704,
+   "connectedRealmId": 355,
+   "wowRealmId": 549,
+   "wowConnectedRealmId": 3391,
+   "name": "Silvermoon",
+   "altName": null,
+   "slug": "silvermoon",
+   "altSlug": "silvermoon",
+   "locale": "en_GB",
+   "isConnected": false,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/silvermoon/Kameraden",
+  "logo": "https://cdn.raiderio.net/images/site/alliance_icon4.png",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 16340,
+  "difficulty": "mythic",
+  "name": "MN Tier 1 (VS / DR / MQD)",
+  "short_name": "VS/DR/MQD",
+  "wowInstanceId": 2912,
+  "slug": "tier-mn-1",
+  "icon_url": "/images/wow/icons/large/inv_achievement_raid_darkwell.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197135,
+  "wowEncounterId": 3178,
+  "name": "Vaelgor & Ezzorak",
+  "slug": "vaelgor-ezzorak",
+  "ordinal": 3,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/inv_120_raid_voidspire_dragonduo.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2735.png"
+ },
+ "count": 40,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-04-16T20:12:27.638Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 98261,
+    "encounter_health": {
+     "overall_percent": 0.748129
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T17:58:23.689Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 15359,
+    "encounter_health": {
+     "overall_percent": 0.999237
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:11:47.480Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 100262,
+    "encounter_health": {
+     "overall_percent": 0.742639
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:16:33.059Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 164220,
+    "encounter_health": {
+     "overall_percent": 0.690304
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:23:50.835Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 164269,
+    "encounter_health": {
+     "overall_percent": 0.60427
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:29:06.425Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 208273,
+    "encounter_health": {
+     "overall_percent": 0.579918
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:35:45.119Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 38071,
+    "encounter_health": {
+     "overall_percent": 0.903426
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:38:26.709Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 64263,
+    "encounter_health": {
+     "overall_percent": 0.816879
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:40:50.539Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 152266,
+    "encounter_health": {
+     "overall_percent": 0.678883
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:44:42.565Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 174250,
+    "encounter_health": {
+     "overall_percent": 0.620731
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:49:22.723Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 83032,
+    "encounter_health": {
+     "overall_percent": 0.758183
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:51:37.205Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 156244,
+    "encounter_health": {
+     "overall_percent": 0.621516
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T18:56:30.383Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 208298,
+    "encounter_health": {
+     "overall_percent": 0.588176
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T19:01:53.866Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 230126,
+    "encounter_health": {
+     "overall_percent": 0.533433
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T19:07:56.401Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 172253,
+    "encounter_health": {
+     "overall_percent": 0.597344
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T19:12:05.637Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 187529,
+    "encounter_health": {
+     "overall_percent": 0.594263
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T19:30:25.607Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 284250,
+    "encounter_health": {
+     "overall_percent": 0.410102
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T19:36:28.305Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 106241,
+    "encounter_health": {
+     "overall_percent": 0.719482
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T19:40:07.561Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 194318,
+    "encounter_health": {
+     "overall_percent": 0.573359
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T19:44:43.723Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 197107,
+    "encounter_health": {
+     "overall_percent": 0.565281
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T19:51:01.230Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 277535,
+    "encounter_health": {
+     "overall_percent": 0.410955
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T19:57:40.703Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 338288,
+    "encounter_health": {
+     "overall_percent": 0.329828
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T20:05:07.179Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 84245,
+    "encounter_health": {
+     "overall_percent": 0.736346
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T20:07:58.236Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 86256,
+    "encounter_health": {
+     "overall_percent": 0.740995
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T20:10:29.018Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 245841,
+    "encounter_health": {
+     "overall_percent": 0.484148
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T20:15:43.430Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 209416,
+    "encounter_health": {
+     "overall_percent": 0.564682
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T20:22:03.813Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 268248,
+    "encounter_health": {
+     "overall_percent": 0.452122
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T20:29:38.886Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 347321,
+    "encounter_health": {
+     "overall_percent": 0.408771
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T20:36:53.745Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 364934,
+    "encounter_health": {
+     "overall_percent": 0.331879
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T20:46:27.334Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 386263,
+    "encounter_health": {
+     "overall_percent": 0.320231
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-20T20:55:22.076Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 370257,
+    "encounter_health": {
+     "overall_percent": 0.355927
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T18:08:39.052Z",
+    "is_reset": true,
+    "is_success": false,
+    "duration_ms": 8816,
+    "encounter_health": {
+     "overall_percent": 0.999741
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T18:10:44.289Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 199378,
+    "encounter_health": {
+     "overall_percent": 0.578387
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T18:16:17.591Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 171086,
+    "encounter_health": {
+     "overall_percent": 0.627407
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T18:20:35.326Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 256106,
+    "encounter_health": {
+     "overall_percent": 0.422382
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T18:26:45.465Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 186231,
+    "encounter_health": {
+     "overall_percent": 0.554475
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T18:31:02.075Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 398238,
+    "encounter_health": {
+     "overall_percent": 0.31428
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T18:39:48.902Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 282234,
+    "encounter_health": {
+     "overall_percent": 0.330854
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T18:45:48.265Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 382224,
+    "encounter_health": {
+     "overall_percent": 0.288466
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T18:53:58.567Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 476263,
+    "encounter_health": {
+     "overall_percent": 0.183109
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T19:04:02.527Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 488228,
+    "encounter_health": {
+     "overall_percent": 0.131944
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-23T19:14:48.014Z",
+    "is_reset": false,
+    "is_success": true,
+    "duration_ms": 434343,
+    "encounter_health": {
+     "overall_percent": 0
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

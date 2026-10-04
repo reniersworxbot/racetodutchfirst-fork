@@ -118,6 +118,14 @@ def _trim_member(member: dict) -> dict:
     return {"character": pick}
 
 
+def _trim_pull(pull: dict) -> dict:
+    """A boss-pulls entry reduced to what race._pulls() reads (the rest is ~1 KB a pull)."""
+    d = pull.get("details") or {}
+    health = d.get("encounter_health") or {}
+    keep = {k: d.get(k) for k in ("pull_started_at", "is_reset", "is_success", "duration_ms")}
+    return {"details": {**keep, "encounter_health": {"overall_percent": health.get("overall_percent")}}}
+
+
 _ENDPOINTS = {
     "guilds/profile": "profile",
     "guilds/boss-kill": "kill",
@@ -154,6 +162,8 @@ class RecordingHTTP:
             data = resp.json()
             if isinstance(data, dict) and data.get("roster"):
                 data = {**data, "roster": [_trim_member(m) for m in data["roster"]]}
+            if isinstance(data, dict) and isinstance(data.get("pulls"), list):
+                data = {**data, "pulls": [_trim_pull(p) for p in data["pulls"]]}
             path = fixture_path(self._dir, fixture_name(url))
             path.write_text(json.dumps(data, indent=1, ensure_ascii=False) + "\n")
         return resp

@@ -100,6 +100,12 @@ Found in the live data (each has a test):
   slugs in guilds.toml. `total_bosses` for The Venomous Abyss is 8; the tier is 8 + 1 = 9.
 - World rank 0 means unranked (shown as "–").
 - Raider.IO goes down regularly (500/502/504). Check with a plain curl before "fixing" code.
+- **Progress per killed boss** (`race.best_steps()`): `boss-pulls` with `period=until_kill` also
+  answers for killed bosses; only the new-best moments before the kill are kept, as `progress`.
+  A kill never changes, so CI runs with `--history <live race.json>` (`history_from()`): bosses
+  killed in it keep their progress and only new kills cost a request. Unreadable or another
+  season's history only means every killed boss's pulls are fetched (~1 request per kill).
+  Recorded pull fixtures are trimmed to the fields `_pulls()` reads (`_trim_pull`).
 
 ## Warcraft Logs (optional)
 
@@ -217,9 +223,11 @@ Read `DESIGN.md` before UI work: it records the visual system (tokens, component
 - "Nu aan het raiden" (`liveState`) is derived in the browser: the last pull on the current
   boss or the latest kill within 60 min of `generatedAt`, *and* race.json itself under 60 min
   old; otherwise "Raidde om 21:57" for 12 h. Badges repaint every 30 s without new data.
-- Voortgang: after a guild's last kill its line rises within the tread with every new best pull on
-  its current boss (`currentProgress()`: (100 - best %) / 100 of a tread), and the line end reads
-  "6/9 · 73%" (the legend on phones). Without pull times only the best % shows, as one rise at the end.
+- Voortgang: every tread rises with each new best pull on the boss killed at its end (`progress`
+  on each killed boss in race.json) and the open tread with those on the current boss
+  (`currentProgress()`), by (100 - best %) / 100 of a tread (`treadPath()`); pulls before a tread
+  began set where it starts. The line end reads "6/9 · 73%" (the legend on phones). Without pull
+  times only the best % shows, as one rise at the end.
 - Voortgang starts in the week of the first Mythic kill (weeks counted from `tier.start`, so
   ticks stay on the reset), not at the tier start.
 

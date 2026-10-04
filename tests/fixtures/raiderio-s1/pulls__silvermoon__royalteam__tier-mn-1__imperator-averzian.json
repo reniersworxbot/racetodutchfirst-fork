@@ -1,0 +1,296 @@
+{
+ "guild": {
+  "id": 1705186,
+  "name": "RoyalTeam",
+  "displayName": "RoyalTeam",
+  "faction": "alliance",
+  "realm": {
+   "id": 704,
+   "connectedRealmId": 355,
+   "wowRealmId": 549,
+   "wowConnectedRealmId": 3391,
+   "name": "Silvermoon",
+   "altName": null,
+   "slug": "silvermoon",
+   "altSlug": "silvermoon",
+   "locale": "en_GB",
+   "isConnected": false,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/silvermoon/RoyalTeam",
+  "logo": "https://cdn.raiderio.net/images/site/alliance_icon4.png",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 16340,
+  "difficulty": "mythic",
+  "name": "MN Tier 1 (VS / DR / MQD)",
+  "short_name": "VS/DR/MQD",
+  "wowInstanceId": 2912,
+  "slug": "tier-mn-1",
+  "icon_url": "/images/wow/icons/large/inv_achievement_raid_darkwell.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197132,
+  "wowEncounterId": 3176,
+  "name": "Imperator Averzian",
+  "slug": "imperator-averzian",
+  "ordinal": 0,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/inv_120_raid_voidspire_hostgeneral.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2733.png"
+ },
+ "count": 20,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T19:29:38.662Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 119023,
+    "encounter_health": {
+     "overall_percent": 0.723272
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T19:33:44.447Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 92643,
+    "encounter_health": {
+     "overall_percent": 0.763882
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T19:37:47.126Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 66612,
+    "encounter_health": {
+     "overall_percent": 0.778858
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T19:39:46.485Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 110960,
+    "encounter_health": {
+     "overall_percent": 0.722301
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T19:42:50.585Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 243797,
+    "encounter_health": {
+     "overall_percent": 0.523866
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T19:50:00.804Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 66364,
+    "encounter_health": {
+     "overall_percent": 0.756141
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T19:52:18.216Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 245506,
+    "encounter_health": {
+     "overall_percent": 0.423443
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T19:58:55.558Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 98656,
+    "encounter_health": {
+     "overall_percent": 0.74521
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:01:20.060Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 282212,
+    "encounter_health": {
+     "overall_percent": 0.402074
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:07:46.271Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 89278,
+    "encounter_health": {
+     "overall_percent": 0.748679
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:10:21.103Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 252644,
+    "encounter_health": {
+     "overall_percent": 0.378062
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:17:07.815Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 280842,
+    "encounter_health": {
+     "overall_percent": 0.368723
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:23:05.793Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 144259,
+    "encounter_health": {
+     "overall_percent": 0.620558
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:26:27.982Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 275238,
+    "encounter_health": {
+     "overall_percent": 0.43791
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:35:07.910Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 280802,
+    "encounter_health": {
+     "overall_percent": 0.366995
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:42:03.035Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 121309,
+    "encounter_health": {
+     "overall_percent": 0.687593
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:45:17.116Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 376935,
+    "encounter_health": {
+     "overall_percent": 0.275335
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-05T20:53:12.255Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 350318,
+    "encounter_health": {
+     "overall_percent": 0.308189
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-12T18:01:59.446Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 149813,
+    "encounter_health": {
+     "overall_percent": 0.622887
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-04-12T18:06:11.450Z",
+    "is_reset": false,
+    "is_success": true,
+    "duration_ms": 421846,
+    "encounter_health": {
+     "overall_percent": 0
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

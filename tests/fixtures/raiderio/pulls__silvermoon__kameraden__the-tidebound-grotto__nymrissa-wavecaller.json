@@ -1,0 +1,153 @@
+{
+ "guild": {
+  "id": 2320417,
+  "name": "Kameraden",
+  "displayName": "Kameraden",
+  "faction": "alliance",
+  "realm": {
+   "id": 704,
+   "connectedRealmId": 355,
+   "wowRealmId": 549,
+   "wowConnectedRealmId": 3391,
+   "name": "Silvermoon",
+   "altName": null,
+   "slug": "silvermoon",
+   "altSlug": "silvermoon",
+   "locale": "en_GB",
+   "isConnected": false,
+   "realmType": "live"
+  },
+  "region": {
+   "name": "Europe",
+   "slug": "eu",
+   "short_name": "EU"
+  },
+  "subregion": {
+   "name": "Europe - English",
+   "slug": "eu-english",
+   "short_name": "EU EN",
+   "regions": [
+    {
+     "name": "Europe",
+     "slug": "eu",
+     "short_name": "EU"
+    }
+   ]
+  },
+  "path": "/guilds/eu/silvermoon/Kameraden",
+  "logo": "https://cdn.raiderio.net/images/site/alliance_icon4.png",
+  "isDefaultLogo": true
+ },
+ "raid": {
+  "type": "raid",
+  "id": 16671,
+  "difficulty": "mythic",
+  "name": "The Tidebound Grotto",
+  "short_name": "TG",
+  "wowInstanceId": 2987,
+  "slug": "the-tidebound-grotto",
+  "icon_url": "/images/wow/icons/large/achievement_boss_elitenagamale.jpg",
+  "expansion_id": 11
+ },
+ "guildPrivacy": {
+  "raidPulls": true,
+  "raidPercents": true,
+  "raidComps": true,
+  "wereRaidPullsRestricted": false,
+  "wereRaidPercentsRestricted": false,
+  "wereRaidCompsRestricted": false,
+  "shareRaidUntil": null
+ },
+ "boss": {
+  "encounterId": 197188,
+  "wowEncounterId": 3379,
+  "name": "Nymrissa Wavecaller",
+  "slug": "nymrissa-wavecaller",
+  "ordinal": 0,
+  "wingId": 0,
+  "iconUrl": "/images/wow/icons/large/achievement_boss_elitenagamale.jpg",
+  "portraitUrl": "/images/wow/encounter-journal/2849.png"
+ },
+ "count": 7,
+ "pulls": [
+  {
+   "details": {
+    "pull_started_at": "2026-09-28T18:06:16.849Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 158396,
+    "encounter_health": {
+     "overall_percent": 0.664602
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-28T18:10:04.980Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 156653,
+    "encounter_health": {
+     "overall_percent": 0.664039
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-28T18:14:46.362Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 134591,
+    "encounter_health": {
+     "overall_percent": 0.687847
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-28T18:19:10.793Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 213697,
+    "encounter_health": {
+     "overall_percent": 0.579102
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-28T18:24:21.917Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 267558,
+    "encounter_health": {
+     "overall_percent": 0.457835
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-28T18:31:53.223Z",
+    "is_reset": false,
+    "is_success": false,
+    "duration_ms": 317794,
+    "encounter_health": {
+     "overall_percent": 0.380504
+    }
+   }
+  },
+  {
+   "details": {
+    "pull_started_at": "2026-09-28T18:38:38.652Z",
+    "is_reset": false,
+    "is_success": true,
+    "duration_ms": 440646,
+    "encounter_health": {
+     "overall_percent": 0
+    }
+   }
+  }
+ ],
+ "error": null,
+ "widgetVersion": 0
+}

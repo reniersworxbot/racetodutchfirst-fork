@@ -11,10 +11,12 @@ import pytest
 from racetodutchfirst import __main__ as cli
 from racetodutchfirst.config import ConfigError, parse_config
 from racetodutchfirst.race import (
+    best_steps,
     build_race,
     fetch_guild,
     find_winner,
     first_kills,
+    history_from,
     race_position,
     rank_guilds,
 )
@@ -179,6 +181,8 @@ def test_ce_kill_is_read_from_the_configured_boss(rio, http, config):
     for boss in ("the-twin-fangs", "the-coiled-altar"):
         http.overrides[f"kill__draenor__kelderklasse__the-venomous-abyss__{boss}.json"] = {
             "kill": {"defeatedAt": "2026-10-08T21:00:00.000Z"}, "roster": []}
+    for boss in ("the-twin-fangs", "the-coiled-altar", "ulatek"):  # kills Raider.IO never saw
+        http.overrides[f"pulls__draenor__kelderklasse__the-venomous-abyss__{boss}.json"] = {"pulls": []}
     g = fetch_guild(rio, guild(config, "Kelderklasse"), config.tier)
     assert g["ceKilledAt"] == "2026-10-14T21:12:00.000Z"
     assert g["current"] is None and g["racePosition"] == 9.0
@@ -312,3 +316,45 @@ def test_realm_slug():
     g = parse_config({**BASE_CFG, "guilds": [
         {"name": "A", "realm": "Argent Dawn", "colour": "#123456"}]}).guilds[0]
     assert g.realm_slug == "argent-dawn"
+
+
+# -- progress through each tread (Voortgang) ------------------------------------
+
+def test_best_steps_keep_only_new_bests_before_the_kill():
+    pulls = [
+        {"at": "2026-09-20T18:31:00Z", "percent": 80.0, "success": False},
+        {"at": "2026-09-20T18:40:00Z", "percent": 85.0, "success": False},  # worse: no step
+        {"at": "2026-09-20T18:50:00Z", "percent": 40.0, "success": False},
+        {"at": "2026-09-27T18:38:00Z", "percent": 0.0, "success": True},    # the kill itself
+        {"at": "2026-09-28T19:00:00Z", "percent": 10.0, "success": False},  # a reclear after it
+    ]
+    assert best_steps(pulls, "2026-09-27T18:44:00Z") == [
+        {"at": "2026-09-20T18:31:00Z", "best": 80.0}, {"at": "2026-09-20T18:50:00Z", "best": 40.0}]
+
+
+def test_killed_bosses_carry_their_progress(rio, config):
+    g = fetch_guild(rio, guild(config, "Kelderklasse"), config.tier)
+    killed = [b for b in g["bosses"] if b["defeatedAt"]]
+    assert killed and all(isinstance(b.get("progress"), list) for b in killed)
+    for b in killed:
+        bests = [s["best"] for s in b["progress"]]
+        assert bests == sorted(bests, reverse=True) and all(s["at"] < b["defeatedAt"] for s in b["progress"])
+
+
+def test_history_skips_the_pulls_of_known_kills(rio, http, config):
+    first = build_race(rio, config, NOW, log=lambda *_: None)
+    asked = sum("boss-pulls" in u for u in http.urls)
+    http.urls.clear()
+    again = build_race(rio, config, NOW, log=lambda *_: None, previous=first)
+    # Only the current bosses' curves are fetched again; every killed boss came from history.
+    currents = sum(1 for g in again["guilds"] if g["current"] and g["current"]["pullSource"] == "raiderio")
+    assert sum("boss-pulls" in u for u in http.urls) == currents < asked
+    assert [b.get("progress") for g in again["guilds"] for b in g["bosses"]] == \
+        [b.get("progress") for g in first["guilds"] for b in g["bosses"]]
+
+
+def test_history_from_another_season_is_ignored(config):
+    assert history_from({"season": {"id": "s0"}, "guilds": []}, config.tier) == {}
+    assert history_from({"season": {"id": config.tier.id}, "guilds": [
+        {"name": "X", "bosses": [{"raid": "r", "slug": "b", "defeatedAt": "t", "progress": "nope"}]}]},
+        config.tier) == {}

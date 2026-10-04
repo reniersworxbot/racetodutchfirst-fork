@@ -60,7 +60,10 @@ def test_curve_comes_from_wcl_when_it_saw_more(rio, http, config):
     out = fetch_guild(rio, g, config.tier, wcl_fights=fights, wcl_id=gid)
     assert (out["current"]["pullCount"], out["current"]["pullSource"]) == (45, "warcraftlogs")
     assert len(out["current"]["pulls"]) == 45
-    assert not any("boss-pulls" in u for u in http.urls)
+    # The current boss's curve is WCL's: no Raider.IO boss-pulls for it (killed bosses still
+    # get theirs, for the progress through each tread).
+    cur = out["current"]["slug"]
+    assert not any("boss-pulls" in u and f"boss={cur}&" in u for u in http.urls)
 
 
 def test_earlier_raiderio_kill_beats_a_later_logged_one(rio, config):

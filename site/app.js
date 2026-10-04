@@ -75,7 +75,8 @@ function trackPosition(g, total) { return g.ceKilledAt ? total : Math.min(g.race
 /* Every Mythic kill of a guild, oldest first. */
 function killsOf(g) {
   return g.bosses.filter(b => b.defeatedAt)
-    .map(b => ({ at: Date.parse(b.defeatedAt), iso: b.defeatedAt, name: b.name, raid: b.raid, slug: b.slug, pullCount: b.pullCount }))
+    .map(b => ({ at: Date.parse(b.defeatedAt), iso: b.defeatedAt, name: b.name, raid: b.raid, slug: b.slug, pullCount: b.pullCount,
+      progress: Array.isArray(b.progress) ? b.progress : [] }))
     .sort((a, b) => a.at - b.at);
 }
 
@@ -347,21 +348,42 @@ function raidDays(data) {
 }
 const STAR = 'M0,-7 L2,-2.2 7,-2 3.2,1.3 4.4,6.5 0,3.6 -4.4,6.5 -3.2,1.3 -7,-2 -2,-2.2Z';
 
-/* How far a guild is through its current boss: each new best pull since its last kill, as
- * { at, frac } with frac = (100 - best %) / 100, so the step rises by that share of a tread.
- * Without pull times (an archive, WCL-only) only the best % is known: one rise at the end. */
+/* A boss's way down, as points { at, frac } with frac = (100 - best %) / 100: the share of a
+ * tread the guild had climbed on it. Killed bosses carry them as `progress` (race.py's best
+ * steps, up to the kill); the current boss gets them from its pulls here. */
+const stepPoints = steps => steps
+  .map(s => ({ at: Date.parse(s.at), frac: (100 - s.best) / 100 }))
+  .filter(p => Number.isFinite(p.at) && p.frac >= 0 && p.frac <= 1)
+  .sort((a, b) => a.at - b.at);
+
+/* How far a guild is through its current boss: every new best pull on it, and the share of a
+ * tread its best pull stands for. Without pull times (an archive, WCL-only) only the best % is
+ * known: one rise at the end. */
 function currentProgress(g) {
   const cur = g.current;
-  if (!cur || g.ceKilledAt || cur.bestPercent === null || cur.bestPercent === undefined) return { steps: [], frac: 0, cur };
-  const after = Math.max(0, ...killsOf(g).map(k => k.at));
+  if (!cur || g.ceKilledAt || cur.bestPercent === null || cur.bestPercent === undefined) return { points: [], frac: 0, cur };
   const pulls = (Array.isArray(cur.pulls) ? cur.pulls : [])
-    .map(p => ({ at: Date.parse(p.at), pct: p.percent }))
-    .filter(p => Number.isFinite(p.at) && p.at >= after && typeof p.pct === 'number')
-    .sort((a, b) => a.at - b.at);
+    .filter(p => typeof p.percent === 'number' && !p.success)
+    .sort((a, b) => Date.parse(a.at) - Date.parse(b.at));
   const steps = [];
   let best = 100;
-  for (const p of pulls) if (p.pct < best) { best = p.pct; steps.push({ at: p.at, frac: (100 - best) / 100 }); }
-  return { steps, frac: (100 - cur.bestPercent) / 100, cur };
+  for (const p of pulls) if (p.percent < best) { best = p.percent; steps.push({ at: p.at, best }); }
+  return { points: stepPoints(steps), frac: (100 - cur.bestPercent) / 100, cur };
+}
+
+/* The path through one tread, from `from` to `to` on level n: up to where the guild already stood
+ * on this boss when the tread began, then up with each new best. Returns SVG path commands. */
+function treadPath(points, from, to, n, x, y, off) {
+  let d = '';
+  const base = points.filter(p => p.at <= from).reduce((m, p) => Math.max(m, p.frac), 0);
+  if (base) d += ` V${y(n + base) + off}`;
+  let level = base;
+  for (const p of points) {
+    if (p.at <= from || p.at >= to || p.frac <= level) continue;
+    level = p.frac;
+    d += ` H${x(p.at)} V${y(n + level) + off}`;
+  }
+  return d;
 }
 const progressPct = frac => `${Math.round(frac * 100)}%`;
 
@@ -415,12 +437,19 @@ function drawTimeline(el, data) {
     order.forEach((g, i) => {
       const off = (i - (order.length - 1) / 2) * 2; // keep equal lines apart
       const kills = killsOf(g);
+      // Each tread climbs with the best pulls on the boss killed at its end; the open tread with
+      // those on the current boss. Points before the chart starts count from its left edge.
+      const cx = t => x(Math.min(Math.max(t, start), end));
       let d = `M${x(start)},${y(0) + off}`;
-      kills.forEach((k, n) => { d += ` H${x(k.at)} V${y(n + 1) + off}`; });
-      // Within the current tread: up with every new best pull on the current boss.
+      let from = start;
+      kills.forEach((k, n) => {
+        d += treadPath(stepPoints(k.progress), from, k.at, n, cx, y, off);
+        d += ` H${cx(k.at)} V${y(n + 1) + off}`;
+        from = k.at;
+      });
       const prog = currentProgress(g);
-      for (const p of prog.steps) d += ` H${x(Math.min(Math.max(p.at, start), end))} V${y(kills.length + p.frac) + off}`;
-      if (prog.frac && !prog.steps.length) d += ` H${x(end)} V${y(kills.length + prog.frac) + off}`;
+      d += treadPath(prog.points, from, Infinity, kills.length, cx, y, off);
+      if (prog.frac && !prog.points.length) d += ` H${x(end)} V${y(kills.length + prog.frac) + off}`;
       d += ` H${x(end)}`;
       const line = s('path', { d, class: 'svg-step', 'stroke-width': g.name === lead ? 3 : 2.25 });
       line.style.setProperty('--guild', colour(g.colour));
