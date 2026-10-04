@@ -34,6 +34,8 @@ NL = {
     "tile.done": "Alles verslagen",
     "tile.noPulls": "Nog geen pulls gezien",
     "tile.best": "Beste pull {pct} · {pulls}",
+    "rank.world": "Wereld {n}",
+    "rank.title": "Raider.IO-rang in {raid} Mythic: wereld, regio en realm",
     "pulls_one": "{n} pull",
     "pulls_other": "{n} pulls",
 }
@@ -64,6 +66,20 @@ def _attr(**kw: str) -> str:
     return "".join(f' {k.rstrip("_").replace("_", "-")}="{escape(v)}"' for k, v in kw.items())
 
 
+def _num(n: int) -> str:
+    return f"{n:,}".replace(",", ".")
+
+
+def _world_tag(data: dict, g: dict) -> str:
+    """Raider.IO's world rank for the CE boss's raid, as app.js's worldRankTag() draws it."""
+    raid = data["tier"]["ceBoss"]["raid"]
+    world = ((g.get("raids") or {}).get(raid) or {}).get("worldRank")
+    if not isinstance(world, int) or world < 1:
+        return ""
+    name = next((r["name"] for r in data["tier"]["raids"] if r["slug"] == raid), "")
+    return f'<span class="row__wr"{_attr(title=_t("rank.title", raid=name))}>{escape(_t("rank.world", n=_num(world)))}</span>'
+
+
 def board(data: dict) -> str:
     """The board's rows, as app.js's renderHero() draws them (minus colours and bars)."""
     winner = (data.get("winner") or {}).get("guild")
@@ -91,7 +107,7 @@ def board(data: dict) -> str:
             f'<span class="rib__acc mono"{_attr(aria_label=_t("tile.place", n=g["rank"]))}>{escape(str(g["rank"]))}</span>'
             f"{name}</div></div></div>"
             f'<span class="row__kills mono">{escape(str(g["mythicKills"]))}<small>/{escape(str(total))}</small></span>'
-            f'<div class="row__fight"><div class="row__top"><span class="row__label">{escape(label)}</span></div>'
+            f'<div class="row__fight"><div class="row__top"><span class="row__label">{escape(label)}</span>{_world_tag(data, g)}</div>'
             f'<span class="row__hp" role="img"{_attr(aria_label=label)}><i></i></span></div></li>')
     return f'<ol id="lowerThirds" class="board">{"".join(rows)}</ol>'
 

@@ -88,6 +88,7 @@
 .row__top { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 10px; min-width: 0; }
 .row__top .row__live { margin-left: 0; flex: 0 0 auto; }
 .row__label { font-size: 14px; line-height: 1.35; color: var(--paper-dim); }
+.row__wr { font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-300); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .row__hp {
   display: block; height: 10px; background: rgba(255, 255, 255, .08);
   clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%);

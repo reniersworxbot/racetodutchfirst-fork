@@ -132,6 +132,8 @@ i18n.add({
     'tile.noPulls': 'Nog geen pulls gezien',
     'tile.noPullsKept': 'Geen pulls bewaard',
     'tile.best': 'Beste pull {pct} · {pulls}',
+    'rank.world': 'Wereld {n}',
+    'rank.title': 'Raider.IO-rang in {raid} Mythic: wereld, regio en realm',
 
     'feed.empty': 'Nog geen Mythic-kills.',
 
@@ -276,6 +278,8 @@ i18n.add({
     'tile.noPulls': 'No pulls seen yet',
     'tile.noPullsKept': 'No pulls kept',
     'tile.best': 'Best pull {pct} · {pulls}',
+    'rank.world': 'World {n}',
+    'rank.title': 'Raider.IO rank in {raid} Mythic: world, region and realm',
 
     'feed.empty': 'No Mythic kills yet.',
 

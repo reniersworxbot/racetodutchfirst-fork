@@ -276,7 +276,7 @@ function renderHero(data) {
       h('span', { class: 'row__kills mono' }, String(x.mythicKills), h('small', { text: `/${total}` })),
       h('div', { class: 'row__fight' },
         // The raiding badge sits on the label line, so it never squeezes the guild name.
-        h('div', { class: 'row__top' }, h('span', { class: 'row__label', text: label }), liveBadge(x, 'row__live')),
+        h('div', { class: 'row__top' }, h('span', { class: 'row__label', text: label }), worldRankTag(data, x, 'row__wr'), liveBadge(x, 'row__live')),
         h('span', { class: 'row__hp', role: 'img', 'aria-label': label }, fill))), x);
   }));
 }
@@ -502,6 +502,28 @@ function pullStrip(data, g) {
 /* " · raider.io" kept in one piece, so the link never wraps onto a line of its own. */
 function srcTag(src) { return src ? h('span', { class: 'gs-pulls__src-wrap' }, ' · ', src) : null; }
 
+/* Raider.IO's Mythic progress ranks for the raid with the CE boss: world, region, realm.
+ * Context from outside the race; `rank` stays the place in the race itself. */
+function mainRanks(data, g) {
+  const r = (g.raids || {})[data.tier.ceBoss.raid] || {};
+  const raid = data.tier.raids.find(x => x.slug === data.tier.ceBoss.raid);
+  return { world: r.worldRank, region: r.regionRank, realm: r.realmRank, raidName: raid ? raid.name : '' };
+}
+function worldRankTag(data, g, cls) {
+  const r = mainRanks(data, g);
+  if (!r.world) return null;
+  return h('span', { class: cls, title: tr('rank.title', { raid: r.raidName }) }, tr('rank.world', { n: num(r.world) }));
+}
+function rankLine(data, g) {
+  const r = mainRanks(data, g);
+  if (!r.world) return null;
+  const more = [r.region ? `${String(g.region || '').toUpperCase()} ${num(r.region)}` : null,
+    r.realm ? `${g.realm} ${num(r.realm)}` : null].filter(Boolean);
+  return h('span', { class: 'gs-who__wr', title: tr('rank.title', { raid: r.raidName }) },
+    tr('rank.world', { n: num(r.world) }),
+    more.length ? h('span', { class: 'gs-who__wr-more', text: ` · ${more.join(' · ')}` }) : null);
+}
+
 function renderGuildSheets(data) {
   const lead = leaderName(data);
   const cols = data.tier.raids.flatMap((raid, ri) => raid.bosses.map((boss, bi) => ({ raid, boss, sep: ri > 0 && bi === 0 })));
@@ -518,7 +540,7 @@ function renderGuildSheets(data) {
     const row = h('tr', { class: g.name === lead ? 'gs-row gs-row--lead' : 'gs-row' },
       h('th', { scope: 'row', class: 'gs-who' }, h('div', { class: 'gs-who__in' },
         h('span', { class: 'gs-who__rank', text: String(g.rank), 'aria-label': tr('tile.place', { n: g.rank }) }),
-        h('span', { class: 'gs-who__name' }, url ? h('a', { href: url, rel: 'noopener', text: g.name }) : g.name, liveBadge(g, 'row__live')),
+        h('span', { class: 'gs-who__name' }, url ? h('a', { href: url, rel: 'noopener', text: g.name }) : g.name, rankLine(data, g), liveBadge(g, 'row__live')),
         h('span', { class: 'gs-who__k' }, String(g.mythicKills), h('small', { text: `/${data.tier.totalBosses}` })))),
       ...cols.map(({ raid, boss, sep }) => {
         const td = guildCell(g, raid, boss, isArchive(data));
