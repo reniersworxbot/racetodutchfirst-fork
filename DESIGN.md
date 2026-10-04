@@ -19,7 +19,7 @@ colors:
   jade-ghost: "rgba(63,217,164,.13)"
   gold: "#d8b263"
   rose: "#d98b8b"
-  live-red: "#e5484d"
+  live-red: "#c93339"
   void-glow: "rgba(150,90,255,.32)"
   hero-dusk: "#1b1030"
   hero-deep-teal: "#0d1a1c"
@@ -279,7 +279,7 @@ A near-black ink ramp with one cool green voice, one warm gold voice and the gui
 - **Podium Gold** (gold): [family rule, proved here] the leader, the race's first kill and the winner, and nothing else. The leader's ribbon outline and kill count (on the board and in Per guild), the star on a first kill (Per guild cells and Voortgang), in the Hall of fame the star on a boss-head tab, the first-kill pill and the first-kill counts in the Raiders table, the winner banner's 2px border, trophy and label.
 
 ### Tertiary
-- **Broadcast Red** (live-red): [race; candidate family] on air only: the LIVE block in the bug while a guild is really raiding, and the "Nu live" strip. Lives on `:root` in splash.css because tokens.css is a byte copy of the overlay's; move it to tokens.css when the overlay adopts it.
+- **Broadcast Red** (live-red): [family] on air only: the LIVE block in the bug while a guild is really raiding, and the "Nu live" strip. #c93339 (darkened from #e5484d on 2026-10-04) so paper text on it reaches 4.6:1; it comes from tokens.css, the overlay's copy.
 - **Faded Rose** (rose): [family] warnings that are not errors: the error capsule's 1px border and the late-data update line (top bar and footer).
 
 ### Neutral
@@ -302,7 +302,7 @@ A near-black ink ramp with one cool green voice, one warm gold voice and the gui
 WoW's class colours are game data, like the guild colours: held in halloffame.js, not tokens, and applied only as the 3px bar along the foot of a raid-frame cell (`--cls`). Death Knight #c41e3a, Demon Hunter #a330c9, Druid #ff7c0a, Evoker #33937f, Hunter #aad372, Mage #3fc7eb, Monk #00ff98, Paladin #f48cba, Priest paper (#eef1f5, never pure white), Rogue #fff468, Shaman #0070dd, Warlock #8788ee, Warrior #c69b6d; an unknown class falls back to ink-300. Monk green sits close to jade; that is accepted because the colour only ever appears as the foot bar of a named raider cell, where it cannot be read as the race brand.
 
 ### Named Rules
-**The Gold Is Earned Rule.** Gold marks the leader, the race's first kill and the winner. A tag, a hover, a late-data note or a "progress" state is never gold, and a raid that doesn't count earns no gold (its first kill is a grey pill).
+**The Gold Is Earned Rule.** [family] Gold marks something earned; here the leader, the race's first kill and the winner (the overlay adds a new best). A tag, a hover, a late-data note or a "progress" state is never gold, and a raid that doesn't count earns no gold (its first kill is a grey pill).
 
 **The Jade Is the Race Rule.** Jade is the race brand, live state and the CE marker. Guild colours (from guilds.toml) stay clear of jade and gold; class colours are game data confined to the raid-frame foot bar.
 
@@ -423,7 +423,7 @@ The overlay's angled card (1px outline, ink-800 body, 22px notch at the bottom r
 ## Do's and Don'ts
 
 ### Do:
-- **Do** take colours, fonts and radii from tokens.css variables only; the one exception is `--live-red` on `:root` in splash.css until the overlay adopts it. tokens.css stays a byte copy of the overlay's.
+- **Do** take colours, fonts and radii from tokens.css variables only. tokens.css stays a byte copy of the overlay's (it carries Outfit 800 and `--live-red`).
 - **Do** keep gold for the leader, the race's first kill and the winner; jade for the race brand, live state and the CE marker.
 - **Do** show the leader's current boss (the CE boss once someone won) as a self-hosted alpha cut-out trimmed to the body, with nothing drawn on it, never past 2x its natural size.
 - **Do** mark a guild with a 1-2px outline, a rank block or a slanted chip in its colour, and draw its best effort in that colour.

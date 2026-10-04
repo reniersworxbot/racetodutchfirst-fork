@@ -82,19 +82,9 @@
       "live-red": {
         "role": "tertiary",
         "displayName": "Broadcast Red",
-        "scope": "race (candidate family)",
-        "definedIn": "site/splash.css :root, not tokens.css",
-        "tonalRamp": [
-          "oklch(15% 0.19 23)",
-          "oklch(25% 0.19 23)",
-          "oklch(35% 0.19 23)",
-          "oklch(48% 0.19 23)",
-          "oklch(60% 0.19 23)",
-          "oklch(72% 0.19 23)",
-          "oklch(84% 0.19 23)",
-          "oklch(95% 0.19 23)"
-        ],
-        "purpose": "On air only: LIVE block in the bug and the Nu live strip."
+        "scope": "family",
+        "definedIn": "site/tokens.css (byte copy of the overlay's)",
+        "purpose": "On air only: LIVE block in the bug and the Nu live strip. #c93339 (darkened from #e5484d) so paper on it is 4.6:1."
       },
       "rose": {
         "role": "tertiary",
@@ -463,7 +453,7 @@
       "refersTo": "bug-title",
       "description": "[race] Flush square blocks: LIVE (only while a guild raids), the name, the race day in jade.",
       "html": "<div class=\"ds-bug\"><span class=\"ds-bug__live\"><span class=\"ds-bug__dot\"></span>Live</span><span class=\"ds-bug__title\">Race to Dutch First</span><span class=\"ds-bug__day\">Dag 47</span></div>",
-      "css": ".ds-bug{display:flex;align-items:stretch;height:40px;font-family:var(--f-display)} .ds-bug>span{display:flex;align-items:center;font-weight:800;white-space:nowrap;text-transform:uppercase} .ds-bug__live{gap:8px;padding:0 18px;background:#e5484d;color:var(--paper);font-size:13px;letter-spacing:.14em} .ds-bug__dot{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.27);box-shadow:0 0 0 2px var(--paper);animation:ds-pulse 1.6s var(--ease) infinite} @keyframes ds-pulse{50%{opacity:.3}} .ds-bug__title{padding:0 22px;background:var(--ink-900);color:var(--paper);font-size:14px;letter-spacing:.1em} .ds-bug__day{padding:0 18px;background:var(--jade);color:var(--ink-900);font-size:14px;letter-spacing:.06em;font-variant-numeric:tabular-nums}"
+      "css": ".ds-bug{display:flex;align-items:stretch;height:40px;font-family:var(--f-display)} .ds-bug>span{display:flex;align-items:center;font-weight:800;white-space:nowrap;text-transform:uppercase} .ds-bug__live{gap:8px;padding:0 18px;background:#c93339;color:var(--paper);font-size:13px;letter-spacing:.14em} .ds-bug__dot{width:8px;height:8px;border-radius:999px;background:rgba(255,255,255,.27);box-shadow:0 0 0 2px var(--paper);animation:ds-pulse 1.6s var(--ease) infinite} @keyframes ds-pulse{50%{opacity:.3}} .ds-bug__title{padding:0 22px;background:var(--ink-900);color:var(--paper);font-size:14px;letter-spacing:.1em} .ds-bug__day{padding:0 18px;background:var(--jade);color:var(--ink-900);font-size:14px;letter-spacing:.06em;font-variant-numeric:tabular-nums}"
     },
     {
       "name": "Language Switch",
@@ -630,7 +620,7 @@
       }
     ],
     "dos": [
-      "Do take colours, fonts and radii from tokens.css variables only; the one exception is `--live-red` on `:root` in splash.css until the overlay adopts it. tokens.css stays a byte copy of the overlay's.",
+      "Do take colours, fonts and radii from tokens.css variables only. tokens.css stays a byte copy of the overlay's (it carries Outfit 800 and `--live-red`).",
       "Do keep gold for the leader, the race's first kill and the winner; jade for the race brand, live state and the CE marker.",
       "Do show the leader's current boss (the CE boss once someone won) as a self-hosted alpha cut-out trimmed to the body, with nothing drawn on it, never past 2x its natural size.",
       "Do mark a guild with a 1-2px outline, a rank block or a slanted chip in its colour, and draw its best effort in that colour.",

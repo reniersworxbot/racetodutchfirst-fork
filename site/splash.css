@@ -1,6 +1,3 @@
-/* tokens.css (a byte copy of the overlay's) loads Outfit 300-700; the poster type is 800. */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@800&display=swap');
-
 /* =====================================================================
    Splash hero (design language v2 for the race site), sketch A: the
    overlay's language (tokens.css, ribbons, slanted pills, jade + gold)
@@ -23,10 +20,6 @@
   content: ""; position: absolute; inset: auto 0 0 0; height: 260px; pointer-events: none;
   background: linear-gradient(transparent, var(--ink-900) 92%);
 }
-
-/* tokens.css is a byte copy of the overlay's, so the broadcast red lives here until the overlay
-   adopts it: the LIVE block's colour and nothing else. */
-:root { --live-red: #e5484d; }
 
 /* ---- top --------------------------------------------------------------- */
 .sp__top {

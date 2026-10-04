@@ -2,7 +2,6 @@
    v2, as the hero: the broadcast bug, the poster question with "Cutting Edge?" in jade, the
    board as ribbons with a raid-frame bar, the leader's current boss in the jade/void glow.
    Gold for the leader only. */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@800&display=swap');
 
 html, body { width: 1200px; height: 630px; background: var(--ink-900); }
 .og {

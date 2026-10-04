@@ -178,8 +178,8 @@ Read `DESIGN.md` before UI work: it records the visual system (tokens, component
   come from an external API.
 - The CSP is `'self'` + Google Fonts only, and no `'unsafe-inline'`: so no `style="…"` in
   HTML and no `setAttribute('style')`. Set custom properties with `el.style.setProperty()`.
-- Colours, fonts and radii come from tokens.css variables (one exception: `--live-red` for the
-  LIVE block sits on :root in splash.css until the overlay's tokens.css adopts it). Guild colours come from
+- Colours, fonts and radii come from tokens.css variables (a byte copy of the overlay's css/tokens.css,
+  which also carries Outfit 800 and `--live-red`). Guild colours come from
   guilds.toml (validated `#rrggbb` in config.py *and* app.js) as `--guild` / `--acc`.
   Keep them clear of jade and gold, which mean leader / first kill / winner.
 - Look: design language v2 (direction contract in `.impeccable/surfaces/site-index-html.md`,
