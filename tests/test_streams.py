@@ -52,7 +52,8 @@ def test_recorded_answers(config):
 
 def test_offline_channels_cost_one_request(config):
     _out, api, sleeps = _run(config)
-    assert api.requests == len(sleeps) == 3 + 3  # 3 uptimes, 3 details for the live one
+    # one uptime per channel, then 3 details (game, title, viewers) for the one live channel
+    assert api.requests == len(sleeps) == len(config.streams.channels) + 3
     assert all(s >= 0.3 for s in sleeps)
 
 
