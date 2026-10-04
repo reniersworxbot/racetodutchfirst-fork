@@ -161,6 +161,29 @@ details[open] > .disclose::before { transform: rotate(45deg); }
 /* The line ends carry the names on wide screens; the legend is for phones. */
 @media (min-width: 600px) { #timelineLegend { display: none; } }
 
+/* Voortgang full screen: the box (bar, chart, legend) covers the screen; the chart takes the
+   rest of the height and redraws to it. Outside full screen only the button shows in the bar. */
+.tl-bar { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-bottom: 8px; }
+.tl-bar__title { display: none; }
+.tl-full__icon { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: square; }
+.tl-box.is-full {
+  position: fixed; inset: 0; z-index: 60; display: flex; flex-direction: column; gap: 10px;
+  padding: max(16px, env(safe-area-inset-top)) max(24px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom)) max(24px, env(safe-area-inset-left));
+  background: var(--ink-900);
+}
+.tl-box.is-full .tl-bar { justify-content: space-between; margin-bottom: 0; }
+.tl-box.is-full .tl-bar__title { display: block; font-size: clamp(18px, 2vw, 26px); font-weight: 800; text-transform: uppercase; color: var(--paper); }
+.tl-box.is-full .timeline-chart { flex: 1; min-height: 0; overflow: hidden; }
+.tl-box.is-full .legend { margin-top: 0; }
+body.has-full { overflow: hidden; }
+/* On a big screen the labels grow a step with the chart. */
+@media (min-width: 900px) {
+  .tl-box.is-full .svg-axis { font-size: 13px; }
+  .tl-box.is-full .svg-end { font-size: 16px; }
+  .tl-box.is-full .svg-end__n, .tl-box.is-full .svg-end__pct { font-size: 14px; }
+}
+@media (max-width: 600px) { .tl-box.is-full { padding-left: max(12px, env(safe-area-inset-left)); padding-right: max(12px, env(safe-area-inset-right)); } }
+
 /* ---- Per guild: a row per guild, a cell per boss, then its current-boss pulls ---------- */
 .gs-wrap { position: relative; overflow-x: auto; margin: -6px; } /* relative: clips the cells' visually-hidden text too */
 /* Fixed layout: the guild and pulls columns keep their width, the nine bosses share the rest. */

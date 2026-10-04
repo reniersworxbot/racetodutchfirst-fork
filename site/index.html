@@ -76,8 +76,14 @@
 <section class="view" aria-labelledby="timelineHeading">
     <h2 id="timelineHeading" class="view__title" data-i18n="timeline.h">Voortgang</h2>
     <p class="section-caption" data-i18n="timeline.cap">Trede = kill · tussenstap = nieuwe beste pull · ster = eerste kill van de race</p>
-    <div id="timeline" class="chart timeline-chart"></div>
-    <ul id="timelineLegend" class="legend"></ul>
+    <div id="timelineBox" class="tl-box">
+      <div class="tl-bar">
+        <span class="tl-bar__title" data-i18n="timeline.h">Voortgang</span>
+        <button id="timelineFull" type="button" class="pill pill--action tl-full" aria-pressed="false" aria-controls="timelineBox"><span id="timelineFullLabel">Volledig scherm</span></button>
+      </div>
+      <div id="timeline" class="chart timeline-chart"></div>
+      <ul id="timelineLegend" class="legend"></ul>
+    </div>
     <details class="as-table">
       <summary class="disclose" data-i18n="timeline.asTable">Toon als tabel</summary>
       <div class="table-wrap"><table id="timelineTable" class="data-table"></table></div>

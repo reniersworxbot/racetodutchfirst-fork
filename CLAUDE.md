@@ -228,6 +228,10 @@ Read `DESIGN.md` before UI work: it records the visual system (tokens, component
   (`currentProgress()`), by (100 - best %) / 100 of a tread (`treadPath()`); pulls before a tread
   began set where it starts. The line end reads "6/9 · 73%" (the legend on phones). Without pull
   times only the best % shows, as one rise at the end.
+- Voortgang has a "Volledig scherm" button (`setTimelineFull()`): the box (bar, chart, legend) covers
+  the screen, via the Fullscreen API where the browser has it for elements, else as a fixed overlay
+  (iPhone); the chart then takes the box's height and redraws on width *and* height changes; Esc,
+  the button or leaving full screen closes it; on a phone it asks for landscape where allowed.
 - Voortgang starts in the week of the first Mythic kill (weeks counted from `tier.start`, so
   ticks stay on the reset), not at the tier start.
 

@@ -80,14 +80,16 @@ function killsOf(g) {
     .sort((a, b) => a.at - b.at);
 }
 
-/* Charts redraw at their container's width. */
+/* Charts redraw at their container's width, and at its height too while it fills the screen
+   (a full-screen chart's box has a fixed height, so redrawing never changes it). */
 const charts = new Map();
 const resizer = typeof ResizeObserver === 'function'
   ? new ResizeObserver(entries => {
     for (const e of entries) {
       const c = charts.get(e.target);
-      const w = Math.floor(e.contentRect.width);
-      if (c && w > 0 && w !== c.width) { c.width = w; c.draw(w); }
+      const w = Math.floor(e.contentRect.width), hh = Math.floor(e.contentRect.height);
+      const full = !!e.target.closest('.is-full');
+      if (c && w > 0 && (w !== c.width || (full && hh !== c.height))) { c.width = w; c.height = hh; c.draw(w); }
     }
   })
   : null;
@@ -400,7 +402,9 @@ function drawTimeline(el, data) {
     // Wide: guild names at the line ends instead of a legend; narrow: only the count there
     // and the legend below (#timelineLegend shows on phones only).
     const narrow = w < 560;
-    const H = narrow ? 280 : 380;
+    // Full screen: as tall as the box allows (its 18px of padding off); else a fixed height.
+    const full = el.closest('.is-full');
+    const H = full ? Math.max(240, Math.floor(el.clientHeight) - 18) : narrow ? 280 : 380;
     const m = { l: narrow ? 36 : 46, r: narrow ? 42 : 250, t: 12, b: 26 };
     const x = tm => m.l + ((tm - start) / (end - start)) * (w - m.l - m.r);
     const y = k => m.t + (1 - k / total) * (H - m.t - m.b);
@@ -485,7 +489,56 @@ function drawTimeline(el, data) {
   });
 }
 
+/* "Volledig scherm": the chart (with its legend) over the whole screen. The Fullscreen API where
+   the browser has it for elements; otherwise (iPhone) the box covers the window. Esc, the button
+   or leaving full screen closes it. On a phone it asks for landscape where that's allowed. */
+let timelineNative = false;
+function setTimelineFull(on) {
+  const box = $('#timelineBox'), btn = $('#timelineFull');
+  if (!box || on === box.classList.contains('is-full')) return;
+  box.classList.toggle('is-full', on);
+  document.body.classList.toggle('has-full', on);
+  btn.setAttribute('aria-pressed', String(on));
+  paintTimelineButton();
+  if (on && box.requestFullscreen && document.fullscreenEnabled) {
+    box.requestFullscreen().then(() => {
+      timelineNative = true;
+      if (screen.orientation && screen.orientation.lock && innerWidth < 600) screen.orientation.lock('landscape').catch(() => {});
+    }).catch(() => { timelineNative = false; });
+  } else if (!on && timelineNative && document.fullscreenElement) {
+    timelineNative = false;
+    document.exitFullscreen().catch(() => {});
+  }
+  btn.focus();
+  redrawTimeline();
+}
+function paintTimelineButton() {
+  const on = $('#timelineBox').classList.contains('is-full');
+  $('#timelineFullLabel').textContent = tr(on ? 'timeline.close' : 'timeline.full');
+  const icon = s('svg', { class: 'tl-full__icon', viewBox: '0 0 16 16', 'aria-hidden': 'true' },
+    s('path', { d: on ? 'M3 3l10 10M13 3L3 13' : 'M1 6V1h5M10 1h5v5M15 10v5h-5M6 15H1v-5' }));
+  const btn = $('#timelineFull');
+  const old = btn.querySelector('.tl-full__icon');
+  if (old) old.replaceWith(icon); else btn.prepend(icon);
+}
+function redrawTimeline() {
+  const el = $('#timeline'), c = charts.get(el);
+  if (c) requestAnimationFrame(() => { c.width = Math.floor(el.clientWidth); c.height = Math.floor(el.clientHeight); c.draw(c.width); });
+}
+document.addEventListener('fullscreenchange', () => {
+  if (!document.fullscreenElement && timelineNative) { timelineNative = false; setTimelineFull(false); }
+});
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && $('#timelineBox') && $('#timelineBox').classList.contains('is-full')) setTimelineFull(false);
+});
+
 function renderTimeline(data) {
+  const btn = $('#timelineFull');
+  if (btn && !btn.dataset.wired) {
+    btn.dataset.wired = '1';
+    btn.addEventListener('click', () => setTimelineFull(!$('#timelineBox').classList.contains('is-full')));
+  }
+  if (btn) paintTimelineButton();
   drawTimeline($('#timeline'), data);
   $('#timelineLegend').replaceChildren(...data.guilds.map(g => setGuild(h('li', {},
     h('span', { class: 'swatch', 'aria-hidden': 'true' }),
