@@ -31,7 +31,7 @@ site/                        static, no build step, no framework, no CDN scripts
   index.html                 splash hero (top bar, title, Nu live when someone streams, board, kills ticker), then Voortgang, Per guild, Hall of fame, footer
   i18n.js                    NL + EN strings and the global `i18n` (loaded before app.js)
   app.js                     loads data/race.json, draws everything (inline SVG)
-  og.html, og.css, og.js     the 1200x630 share image page; scripts/og-image.sh screenshots it to og.png
+  og.html, og.css, og.js     the 1200x630 share image page (v2, as the hero: bug, poster question, ribbons, the hero boss); scripts/og-image.sh screenshots it to og.png
   og.png                     committed fallback share image; CI replaces it in the Pages artifact
   splash.css                 the hero (design language v2: the overlay's language as a raid poster)
   style.css                  the sections below the hero
@@ -251,7 +251,9 @@ committed archive made once with
   never live (`liveState` returns null), the update line says when it closed and never turns
   late, Dag N stops on the win (or the season's end), the title reads "Wie haalde als eerste", Per guild's
   last column is "Eindstand" (a guild's last boss says "gestopt", not "volgende"), and the footer
-  drops Warcraft Logs (`#srcWcl`) when the archive has no WCL.
+  drops Warcraft Logs (`#srcWcl`) when the archive has no WCL, and DecAPI (`#srcLive`) always.
+- Footer sources: Raider.IO, Warcraft Logs, DecAPI and Blizzard (the boss renders), each named once;
+  `#wclNote` says how the two are merged (or that WCL was missing), `#pullNote` which pulls are absent.
 - `splitSideRaids()` drops `counts: false` raids from `tier.raids` and the guilds' `bosses` right
   after the fetch, so every chart and table counts only the race; they come back as one line
   under the winner banner (`#sideRaids`).

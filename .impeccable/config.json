@@ -20,6 +20,15 @@
         ],
         "createdAt": "2026-10-04T01:21:14.953Z",
         "reason": "User chose mockup B (2026-10-04), whose raid frame puts the class colour as a 3px bar along the foot of each raider cell, like WoW's raid frames; a bottom bar, not a side stripe on a card"
+      },
+      {
+        "rule": "radial-spotlight-glow",
+        "value": "*",
+        "files": [
+          "site/og.html"
+        ],
+        "createdAt": "2026-10-04T06:24:21.144Z",
+        "reason": "Claude decided: the share image reproduces the hero, whose jade/void glow behind the boss render is the documented Hero atmosphere in DESIGN.md (same gradients as .sp in splash.css), not a decorative spotlight"
       }
     ]
   }

@@ -579,6 +579,10 @@ function render(data) {
   renderGuildSheets(data);
   $('#wclNote').textContent = isArchive(data) && !(data.sources && data.sources.warcraftlogs) ? tr('wcl.archive')
     : data.sources && data.sources.warcraftlogs ? tr('wcl.on') : tr('wcl.off');
+  // Footer sources: DecAPI only where streams are checked (never in an archive); the last line
+  // names Raider.IO alone when the season has no Warcraft Logs.
+  $('#srcLive').hidden = isArchive(data) || !data.streams;
+  $('#pullNote').textContent = tr(isArchive(data) && !(data.sources && data.sources.warcraftlogs) ? 'footer.src4Past' : 'footer.src4');
   renderUpdated();
   // Other scripts draw their own sections from the same data (halloffame.js).
   document.dispatchEvent(new CustomEvent('race:data', { detail: data }));
