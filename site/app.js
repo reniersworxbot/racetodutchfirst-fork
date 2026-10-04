@@ -13,7 +13,9 @@ const DATA_URL = 'data/race.json';
 const SITE_URL = 'https://racetodutchfirst.bmiest.be/';
 const SEASON_FILE = /^data\/[a-z0-9-]+\.json$/; // an archived season's file, from race.json's `seasons`
 const REFRESH_MS = 5 * 60 * 1000;
-const STALE_MIN = 150; // the fetcher runs every 30 min on raid evenings, else every 2 h
+// The fetcher's schedule: a copy of the cron lines in .github/workflows/site.yml (UTC, minute and
+// hour fields only; test_site.py keeps them equal). GitHub may start a run late or skip it.
+const CRON = ['7,37 17-23 * * *', '7 0-16/2 * * *'];
 const LIVE_MIN = 60;   // a pull or kill this close to the fetch = raiding now
 const RECENT_H = 12;   // "raided at 21:57" for this long afterwards
 const FEED_SIZE = 8;
@@ -559,24 +561,46 @@ function renderUpdated() {
   if (!race) return;
   const el = $('#updated');
   if (isArchive(race)) {
-    el.classList.remove('updated--late');
     el.textContent = race.season.end ? tr('upd.archived', { date: day(race.season.end) }) : tr('upd.archivedNoDate');
     el.title = '';
     liveBadges.forEach(paintLive);
     return;
   }
-  const min = Math.max(0, Math.round((Date.now() - Date.parse(race.generatedAt)) / 60000));
-  let when;
-  if (min < 1) when = tr('upd.now');
-  else if (min < 60) when = i18n.tn('upd.min', min);
-  else if (min < 48 * 60) when = i18n.tn('upd.hour', Math.round(min / 60));
-  else when = i18n.tn('upd.day', Math.round(min / 1440));
-  el.replaceChildren(h('span', { class: 'upd__pre', text: tr('upd.pre') }), ' ', when);
-  el.title = dayTime(race.generatedAt);
-  const late = min > STALE_MIN;
-  el.classList.toggle('updated--late', late);
-  if (late) el.append(tr('upd.late'));
+  // When the data was fetched, exactly, and when the schedule normally fetches it next.
+  const at = race.generatedAt;
+  const today = new Date(at).toDateString() === new Date().toDateString();
+  el.textContent = today ? tr('upd.at', { time: clock(at) }) : tr('upd.atDay', { day: day(at), time: clock(at) });
+  const next = nextRun(new Date());
+  if (next) el.append(` · ${tr('upd.next', { time: clock(next) })}`);
+  el.title = dayTime(at);
   liveBadges.forEach(paintLive);
+}
+
+/* The values a cron field allows: *, n, a-b, lists and /steps (enough for site.yml's lines). */
+function cronValues(field, max) {
+  const out = new Set();
+  for (const part of field.split(',')) {
+    const [range, step] = part.split('/');
+    const [a, b] = range === '*' ? [0, max] : range.split('-').map(Number);
+    for (let v = a; v <= (b ?? (step ? max : a)); v += Number(step) || 1) out.add(v);
+  }
+  return out;
+}
+
+// The first scheduled run after `from`, as an ISO string (the cron lines are UTC).
+function nextRun(from) {
+  let best = null;
+  for (const line of CRON) {
+    const [mins, hours] = line.split(' ');
+    const ms = cronValues(mins, 59), hs = cronValues(hours, 23);
+    for (let d = 0; d < 2; d++) {
+      for (const hr of hs) for (const mi of ms) {
+        const t = Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), from.getUTCDate() + d, hr, mi);
+        if (t > from.getTime() && (best === null || t < best)) best = t;
+      }
+    }
+  }
+  return best === null ? null : new Date(best).toISOString();
 }
 
 /* ---- load ------------------------------------------------------------------------------------- */

@@ -280,7 +280,7 @@ A near-black ink ramp with one cool green voice, one warm gold voice and the gui
 
 ### Tertiary
 - **Broadcast Red** (live-red): [family] on air only: the LIVE block in the bug while a guild is really raiding, and the "Nu live" strip. #c93339 (darkened from #e5484d on 2026-10-04) so paper text on it reaches 4.6:1; it comes from tokens.css, the overlay's copy.
-- **Faded Rose** (rose): [family] warnings that are not errors: the error capsule's 1px border and the late-data update line (top bar and footer).
+- **Faded Rose** (rose): [family] warnings that are not errors: the error capsule's 1px border.
 
 ### Neutral
 - **Raid Night Black** (ink-900): page ground, bug name block, ticker band, inactive language block, the pinned guild column's ground, ink text on jade.
@@ -366,7 +366,7 @@ Flat. No drop shadows anywhere. Depth comes from the ink ramp (ink-900 ground, i
 ## Components
 
 ### Broadcast bug [race]
-Flush square blocks at 40px (34px under 900px), no gaps: LIVE (live-red, pulsing dot, hidden unless a guild is raiding), the name on ink-900, "Dag N" in jade (tier start = day 1, stops on the winning day). The update time sits beside it in ink-200 (rose when late).
+Flush square blocks at 40px (34px under 900px), no gaps: LIVE (live-red, pulsing dot, hidden unless a guild is raiding), the name on ink-900, "Dag N" in jade (tier start = day 1, stops on the winning day). The update line sits beside it in paper-dim: when the data was fetched ("Bijgewerkt om 13:42") and when the schedule normally fetches next ("volgende normaal om 14:07"), never coloured.
 
 ### Language switch [race]
 NL | EN as two flush blocks at the bug's height, label type at 13px/800; the active one solid jade with ink text, the other ink-900 with ink-300 text (paper on hover). Dutch is the default.

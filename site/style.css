@@ -221,9 +221,6 @@ details[open] > .disclose::before { transform: rotate(45deg); }
   display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--ink-300); max-width: 90ch;
 }
 .updated { font-size: 15px; color: var(--paper-dim); }
-/* Late data is muted rose, not alarm red and never gold (gold is earned): nothing is broken,
-   the data just hasn't caught up. */
-.updated.updated--late { color: var(--rose); }
 
 /* ---- responsive ------------------------------------------------------------------ */
 @media (max-width: 720px) {
