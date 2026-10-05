@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Voortgang varianten 2</title>
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="mocks.css">
+</head>
+<body>
+<main class="mk">
+  <header class="mk-head">
+    <h1 class="view__title">Voortgang: ronde 2</h1>
+    <p class="section-caption">Vier nieuwe vormen, uit hoe andere races het tonen: de Tour de France (bergprofiel, tijdsverschil in het klassement), F1 (gapper graph) en de Race to World First-trackers van Method.gg en Archon (pulls per boss, voortgang per inspanning). Alles op race.json van vandaag. Ronde 1 (A–D) staat op <a href="./">de vorige pagina</a>.</p>
+  </header>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>E</b><span>Klimprofiel</span></div>
+    <p class="mk-what">De raid als bergetappe. Elke boss is een klim; hoe steil hangt af van hoeveel pulls hij kostte (mediaan van de guilds die hem versloegen), met een categorie zoals in de Tour: 4 tot HC. Ula'tek is de top. De guilds zijn renners op de weg, met hun achterstand in dagen.</p>
+    <div id="vE" class="mk-chart"></div>
+    <p class="mk-pro"><b>Sterk:</b> in één beeld waar iedereen staat én hoe zwaar het nog wordt; het meest "poster" en het meest WoW-race. <b>Let op:</b> de volgorde van de bosses is die van de eerste kills in de race; een guild die in een andere volgorde killt, staat op zijn aantal kills, niet op een bepaalde boss.</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>F</b><span>Tijdsachterstand</span></div>
+    <p class="mk-what">Zoals het klassement in de Tour: per punt in de race (x = bosses verslagen) hoeveel dagen later een guild daar aankwam dan de eerste. De bovenrand is "eerste op dit punt". Een lijn die stijgt maakt tijd goed.</p>
+    <div id="vF" class="mk-chart"></div>
+    <p class="mk-pro"><b>Sterk:</b> één getal per guild dat iedereen snapt ("+9 dagen"), en je ziet of het gat groeit of krimpt. <b>Zwak:</b> abstracter dan een kalender.</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>G</b><span>Inspanning</span></div>
+    <p class="mk-what">Voortgang tegen het totaal aantal pulls in plaats van de kalender, zoals de RWF-trackers "active fight time" gebruiken. Een guild die 2 avonden raidt en een die er 4 raidt worden zo eerlijk vergeleken: wie haalt het meest uit een pull?</p>
+    <div id="vG" class="mk-chart"></div>
+    <p class="mk-pro"><b>Sterk:</b> de enige vergelijking die los staat van hoeveel avonden een guild raidt. <b>Zwak:</b> pulls die Raider.IO en Warcraft Logs niet zagen ontbreken (een kill met "1 pull" maakt een guild hier te snel).</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>H</b><span>Pulls per boss</span></div>
+    <p class="mk-what">Zoals Method.gg's "pull count comparison": per boss een balk per guild met het aantal pulls tot de kill (ster = eerste kill van de race). Een open balk is de boss waar een guild nu op zit, met de beste pull.</p>
+    <div id="vH" class="mk-chart mk-chart--bare"></div>
+    <p class="mk-pro"><b>Sterk:</b> heel leesbaar, per boss in één blik wie er het langst op vast zat. <b>Zwak:</b> geen tijd; dit is eerder een tweede blik naast E, F of G dan de hoofdgrafiek.</p>
+  </section>
+</main>
+<script src="../../bossart.js"></script>
+<script src="mocks.js"></script>
+<script src="mocks2.js"></script>
+</body>
+</html>

@@ -24,8 +24,8 @@
 .hof-tab__head .hof-art__mono { font-size: 28px; }
 /* two lines, so a long boss name still reads when ten tabs share the row */
 .hof-tab__name { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; min-height: 2.5em; max-width: 100%; padding: 0 10px;
-  font-size: 12.5px; font-weight: 600; line-height: 1.25; color: var(--paper); overflow: hidden; overflow-wrap: anywhere; }
-.hof-tab__sub { display: inline-flex; align-items: center; gap: 5px; padding: 0 10px; font-size: 11px; color: var(--ink-300); }
+  font-size: 13px; font-weight: 600; line-height: 1.25; color: var(--paper); overflow: hidden; overflow-wrap: anywhere; }
+.hof-tab__sub { display: inline-flex; align-items: center; gap: 5px; padding: 0 10px; font-size: 12px; color: var(--ink-300); }
 .hof-tab__sub .hof-star { width: 11px; height: 11px; }
 .hof-tab__sub--ce { font-weight: 700; letter-spacing: .12em; color: var(--jade); }
 .hof-tab.is-empty .hof-tab__head img { filter: brightness(0) invert(.12); }
@@ -61,23 +61,23 @@
 
 /* Raid frame: a cell per raider, the class colour as the bar along its foot. */
 .hof-frame { display: grid; grid-template-columns: minmax(0, 1fr); gap: 14px; }
-.hof-frame__role { margin-bottom: 6px; font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-300); }
+.hof-frame__role { margin-bottom: 6px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-300); }
 .hof-frame__cells { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(124px, 1fr)); gap: 4px; }
 .hof-cell { position: relative; display: grid; gap: 1px; min-width: 0; padding: 7px 10px 10px; background: var(--ink-800);
   clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%); }
 .hof-cell::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 3px; background: var(--cls); }
-.hof-cell a, .hof-cell > span:first-child { font-size: 13.5px; font-weight: 600; color: var(--paper); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hof-cell a, .hof-cell > span:first-child { font-size: 14px; font-weight: 600; color: var(--paper); text-decoration: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hof-cell a:hover { color: var(--jade); text-decoration: underline; }
-.hof-cell__spec { font-size: 11px; color: var(--ink-300); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hof-cell__spec { font-size: 12px; color: var(--ink-300); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 /* The guilds that followed, with how many days after the first kill. */
 .hof-after { padding-top: 14px; border-top: 1px solid var(--ink-700); }
-.hof-after__h { margin-bottom: 8px; font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-300); }
+.hof-after__h { margin-bottom: 8px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-300); }
 .hof-after ol { list-style: none; display: grid; gap: 6px; }
-.hof-after li { display: grid; grid-template-columns: 14px minmax(150px, 220px) 64px 76px minmax(0, 1fr); align-items: center; gap: 10px; font-size: 13px; }
-.hof-after__n { font-size: 11px; color: var(--ink-300); }
-.hof-after__d { font-size: 12px; color: var(--paper-dim); }
-.hof-after__gap { font-size: 12px; color: var(--ink-300); }
+.hof-after li { display: grid; grid-template-columns: 14px minmax(150px, 220px) 64px 76px minmax(0, 1fr); align-items: center; gap: 10px; font-size: 14px; }
+.hof-after__n { font-size: 12px; color: var(--ink-300); }
+.hof-after__d { font-size: 13px; color: var(--paper-dim); }
+.hof-after__gap { font-size: 13px; color: var(--ink-300); }
 .hof-after__p { color: var(--ink-300); }
 .hof-chip { display: inline-flex; align-items: center; gap: 7px; min-width: 0; color: var(--paper-dim); }
 .hof-chip i { flex: 0 0 12px; width: 12px; height: 12px; background: var(--guild); clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 0 100%); }
@@ -99,7 +99,7 @@
 .hof-rib__acc { display: grid; place-items: center; flex: 0 0 40px; width: 40px; background: var(--guild); color: var(--ink-900); font-size: 15px; font-weight: 800; }
 .hof-rib__name { display: flex; align-items: center; min-width: 0; padding: 0 22px 0 12px; font-size: 16px; font-weight: 600; color: var(--paper); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .hof-present__txt { display: grid; gap: 2px; padding-top: 2px; min-width: 0; }
-.hof-present__cap { font-size: 10px; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-300); }
+.hof-present__cap { font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-300); }
 .hof-present__names { font-size: 15px; line-height: 1.6; color: var(--paper); }
 /* inline-block: a break between names, never inside one */
 .hof-present__n { display: inline-block; }
@@ -109,7 +109,7 @@
 
 /* ---- every raider, behind the button ---------------------------------------------------- */
 .hof-more { margin-top: 18px; }
-.hof-more button { border: 0; font: inherit; font-size: 11px; font-weight: 700; letter-spacing: .12em; }
+.hof-more button { border: 0; font: inherit; font-size: 12px; font-weight: 700; letter-spacing: .1em; }
 .hof-all .hof-subtitle { margin-top: 28px; }
 /* A ranking, not a spreadsheet: capped so the numbers stay next to the names. */
 .hof-table-wrap { overflow-x: auto; max-width: 880px; border: 1px solid var(--ink-700); background: var(--ink-850); }

@@ -67,9 +67,11 @@
 
   function art(b, cls) {
     const srcs = bossArtFor(b.name);
-    return h('span', { class: `hof-art ${cls}${srcs.length > 1 ? ' hof-art--duo' : ''}`, 'aria-hidden': 'true' },
+    const el = h('span', { class: `hof-art ${cls}${srcs.length > 1 ? ' hof-art--duo' : ''}`, 'aria-hidden': 'true' },
       srcs.length ? srcs.map(src => h('img', { src, alt: '', loading: 'lazy' }))
         : h('b', { class: 'hof-art__mono', text: b.name.trim()[0] }));
+    tidyBossArt(el, 'hof-art--duo');
+    return el;
   }
 
   function nameLink(m) {

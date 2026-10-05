@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Voortgang varianten</title>
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="mocks.css">
+</head>
+<body>
+<main class="mk">
+  <header class="mk-head">
+    <h1 class="view__title">Voortgang: varianten</h1>
+    <p class="section-caption">Vier manieren om dezelfde data te tonen (race.json van vandaag). Kies er één, of een combinatie. De huidige grafiek en de replay staan op de site zelf.</p>
+  </header>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>A</b><span>Achterstand</span></div>
+    <p class="mk-what">Per guild hoeveel bosses ze achter de leider staan, door de tijd. De leider loopt over de bovenrand; een lijn die stijgt haalt in, een lijn die zakt valt terug. Sterren = eerste kill van de race.</p>
+    <div id="vA" class="mk-chart"></div>
+    <p class="mk-pro"><b>Sterk:</b> leest als een race (wie loopt in, wie zakt weg), het klassement in één oogopslag. <b>Zwak:</b> je ziet niet meer hoe ver iemand van de finish is.</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>B</b><span>De reis</span></div>
+    <p class="mk-what">Een baan per guild; elk blok is een boss, van de vorige kill tot de kill. Lange blokken zijn de muren. Het open blok is de huidige boss, met de beste pull als balk onderaan.</p>
+    <div id="vB" class="mk-chart"></div>
+    <p class="mk-pro"><b>Sterk:</b> toont het verhaal: waar elke guild vast zat en hoe lang. <b>Zwak:</b> wie voor ligt lees je minder snel af.</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>C</b><span>Splits per boss</span></div>
+    <p class="mk-what">Een kolom per boss (op volgorde van de eerste kill in de race), een stip per guild op de dag dat ze hem versloegen. De afstand tussen stippen in een kolom = hoeveel dagen later. Een lijn verbindt de kills van één guild.</p>
+    <div id="vC" class="mk-chart"></div>
+    <p class="mk-pro"><b>Sterk:</b> per boss zie je de achterstand in dagen, zoals tijdsverschillen in een etappe. <b>Zwak:</b> de lopende pogingen (huidige boss) vallen weg.</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>D</b><span>De muur</span></div>
+    <p class="mk-what">Per guild elke pull op de huidige boss: de stip is hoeveel HP de boss nog had, de lijn de beste pull tot dan. Streepjes scheiden de raidavonden.</p>
+    <div id="vD" class="mk-chart mk-chart--bare"></div>
+    <p class="mk-pro"><b>Sterk:</b> het live deel van de race: wie komt dichtbij, hoe snel daalt het. <b>Zwak:</b> alleen de huidige boss; geen geschiedenis. Past als aanvulling naast A, B of C.</p>
+  </section>
+</main>
+<script src="../../bossart.js"></script>
+<script src="mocks.js"></script>
+</body>
+</html>

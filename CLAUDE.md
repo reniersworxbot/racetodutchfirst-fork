@@ -29,9 +29,10 @@ tests/
   test_fixtures.py           --record never writes outside its directory (src/racetodutchfirst/fixtures.py)
 scripts/og-image.sh          headless Chrome: site/og.html → site/og.png (run by site.yml)
 site/                        static, no build step, no framework, no CDN scripts
-  index.html                 splash hero (top bar, title, Nu live when someone streams, board, kills ticker), then Voortgang, Per guild, Hall of fame, footer
+  index.html                 three views behind a nav under the top bar (hash: #race default, #guilds, #halloffame): Race = splash hero (title, Nu live, board, kills ticker) + Voortgang; Guilds = Per guild; Hall of fame; footer on all
   i18n.js                    NL + EN strings and the global `i18n` (loaded before app.js)
   app.js                     loads data/race.json, draws everything (inline SVG)
+  voortgang.js               Voortgang (Grafiek, Plaatsen, Per guild, Replay, Ronde) and the Wedstrijdverslag (#raceLog)
   og.html, og.css, og.js     the 1200x630 share image page (v2, as the hero: bug, poster question, ribbons, the hero boss); scripts/og-image.sh screenshots it to og.png
   og.png                     committed fallback share image; CI replaces it in the Pages artifact
   splash.css                 the hero (design language v2: the overlay's language as a raid poster)
@@ -220,7 +221,7 @@ Read `DESIGN.md` before UI work: it records the visual system (tokens, component
 - Charts draw at the container's measured width and redraw on resize (ResizeObserver).
   It must work at 360 px.
 - Below the hero (chosen from three mockups, 2026-10-04: variant B): Voortgang (raid nights
-  = days with a pull or kill in race.json, shaded; first kills as gold stars, guild names at the line ends; the legend only on phones),
+  = days with a pull or kill in race.json, shaded; first kills as gold stars, guild names at the line ends; see voortgang.js),
   then **Per guild** (`renderGuildSheets()`, one table row per guild: a cell per boss with the
   kill date or best pull, then the pulls on its current boss as bars with a link to their source),
   then the Hall of fame (see *Hall of fame*). The per-boss table and the current-boss cards
@@ -229,18 +230,22 @@ Read `DESIGN.md` before UI work: it records the visual system (tokens, component
 - "Nu aan het raiden" (`liveState`) is derived in the browser: the last pull on the current
   boss or the latest kill within 60 min of `generatedAt`, *and* race.json itself under 60 min
   old; otherwise "Raidde om 21:57" for 12 h. Badges repaint every 30 s without new data.
-- Voortgang: every tread rises with each new best pull on the boss killed at its end (`progress`
-  on each killed boss in race.json) and the open tread with those on the current boss
-  (`currentProgress()`), by (100 - best %) / 100 of a tread (`treadPath()`); pulls before a tread
-  began set where it starts. The line end reads "6/9 · 73%" (the legend on phones). Without pull
-  times only the best % shows, as one rise at the end.
-- Voortgang has a "Volledig scherm" button (`setTimelineFull()`): the box (bar, chart, legend) covers
+- Voortgang (`site/voortgang.js`, `Voortgang.render(data)` from renderTimeline()): one model, every guild's
+  race position over time (`seriesOf()`: a kill = the next whole number, a new best pull = n + (100 - best %) / 100
+  from `progress` on each killed boss and the current boss's pulls; pulls before a tread began count from its start).
+  Five views sharing one chosen moment: Grafiek (step lines under a jade finish band with the CE boss, mouse drag =
+  zoom, Alles / 2 weken / 1 week, hover/tap/arrows = moment, the standings strip under it, click a guild = focus),
+  Plaatsen (bump chart, overtakes ringed), Per guild (small multiples), Replay (lanes on the board's race track) and
+  Ronde (an athletics track); Replay and Ronde share slider + play and play on opening. Overtakes (`passesOf()`,
+  sampled every 3 h) also feed the Wedstrijdverslag section (#raceLog, newest day first, 3 days + "Toon het hele verslag"). The choice survives refreshes and NL | EN
+  and resets with the season. Its strings (`vg.*`) are in i18n.js like all others.
+- Voortgang has a "Volledig scherm" button (`setTimelineFull()`): the box (bar, chart or replay, standings) covers
   the screen, via the Fullscreen API where the browser has it for elements, else as a fixed overlay
   (iPhone); the chart then takes the box's height and redraws on width *and* height changes; Esc,
   the button or leaving full screen closes it; on a phone it asks for landscape where allowed.
 - Motion on change (app.js `renderWithMotion()`): `load()` diffs the new race.json against the one on screen
-  (`diffRace()`, same season, visible tab only) and plays the news once: board bars via a registered
-  `--w` (on a kill to full, then down), the kill count rising in, FLIP for swapped rows, `tk--new` in
+  (`diffRace()`, same season, visible tab only) and plays the news once: board race tracks via a registered
+  `--p` (race position; each segment fills from `--p` minus its `--i`), the kill count rising in, FLIP for swapped rows, `tk--new` in
   the ticker (gold `tk--first`), the new stretch of a Voortgang line (`drawLineFrom()`), and a View
   Transition (`hero-art`) when the hero boss changes. Nothing moves on load or on NL | EN; reduced
   motion keeps only the colour cues.

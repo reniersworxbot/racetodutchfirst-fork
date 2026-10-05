@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Voortgang varianten 3</title>
+<link rel="stylesheet" href="../../tokens.css">
+<link rel="stylesheet" href="../../style.css">
+<link rel="stylesheet" href="mocks.css">
+</head>
+<body>
+<main class="mk">
+  <header class="mk-head">
+    <h1 class="view__title">Voortgang: ronde 3</h1>
+    <p class="section-caption">Zes vormen buiten de lijngrafiek, uit games en sport. Op race.json van vandaag. Eerder: <a href="./">ronde 1 (A–D)</a>, <a href="v2.html">ronde 2 (E–H)</a>.</p>
+  </header>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>I</b><span>De ronde</span></div>
+    <p class="mk-what">Een atletiekbaan: een ring met de start en Cutting Edge bovenaan, een baan per guild (de leider buiten). Rondom de bosses in de volgorde van de race. In het midden de stand.</p>
+    <div id="vI" class="mk-chart"></div>
+    <p class="mk-pro"><b>Sterk:</b> een beeld dat je onthoudt; werkt als poster en als replay (lopers die rondgaan). <b>Zwak:</b> afstanden op een ring zijn moeilijker te vergelijken dan op een rechte lijn.</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>J</b><span>Raidkalender</span></div>
+    <p class="mk-what">Zoals de GitHub-kalender: een rij per guild, een vakje per dag. Gekleurd = op die dag geraid (een pull of kill gezien), vol = kill(s) die dag met het aantal, goud = een eerste kill van de race. Lijnen op woensdag (de reset).</p>
+    <div id="vJ" class="mk-chart mk-chart--scroll"></div>
+    <p class="mk-pro"><b>Sterk:</b> toont het ritme van elke guild (welke avonden, hoe vaak) en wanneer het raak was. <b>Zwak:</b> zegt niets over hoe ver ze staan; Raider.IO ziet niet elke avond (alleen dagen met een nieuwe beste pull of kill).</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>K</b><span>Inhaalmanoeuvres</span></div>
+    <p class="mk-what">Een bump chart zoals in esports en F1: de plaats in de race door de tijd. Elke inhaalbeweging krijgt een ring en een label.</p>
+    <div id="vK" class="mk-chart"></div>
+    <p class="mk-pro"><b>Sterk:</b> de spanning van de race: wie passeerde wie, wanneer. <b>Zwak:</b> alleen plaatsen, geen afstanden.</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>L</b><span>Wedstrijdverslag</span></div>
+    <p class="mk-what">De race als liveblog, nieuwste dag eerst: kills, eerste kills (goud) en inhaalbewegingen met het uur, en onder elke dag de stand van dat moment.</p>
+    <div id="vL" class="mk-chart mk-chart--bare"></div>
+    <p class="mk-pro"><b>Sterk:</b> leest als een verhaal, ideaal op de telefoon; alles in tekst, dus ook voor wie geen grafieken leest. <b>Zwak:</b> lang; geen overzicht in één blik.</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>M</b><span>Pull-mozaïek</span></div>
+    <p class="mk-what">Elke pull is een vakje, per boss een blok; het laatste vakje is de kill (goud = eerste kill van de race). Bij de huidige boss is elk vakje zo licht als ver als die pull kwam.</p>
+    <div id="vM" class="mk-chart mk-chart--bare"></div>
+    <p class="mk-pro"><b>Sterk:</b> maakt de inspanning tastbaar: 82 vakjes Sszorak zie je meteen. <b>Zwak:</b> geen tijd; een pull die niemand zag ontbreekt.</p>
+  </section>
+
+  <section class="mk-v">
+    <div class="mk-tag"><b>N</b><span>Kleine veelvouden</span></div>
+    <p class="mk-what">De huidige grafiek, maar een paneel per guild: zijn lijn in kleur (gevuld), de andere vier grijs erachter. Geen spaghetti meer.</p>
+    <div id="vN" class="mk-chart mk-chart--bare"></div>
+    <p class="mk-pro"><b>Sterk:</b> elke guild zijn eigen verhaal, en toch vergelijkbaar. <b>Zwak:</b> neemt meer ruimte; het onderlinge gat lees je minder exact.</p>
+  </section>
+</main>
+<script src="../../bossart.js"></script>
+<script src="mocks.js"></script>
+<script src="mocks2.js"></script>
+<script src="mocks3.js"></script>
+</body>
+</html>

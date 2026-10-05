@@ -26,7 +26,7 @@ colors:
 typography:
   display:
     fontFamily: "'Outfit', 'Segoe UI', system-ui, -apple-system, sans-serif"
-    fontSize: "clamp(44px, 6.6vw, 88px)"
+    fontSize: "clamp(40px, 5.4vw, 74px)"
     fontWeight: 800
     lineHeight: 0.92
     letterSpacing: "-.03em"
@@ -74,14 +74,14 @@ typography:
     letterSpacing: ".1em"
   label:
     fontFamily: "'Outfit', 'Segoe UI', system-ui, -apple-system, sans-serif"
-    fontSize: "11px"
+    fontSize: "12px"
     fontWeight: 700
     letterSpacing: ".12em"
   label-micro:
     fontFamily: "'Outfit', 'Segoe UI', system-ui, -apple-system, sans-serif"
-    fontSize: "10px"
+    fontSize: "12px"
     fontWeight: 700
-    letterSpacing: ".18em"
+    letterSpacing: ".12em"
   numeric-board:
     fontFamily: "'JetBrains Mono', 'Cascadia Mono', Consolas, monospace"
     fontSize: "32px"
@@ -103,7 +103,7 @@ spacing:
   section: "40px"
   gutter: "24px"
   gutter-phone: "16px"
-  stage-top: "64px"
+  stage-top: "44px"
 components:
   bug-live:
     backgroundColor: "{colors.live-red}"
@@ -252,7 +252,7 @@ components:
 
 **Creative North Star: "The Raid Poster on the Overlay"**
 
-The bmiest stream overlay's language, grown into a poster. The page opens on the boss the leading guild is fighting right now, cut out and standing in a jade-and-void glow with nothing drawn on it; the question ("Wie haalt als eerste Cutting Edge?") is the title, and the standings sit beside it as overlay ribbons with a raid-frame bar per guild. A broadcast bug crowns the page and a kills ticker closes the hero from edge to edge, both taken from the overlay's broadcast grammar. Below the hero the same parts (slanted rank blocks, slanted pills, square dark cells and panels) carry the data: Voortgang, then Per guild (a row per guild, a cell per boss, then its pulls), then the Hall of fame as a raid journal (boss heads as tabs, a stage per boss with the race's first kill and its team as a WoW raid frame).
+The bmiest stream overlay's language, grown into a poster. The page opens on the boss the leading guild is fighting right now, cut out and standing in a jade-and-void glow with nothing drawn on it; the question ("Wie haalt als eerste Cutting Edge?") is the title, and the standings sit beside it as overlay ribbons with a race track per guild (a slanted segment per boss). A broadcast bug crowns the page and a kills ticker closes the hero from edge to edge, both taken from the overlay's broadcast grammar. The page is three views behind a nav under the bug: Race (the hero, the ticker and Voortgang), Guilds and Hall of fame. Below the hero the same parts (slanted rank blocks, slanted pills, square dark cells and panels) carry the data: Voortgang, then Per guild (a row per guild, a cell per boss, then its pulls), then the Hall of fame as a raid journal (boss heads as tabs, a stage per boss with the race's first kill and its team as a WoW raid frame).
 
 Everything is flat near-black ink: no rounded cards, no drop shadows, no glass. Shape comes from slanted cuts on the right edge of every ribbon, pill, bar, rank block and boss head. Colour is scarce and semantic: jade is the race and its live state, gold is the leader, the first kill and the winner, and each guild brings its own colour to its rank block, bar, line, meter and chip. The poster is loud only at the top; the sections below are a dense, honest data surface whose explanation sits in the marks themselves, with one-line captions.
 
@@ -287,7 +287,7 @@ A near-black ink ramp with one cool green voice, one warm gold voice and the gui
 - **Table Ink** (ink-850): Per guild cells, the Voortgang chart well, the Hall of fame tabs, stage box and Raiders table well.
 - **Panel Ink** (ink-800): ribbon body, Per guild guild block and current-boss cell, the Hall of fame's tab head wells, selected tab, raid-frame cells, Altijd paraat ribbons and an unbeaten boss's art column, winner banner, live cards.
 - **Raised Ink** (ink-750): pills, boss-head tiles, the dashed border of an empty Per guild cell.
-- **Rule Ink** (ink-700): 1px borders, cell borders, table rules, chart grid, hairlines (the Hall of fame stage border and the rule above Daarna, the footer rule), and the track under every meter.
+- **Rule Ink** (ink-700): 1px borders, cell borders, table rules, chart grid, hairlines (the Hall of fame stage border and the rule above Daarna), and the track under every meter.
 - **Outline Ink** (ink-600): the ribbon's 1px slanted outline, the baseline under the pull strip, the 1px divider between raids in Per guild.
 - **Muted Ink** (ink-500 / ink-400): plain pull bars, boss-head initials.
 - **Caption Grey** (ink-300): captions, secondary meta, axis labels, inactive language, the source link, "/9", the Hall of fame tab sub lines, raid-frame specs and quiet pills.
@@ -315,7 +315,7 @@ WoW's class colours are game data, like the guild colours: held in halloffame.js
 **Display Font:** Outfit (with Segoe UI, system-ui)
 **Label/Mono Font:** JetBrains Mono (with Cascadia Mono, Consolas), tabular figures
 
-**Character:** One geometric sans carries everything from the 88px poster caps to 10px labels; the mono is reserved for numbers that are compared (kills, rank, pulls, dates, percentages).
+**Character:** One geometric sans carries everything from the 74px poster caps to 12px labels (nothing smaller: the 2026-10-05 legibility floor); the mono is reserved for numbers that are compared (kills, rank, pulls, dates, percentages).
 
 ### Hierarchy
 - **Display** (display): [race] the hero question, once per page. Uppercase, balanced, max 12ch; the second half in jade.
@@ -325,12 +325,12 @@ WoW's class colours are game data, like the guild colours: held in halloffame.js
 - **Lead** (lead): the hero lead line, max 40ch, paper-dim; 17px on phones.
 - **Stage guild** (stage-guild): [race] the guild with the race's first kill on the Hall of fame stage, behind a 22px slanted guild-colour block (6px slant, 0.9em tall). A boss nobody has beaten shows its own name there instead, 26-40px/800 uppercase in ink-300.
 - **Ribbon** (ribbon): guild names on the board ribbons; 16px on lane ribbons, 14px under 400px. Per guild names are 16px/600 (14px on phones), clamped to two lines.
-- **Body** (body): section captions (one line, max 72ch, ink-300), tables at 13px, ticker items at 15px. In the Hall of fame: tab names 12.5px/600 paper on two lines, raid-frame names 13.5px/600 paper with the spec at 11px ink-300, the stage meta line at 15px paper-dim, Altijd paraat names at 15px/1.6 paper.
+- **Body** (body): section captions (one line, max 72ch, ink-300), tables at 13px, ticker items at 15px. In the Hall of fame: tab names 13px/600 paper on two lines, raid-frame names 14px/600 paper with the spec at 12px ink-300, the stage meta line at 15px paper-dim, Altijd paraat names at 15px/1.6 paper.
 - **Bug** (bug): the broadcast bug and its blocks, uppercase; LIVE at 13px/.14em; 12px on phones.
-- **Label** (label): pills, language blocks, the Per guild pulls column head (11px/.14em, ink-300); uppercase.
-- **Label micro** (label-micro): raid-group rows, role labels ("Tanks · 2" in the raid frame), the Daarna and Altijd paraat caps, first-kill labels, raiding badges; uppercase, ink-300.
+- **Label** (label): pills, language blocks, the Per guild pulls column head (12px/.1em, ink-300); uppercase.
+- **Label micro** (label-micro): raid-group rows, role labels ("Tanks · 2" in the raid frame), the Daarna and Altijd paraat caps, first-kill labels, raiding badges; 12px/.12em (the board's raiding badge .08em), uppercase, ink-300.
 - **Numeric board** (numeric-board): kill counts on the board with a 16px ink-300 "/9"; 24px on phones.
-- **Numeric** (numeric): table cells, chart axes (11px), Per guild cell values (dates and best %, 12px; 11px on phones), the count at a Voortgang line end (12px/500); in the Hall of fame the tab sub line "dag N" (11px), the stage date, Daarna's position, date and "+n d", and the Raiders table numbers.
+- **Numeric** (numeric): table cells, chart axes (12px), Per guild cell values (dates and best %, 13px; 12px on phones), the count at a Voortgang line end (12px/500); in the Hall of fame the tab sub line "dag N" (12px), the stage date, Daarna's position, date and "+n d", and the Raiders table numbers.
 
 ### Named Rules
 **The Poster Voice Rule.** Display and section heads are Outfit 800 uppercase with tight tracking; nothing else on the page is that heavy except the bug, the board, the Per guild rank and count, the Altijd paraat count block and an unbeaten boss's name on the Hall of fame stage.
@@ -343,9 +343,9 @@ WoW's class colours are game data, like the guild colours: held in halloffame.js
 
 [race] One container, 1320px max, 24px gutters (16px under 720px, the hero bar from 900px; 12px under 400px). The hero is a stage: title, lead and tier pills on the left; the board below them in an 820px column; the boss art owns everything right of that column (from 24 + 820 + 40px to the edge) at the stage's full height, its feet faded by a mask. A lone render wider than 2:1 instead takes the open field right of the title (from 50% + 40px, 62% of the stage height). Below 1180px the art becomes a band above the title (360px tall, 300px under 900px). A council fight shows two bodies side by side (6% gap, 47% each). Art is never shown past 2x its natural height.
 
-The board is a grid per guild: ribbon (320px), kills (96px), raid-frame bar (rest), 20px column gap and 8px between rows; on phones the ribbon and kills share a row and the bar spans below. Over each bar a label line carries the current boss, best pull and pulls, and the raiding badge beside it; the line wraps (the badge drops under it) and never cuts a number off. The ticker closes the hero at 52px, edge to edge across the viewport, its label flush at the left edge.
+The board is a grid per guild: ribbon (340px), kills (96px), race track (rest), 20px column gap and 8px between rows; on phones the ribbon and kills share a row and the track spans below. Over each track a 15px label line carries the current boss, what is left of it and the pulls ("nog 72,58% · 34 pulls"), and the raiding badge beside it; Raider.IO's ranks for the CE raid sit in the ribbon under the name ("Wereld 689 · EU 397 · Draenor 30", 12px tabular ink-300, ink-400 dots; a part that doesn't fit drops out whole, realm first, never half a number), so the label line stays one line; the line wraps (the badge drops under it) and never cuts a number off. The ticker closes the hero at 52px, edge to edge across the viewport, its label flush at the left edge.
 
-[race] Below the hero, sections stack with 40px between (32px on phones): Voortgang, Per guild, the Hall of fame, then the footer. Voortgang is a full-width chart (380px tall, 280px under 560px) with a 210px right margin for the guild names at the line ends; under 600px the names give way to the count only and a legend below. Per guild is one fixed-layout table: a 240px pinned guild column, nine boss columns sharing the rest, a 230px pulls column, 6px between cells, at least 1040px wide; under 600px it scrolls sideways (min 1120px) with the guild column (150px) and the corner pinned, and the pulls column at 190px. A 1px rule separates the main raid's bosses from the next raid's. Card grids (Nu live) are auto-fill with 280-340px minimums and 16px gaps. Everything works at 360px.
+[race] Views: a nav row under the bug (18px below it; 12px on phones) with Race | Guilds | Hall of fame as 40px blocks (34px under 900px), 13px/800 caps, ink-200 on ink-900 at 55%; the open one paper on ink-900 with a 3px jade foot. The hash picks the view (#guilds, #halloffame; none = Race), so views link and the back button works. Off the Race view the header is only the bug and the nav on a short band of the hero ground. Within a view, sections stack with 40px between (32px on phones): Race = Voortgang; Guilds = Per guild; Hall of fame = the journal, Altijd paraat and the Raiders; the footer closes every view. Voortgang is a full-width chart (420px tall, 320px under 560px) with a 276px right margin (a 40px gutter for the distance bars, then the guild names at the line ends; under 560px 58px and the count only), and the standings strip under it. Per guild is one fixed-layout table: a 240px pinned guild column, a column per counted boss sharing the rest, a 230px pulls column, 6px between cells, at least 1040px wide; under 600px it scrolls sideways (min 1120px) with the guild column (150px) and the corner pinned, and the pulls column at 190px. A 1px rule separates the main raid's bosses from the next raid's. Card grids (Nu live) are auto-fill with 280-340px minimums and 16px gaps. Everything works at 360px.
 
 [race] The Hall of fame: the section head and caption, then a row of boss-head tabs (columns of at least 104px sharing the width, 4px apart, scrolling sideways when they don't fit, the chosen tab kept in view), the stage 4px under it (art column minmax(280px, 36%), info column the rest, at least 460px tall), then Altijd paraat 48px below (a 260px ribbon column and the names beside it; stacked under 720px) and the "Toon alle N raiders" pill 18px under that. The raid frame is an auto-fill grid of 124px+ cells, 4px apart, 14px between role groups; two columns under 600px. Daarna is a five-column row (position, guild chip, date, "+n d", pulls); under 720px the pulls drop. Under 900px the art becomes a 280px band above the info (240px under 600px), showing the whole body. The Raiders table is capped at 880px.
 
@@ -358,7 +358,7 @@ Flat. No drop shadows anywhere. Depth comes from the ink ramp (ink-900 ground, i
 
 ## Shapes
 
-[family] Corners are square. The signature is the right-edge slant: `clip-path: polygon(0 0, 100% 0, calc(100% - N) 100%, 0 100%)`, with N at 11px on ribbons, 10px on the ribbon's accent block and the Per guild guild block, 6px on pills, raid-frame bars, Hall of fame raid-frame cells, the stage guild block and boss-head tiles, 10px on the Altijd paraat ribbon, 5px on the section-head cap, 4px on the Raiders cap, 3px on guild chips. Ribbons draw their 1px outline as a slanted outer clip one pixel larger than the inner one. The only round things are dots (live dots, legend dots, the hollow kill nodes on Voortgang). Empty Per guild cells are dashed; every other border is solid. The disclosure mark is a drawn 7px chevron (two 2px jade strokes, rotated -45deg closed, 45deg open). [race] The broadcast bug, the language switch and the edge-to-edge ticker are the deliberate exception to the slant: flush, square, gapless blocks. The Hall of fame tabs and stage box are square too: tabs tile in a row, so their heads are square wells, not slanted tiles.
+[family] Corners are square. The signature is the right-edge slant: `clip-path: polygon(0 0, 100% 0, calc(100% - N) 100%, 0 100%)`, with N at 11px on ribbons, 10px on the ribbon's accent block and the Per guild guild block, 6px on pills, Hall of fame raid-frame cells, 5px on race-track segments, Hall of fame raid-frame cells, the stage guild block and boss-head tiles, 10px on the Altijd paraat ribbon, 5px on the section-head cap, 4px on the Raiders cap, 3px on guild chips. Ribbons draw their 1px outline as a slanted outer clip one pixel larger than the inner one. The only round things are dots (live dots, legend dots, the hollow kill nodes on Voortgang). Empty Per guild cells are dashed; every other border is solid. The disclosure mark is a drawn 7px chevron (two 2px jade strokes, rotated -45deg closed, 45deg open). [race] The broadcast bug, the language switch and the edge-to-edge ticker are the deliberate exception to the slant: flush, square, gapless blocks. The Hall of fame tabs and stage box are square too: tabs tile in a row, so their heads are square wells, not slanted tiles.
 
 ### Named Rules
 **The One Slant Rule.** Slants go down and to the right, on the trailing edge only. A slanted element never also gets rounded corners.
@@ -380,8 +380,8 @@ Slanted chips, ink-750, label type, uppercase. Jade text for the CE pill. A pill
 ### Ribbon [family]
 The overlay's ribbon: a 1px slanted outline (ink-600; gold for the leader) around an ink-800 body, a square accent block on the left in the guild colour carrying the rank in mono 20px/800 ink-900, and the name in ribbon type (links go jade on hover).
 
-### Raid-frame bar [race]
-10px slanted bar, track white at 8%, fill in the guild colour at the share of the boss already down. Above it a label line (14px paper-dim, wraps) with the current boss, best pull and pulls, and the raiding badge (label-micro, jade dot when live, ink-300 "raided at 21:57" otherwise) on the same line.
+### Race track [race]
+One 14px slanted segment per boss of the tier (5px trailing slant, 3px apart), so the bar's length is the race position and matches the ranking (chosen 2026-10-05 over the old current-boss bar, which made the 4th guild look fullest). Killed bosses fill in the guild colour, the current one as far as its best pull ((100 - best %) / 100); empty segments are white at 9%, the last one (the finish, CE) jade at 20%. Driven by one registered number `--p` (race position) minus each segment's `--i`. Above it a label line (15px paper-dim, wraps) with the current boss, what is left ("nog x%") and pulls, and the raiding badge (label-micro, jade dot when live, ink-300 "raided at 21:57" otherwise) on the same line.
 
 ### Kills ticker [race]
 A 52px ink-900 band spanning the viewport, with only a 2px jade top edge (no side or bottom borders), a solid jade label block ("Laatste kills") flush at the left edge, items "Guild · boss · date · eerste kill" in paper-dim with the guild bold in paper. The list is rendered twice and slides one width in 48s; it pauses on hover and focus, and under reduced motion it becomes a static scrollable row. A 64px fade hides the right edge.
@@ -389,13 +389,22 @@ A 52px ink-900 band spanning the viewport, with only a 2px jade top edge (no sid
 ### Section head [family]
 Headline type behind a slanted jade cap (14px wide, 0.9em tall), 8px above a one-line caption. Subsections use headline-sub with an 11px cap.
 
-### Voortgang chart [race]
-A step line per guild in its colour (3px for the leader, drawn last, 2.25px for the rest) in an ink-850 well with a 1px ink-700 border. Raid nights (days with a pull or kill in race.json) are shaded jade columns; the grid is ink-700, its top line the CE finish dashed in jade-deep (4 5); axes in mono 11px ink-300 with "x/9" and "CE". The race's first kills are gold stars (ink-850 stroke), other kills hollow nodes (ink-850 fill, 2px guild-colour ring). Within every tread a line rises with each new best pull on the boss it was working on ((100 - best %) / 100 of a tread, from race.json's `progress` per killed boss and the current boss's pulls), so it shows the way to each kill and ends where the guild really stands. On wide screens each line ends in the guild name (14px/700, guild colour) and its x/9 (mono 12px/500, paper-dim) plus " · 73%" through the current boss (mono 12px/500, ink-300); on phones a legend replaces them. "Toon als tabel" discloses the same data as a table. A "Volledig scherm" pill (jade, drawn corner icon; "Sluiten" with a drawn cross) above the chart opens the chart with its legend over the whole screen on ink-900, the section name as a bar title; the chart takes the full height, and its labels grow a step on wide screens.
+### Voortgang [race]
+The race over time in two views that share one chosen moment (site/voortgang.js), behind a bar of flush blocks a step smaller than NL | EN (32px, 12px/800 caps): Grafiek | Plaatsen | Per guild | Replay | Ronde (the open one jade with ink text; on phones the row scrolls sideways), in chart mode the period Alles | 2 weken | 1 week (the open one paper on ink-700), a one-line ink-300 hint, and the "Volledig scherm" pill on the right. On phones the view switch and the pill share the first row.
+- **Grafiek**: a step line per guild in its colour (3px for the leader, drawn last, 2.25px for the rest) in an ink-850 well with a 1px ink-700 border. Every tread rises with each new best pull on the boss it was working on ((100 - best %) / 100 of a tread, from race.json's `progress` per killed boss and the current boss's pulls). Raid nights are shaded jade columns (4.5%); the levels are ink-700 rules labelled "x/N" (N = the counted bosses) in mono 12px ink-300. The finish is a jade band (jade at 10%, 32px) over the top level with a 2px jade line, the CE boss's head and "CUTTING EDGE · BOSS" in 12px/800 jade caps. The race's first kills are gold stars, other kills hollow nodes. At the line ends the name (14px/700, guild colour), "x/N" (mono, paper-dim) and " · nog 1,7" (mono 12px, ink-200); on phones only the count.
+- **Focus**: a click on a guild (its name at a line end, its row in the strip, its name on Plaatsen) fades every other guild's marks to 18% (its strip row to 40%); a second click clears it.
+- **Zoom and moment**: drag across the chart with a mouse to zoom in on a stretch (a jade-12% band with 1px jade edges while dragging); double-click or 0 shows everything. Ticks switch from weekly resets to days when zoomed in. Hover (mouse), tap or swipe (touch) or the arrow keys (Shift = a week, Home/End, Esc) pick a moment: a dashed paper-dim crosshair with a ring per line (ink-900, 2.5px guild colour).
+- **Standings strip**: under the chart, always there: "Stand nu" (an archive: "Eindstand"), or the chosen moment's date with "dag N" and a "Terug naar nu" button; then per guild in order at that moment a guild-colour rank block (3px slant), the name, "x/N" and the boss it was on with "nog x%" or "nog geen pull". It replaces the legend.
+- **Replay**: a jade play block ("Afspelen" / "Pauze", 8px slant), a slider (6px track, jade up to the moment, a 12x24 paper thumb) and the moment in mono; then a lane per guild: an ink-800 block (10px slant) with the rank at that moment in the guild colour, the name and the boss it was on, the board's race track (20px, 14px on phones), the jade finish line with the CE boss's head above it, and "x/N" (gold for the leader). Lanes reorder as places change (420 ms slide). Opening Replay plays it at once, from the first day to now in 14 s, holds 2.5 s on today and starts again, until paused (the play block pauses and resumes); under reduced motion it steps a day at a time.
+- "Toon als tabel" discloses the kills as a table. "Volledig scherm" opens the box over the whole screen on ink-900; the chart or the replay takes the full height.
+- **Plaatsen**: a bump chart in the same well: the place (1 to the number of guilds, mono axis) from the day before the first kill to now, a 4px line per guild, and every overtake as a ring (ink-900 fill, 2.5px ring in the colour of the guild that moved up) with "Guild › Guild" in 12px paper-dim where there is room; the names with their place at the line ends (only the first word on phones).
+- **Per guild**: small multiples, one ink-850 panel per guild in today's order (as many columns as fit at 250px): a slanted rank block, the name, "x/N" and "nog x"; its own step line (2.5px) over a 14% guild-colour area, the other guilds as 1.25px ink-500 lines behind, the finish band and line, gold stars for first kills.
+- **Ronde**: the race as an athletics track: a ring (94% of a circle, open at the top), a lane per guild in today's order with the leader outside, the lane filled in the guild colour up to its position with a runner dot; ticks per kill count with the bosses' heads outside in the order the race killed them, the last tick (CE) in jade, "START" in jade; in the middle the day and the standings at that moment. It shares the Replay's play block and slider; opening it plays the race.
 
 ### Per guild sheet [race]
 One table row per guild:
 - **Guild block** (pinned): an ink-800 block with a 10px trailing slant, a full-height rank block in the guild colour (18px/800, ink-900 text), the name (paper, jade on hover, raiding badge under it) and the kills as 22px/800 "x" over a 13px ink-300 "/9", gold for the leader. On phones the count goes under the name.
-- **Boss head row**: a boss-head tile and the boss name (11px ink-300, ellipsis), with the `CE` tag on the CE boss.
+- **Boss head row**: a boss-head tile and the boss name (12px ink-200, up to two lines), with the `CE` tag on the CE boss.
 - **Cell per boss** (ink-850, 1px ink-700 border, 58px tall): a kill shows a drawn jade check and the mono date, with the pull count under it; the race's first kill turns the mark and the date gold with a star. A boss in progress shows the best % in mono over a 5px meter (ink-700 track, guild-colour fill) and the pulls. The guild's current boss is framed 1px in the guild colour on ink-800 ("volgende" when not pulled yet). An untried boss is an empty cell with a dashed ink-750 border on the ground.
 - **Pull strip**: bars per pull on the current boss (up to the last 60, 32px tall, 1px apart, over a 1px ink-600 baseline), ink-500 with the best bar in the guild colour; under it a caption "boss · n pulls · beste x%" in paper-dim with "beste x%" in the guild colour and the source link (ink-300, jade on hover) kept on one line with its separator.
 
@@ -412,10 +421,16 @@ Every `<details>` (Voortgang's "Toon als tabel") uses the same drawn jade chevro
 A raid journal: pick a boss, see who beat it first, with which team, and who followed.
 - **Boss-head tabs** (`role="tablist"`, arrow keys, Home and End, a roving tabindex): the race's bosses in tier order, then the kills of raids that don't count. Each tab is an ink-850 block with a 76px ink-800 head well showing the top of the render (two bodies for a council), the name on two lines, and a sub line: the drawn gold star and "dag N" in mono for the race's first kill, "telt niet mee" for a raid that doesn't count (no gold), jade "CE" for the unbeaten CE boss, "–" for another unbeaten boss. An unbeaten boss's head is a dark silhouette. Hover lifts the tab to ink-800; the selected tab is ink-800 with a 2px jade top edge. The row scrolls sideways.
 - **Stage**: an ink-850 box with a 1px ink-700 border, the tab panel. The art column stands the render in the hero's glow for an earned trophy, on flat ink-800 as a silhouette for an unbeaten boss. The info column: the guild in stage-guild type behind its slanted colour block; a meta line led by the status pill, then "boss Mythic" (with the jade `CE` tag), the date in mono paper and the pulls; then the raid frame and Daarna. An unbeaten boss shows its name, the quiet pill and "Nog door niemand verslagen op Mythic." It opens on the CE boss once it fell, else the latest first kill of the race.
-- **Raid frame**: the first-kill team as a WoW raid frame, grouped Tanks, Healers, DPS under label-micro role rows with the count. A cell per raider: ink-800, 6px trailing slant, name 13.5px/600 paper (a Raider.IO link, jade on hover), spec 11px ink-300, and a 3px class-colour bar along the foot. A kill known only from Warcraft Logs says so in a muted note instead.
+- **Raid frame**: the first-kill team as a WoW raid frame, grouped Tanks, Healers, DPS under label-micro role rows with the count. A cell per raider: ink-800, 6px trailing slant, name 13.5px/600 paper (a Raider.IO link, jade on hover), spec 12px ink-300, and a 3px class-colour bar along the foot. A kill known only from Warcraft Logs says so in a muted note instead.
 - **Daarna**: under a 1px ink-700 rule, the guilds that followed: position (mono ink-300), guild chip (3px slant), date (mono paper-dim), "+n d" or "zelfde dag" (mono ink-300) and the pulls.
 - **Altijd paraat**: a headline-sub subsection; per guild with a kill a 40px ink-800 ribbon (10px slant, no outline) whose guild-colour accent block carries the count of raiders in every kill (mono 15px/800, ink-900), then a label-micro cap ("bij alle N kills", or "niemand bij alle N kills") and the names as running text with ink-500 "·" separators, breaking between names, never inside one.
 - **Raiders table**: behind the "Toon alle N raiders" pill, a headline-sub subsection and the table in an ink-850 well with a 1px ink-700 border, capped at 880px: numbers right-aligned in mono, a shared rank in paper once and ink-300 after, first-kill counts gold for raiders who have them; under 600px the guild column folds into the name's second line as dot, guild · realm.
+
+### Wedstrijdverslag [race]
+A section on the Race view under Voortgang: the race as a live blog, newest day first, three days shown and "Toon het hele verslag (n dagen)" for the rest. A 2px ink-700 rail on the left with a slanted jade mark per day; per day "DAG N" (16px/800 caps) over the date (13px ink-300), then the events with their time in mono 13px (gold for a race first kill, jade for an overtake, ink-300 otherwise): "Guild is de eerste die Boss verslaat (7e kill, 50 pulls)", "Guild verslaat Boss (…)", "Guild passeert Guild en staat nu 2e", the guild in its colour and bold, the boss in paper; under them the standings at the end of that day as chips (an ink-800 chip with a slanted guild-colour rank block, the name and the position in mono). Under 720px the date sits over the events.
+
+### Footer [race]
+A full-width ink-850 band under every view, 1px ink-700 rule on top. A head row: the name (18px/800 caps, paper) with the season and race day under it (mono 12px, ink-300); the views again as text links (13px/800 caps, ink-200; the open one paper with a 2px jade foot); "Naar boven" (an ink-800 block with a 6px slant and a drawn chevron, jade on hover; a button, since the hash picks the view). A 1px ink-700 rule, then two columns (stacked under 720px), 14px ink-300 text with label-type heads in ink-200: Bronnen as a list (the source name as a jade link in a 120px column, then what it gives) and Zo tellen we (the WCL merge note, which pulls are missing, then Broncode op GitHub with a drawn out-arrow).
 
 ### Panels [family]
 Square ink-800 panels with a 1px ink-700 border (live cards; live cards lift to ink-750 with an ink-600 border on hover). The winner banner is the same panel with a 2px gold border, a drawn SVG trophy and the winner's name. Errors use the panel with a 1px rose border.
@@ -426,7 +441,7 @@ The overlay's angled card (1px outline, ink-800 body, 22px notch at the bottom r
 ## Motion
 
 [race] The page doesn't move on load; it moves when the race does. When the 5-minute refresh of an open, visible page brings news for the season on screen, the change plays once:
-- a guild's raid-frame bar runs from its old to its new best (on a kill: to full, then down to the next boss), about 0.9–1.4 s;
+- a guild's race track runs from its old to its new position (through the rest of a segment on a kill), about 0.9–1.4 s;
 - its kill count rises in once the bar is full;
 - guilds that swap places slide to their new row (FLIP, 650 ms);
 - new kills light up in the ticker (the guild in jade; gold for the race's first kill);
@@ -443,6 +458,7 @@ Easing is `cubic-bezier(0.16, 1, 0.3, 1)`: no bounce. Constant motion stays limi
 - **Do** show the leader's current boss (the CE boss once someone won) as a self-hosted alpha cut-out trimmed to the body, with nothing drawn on it, never past 2x its natural size.
 - **Do** mark a guild with a 1-2px outline, a rank block or a slanted chip in its colour, and draw its best effort in that colour.
 - **Do** draw marks as SVG (check, star, trophy, chevron) in the meaning colour.
+- **Do** drop a council body whose render is under 40% of its partner's height, and fade a render cut off at the top (app.js `tidyBossArt()`), rather than show a tiny upscaled body or a flat crop.
 - **Do** slant the trailing edge of ribbons, pills, bars, rank blocks and boss heads; keep the bug, the language switch and the ticker flush and square.
 - **Do** let a label wrap rather than cut a number off.
 - **Do** keep a section caption to one line and put the explanation in the marks.

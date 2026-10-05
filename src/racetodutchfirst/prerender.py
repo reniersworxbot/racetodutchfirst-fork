@@ -33,9 +33,8 @@ NL = {
     "tile.ce": "Cutting Edge behaald",
     "tile.done": "Alles verslagen",
     "tile.noPulls": "Nog geen pulls gezien",
-    "tile.best": "Beste pull {pct} · {pulls}",
+    "tile.best": "nog {pct} · {pulls}",
     "rank.world": "Wereld {n}",
-    "rank.title": "Raider.IO-rang in {raid} Mythic: wereld, regio en realm",
     "pulls_one": "{n} pull",
     "pulls_other": "{n} pulls",
 }
@@ -66,20 +65,6 @@ def _attr(**kw: str) -> str:
     return "".join(f' {k.rstrip("_").replace("_", "-")}="{escape(v)}"' for k, v in kw.items())
 
 
-def _num(n: int) -> str:
-    return f"{n:,}".replace(",", ".")
-
-
-def _world_tag(data: dict, g: dict) -> str:
-    """Raider.IO's world rank for the CE boss's raid, as app.js's worldRankTag() draws it."""
-    raid = data["tier"]["ceBoss"]["raid"]
-    world = ((g.get("raids") or {}).get(raid) or {}).get("worldRank")
-    if not isinstance(world, int) or world < 1:
-        return ""
-    name = next((r["name"] for r in data["tier"]["raids"] if r["slug"] == raid), "")
-    return f'<span class="row__wr"{_attr(title=_t("rank.title", raid=name))}>{escape(_t("rank.world", n=_num(world)))}</span>'
-
-
 def board(data: dict) -> str:
     """The board's rows, as app.js's renderHero() draws them (minus colours and bars)."""
     winner = (data.get("winner") or {}).get("guild")
@@ -101,13 +86,26 @@ def board(data: dict) -> str:
         name = (f'<a class="rib__val"{_attr(href=url, rel="noopener")}>{escape(g["name"])}</a>'
                 if isinstance(url, str) and url.startswith("https://raider.io/")
                 else f'<span class="rib__val">{escape(g["name"])}</span>')
+        ranks = (g.get("raids") or {}).get(data["tier"]["ceBoss"]["raid"]) or {}
+        world = ranks.get("worldRank")
+        if isinstance(world, int) and world > 0:
+            dots = lambda n: f"{n:,}".replace(",", ".")
+            parts = [_t("rank.world", n=dots(world))]
+            if isinstance(ranks.get("regionRank"), int) and ranks["regionRank"] > 0:
+                parts.append(f'{str(g.get("region") or "").upper()} {dots(ranks["regionRank"])}')
+            if isinstance(ranks.get("realmRank"), int) and ranks["realmRank"] > 0:
+                parts.append(f'{g.get("realm", "")} {dots(ranks["realmRank"])}')
+            wr = "".join(f"<span>{escape(p)}</span>" for p in parts)
+            name = f'<span class="rib__txt">{name}<span class="rib__wr">{wr}</span></span>'
+        else:
+            name = f'<span class="rib__txt">{name}</span>'
         cls = "row row--lead" if g["name"] == lead else "row"
         rows.append(
             f'<li class="{cls}"><div class="rib"><div class="rib__bar"><div class="rib__in">'
             f'<span class="rib__acc mono"{_attr(aria_label=_t("tile.place", n=g["rank"]))}>{escape(str(g["rank"]))}</span>'
             f"{name}</div></div></div>"
             f'<span class="row__kills mono">{escape(str(g["mythicKills"]))}<small>/{escape(str(total))}</small></span>'
-            f'<div class="row__fight"><div class="row__top"><span class="row__label">{escape(label)}</span>{_world_tag(data, g)}</div>'
+            f'<div class="row__fight"><div class="row__top"><span class="row__label">{escape(label)}</span></div>'
             f'<span class="row__hp" role="img"{_attr(aria_label=label)}><i></i></span></div></li>')
     return f'<ol id="lowerThirds" class="board">{"".join(rows)}</ol>'
 

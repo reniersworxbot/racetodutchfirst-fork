@@ -16,7 +16,7 @@ a:hover { text-decoration-color: var(--jade); }
 [hidden] { display: none !important; }
 
 .page {
-  max-width: 1320px; margin: 0 auto; padding: 40px 24px 96px;
+  max-width: 1320px; margin: 0 auto; padding: 40px 24px 72px;
   display: flex; flex-direction: column; gap: 40px;
 }
 
@@ -62,7 +62,7 @@ a:hover { text-decoration-color: var(--jade); }
 /* ---- pills ------------------------------------------------------------ */
 .pill {
   display: inline-flex; align-items: center; gap: 6px; padding: 6px 15px 6px 11px;
-  font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap;
+  font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; white-space: nowrap;
   background: var(--ink-750); color: var(--ink-200);
   clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
 }
@@ -104,7 +104,7 @@ a:hover { text-decoration-color: var(--jade); }
 
 /* ---- race track (SVG) --------------------------------------------------- */
 .timeline-chart text { font-family: var(--f-display); }
-.svg-axis { fill: var(--ink-300); font-size: 11px; font-family: var(--f-mono) !important; }
+.svg-axis { fill: var(--ink-300); font-size: 12px; font-family: var(--f-mono) !important; }
 .svg-grid { stroke: var(--ink-700); stroke-width: 1; }
 
 
@@ -138,7 +138,7 @@ details[open] > .disclose::before { transform: rotate(45deg); }
 .data-table th, .data-table td { text-align: left; padding: 6px 14px 6px 0; border-bottom: 1px solid var(--ink-700); vertical-align: top; }
 .data-table th { color: var(--ink-200); font-weight: 600; }
 
-.ce-tag { margin-left: 8px; font-size: 10px; font-weight: 700; letter-spacing: .12em; color: var(--jade); }
+.ce-tag { margin-left: 8px; font-size: 12px; font-weight: 700; letter-spacing: .12em; color: var(--jade); }
 .pill--jade { color: var(--jade); }
 ::selection { background: var(--jade-ghost); color: var(--paper); }
 .boss-thumb {
@@ -150,20 +150,188 @@ details[open] > .disclose::before { transform: rotate(45deg); }
 
 /* ---- Voortgang chart ---------------------------------------------------------------- */
 .svg-night { fill: rgba(63, 217, 164, .045); }
-.svg-grid--ce { stroke: var(--jade-deep); stroke-dasharray: 4 5; }
 .svg-step { fill: none; stroke: var(--guild); stroke-linejoin: round; stroke-linecap: round; }
 .svg-node { fill: var(--ink-850); stroke: var(--guild); stroke-width: 2; }
 .svg-star { fill: var(--gold); stroke: var(--ink-850); stroke-width: 1.5; }
 .svg-end { fill: var(--guild); font: 700 14px var(--f-display); }
 .svg-end__n { fill: var(--paper-dim); font: 500 12px var(--f-mono); }
-.svg-end__pct { fill: var(--ink-300); font: 500 12px var(--f-mono); }
-.timeline-chart { background: var(--ink-850); border: 1px solid var(--ink-700); padding: 14px 0 4px; }
-/* The line ends carry the names on wide screens; the legend is for phones. */
-@media (min-width: 600px) { #timelineLegend { display: none; } }
+.svg-end__go { fill: var(--ink-200); font: 500 12px var(--f-mono); }
+/* The finish: a jade band over the top level, the CE boss's head and name in it, a 2px line. */
+.svg-finish { fill: rgba(63, 217, 164, .1); }
+.svg-finish__line { stroke: var(--jade); stroke-width: 2; }
+.svg-finish__label { fill: var(--jade); font: 800 12px var(--f-display); letter-spacing: .12em; text-transform: uppercase; }
+/* The way still to go: a bar per guild from where it stands up to the finish line. */
+/* The chosen moment. */
+.svg-cross { stroke: var(--paper-dim); stroke-width: 1; stroke-dasharray: 3 3; }
+.svg-cross-dot { fill: var(--ink-900); stroke: var(--guild); stroke-width: 2.5; }
+.timeline-chart {
+  background: var(--ink-850); border: 1px solid var(--ink-700); padding: 14px 0 4px;
+  cursor: crosshair; touch-action: pan-y; user-select: none; -webkit-user-select: none;
+}
+.timeline-chart:focus-visible { outline-offset: 2px; }
+.tl-stage { position: relative; }
+/* Drag to zoom: the stretch being selected. */
+.tl-brush {
+  position: absolute; pointer-events: none; left: var(--bx); width: var(--bw); top: calc(var(--by) + 15px); height: var(--bh);
+  background: rgba(63, 217, 164, .12); box-shadow: inset 1px 0 0 var(--jade), inset -1px 0 0 var(--jade);
+}
+/* The standings at the chosen moment (now, until one is picked), in a strip under the chart: it
+   never covers a line, and its rank blocks carry the guild colours, so it is the legend too. */
+.tl-readout { margin-top: 4px; padding: 10px 14px 12px; background: var(--ink-850); border: 1px solid var(--ink-700); }
+.tl-readout__head { display: flex; align-items: center; gap: 10px; min-height: 24px; margin-bottom: 8px; }
+.tl-readout__when { font-size: 14px; font-weight: 700; color: var(--paper); }
+.tl-readout__day { font-family: var(--f-mono); font-size: 12px; color: var(--ink-300); }
+.tl-readout__x {
+  display: inline-flex; align-items: center; gap: 6px; height: 26px; margin-left: auto; padding: 0 8px; border: 0;
+  background: none; color: var(--ink-300); font: inherit; font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+}
+.tl-readout__x:hover { color: var(--paper); }
+.tl-readout__list { list-style: none; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 8px 18px; }
+.tl-readout__list li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; gap: 0 10px; align-items: baseline; min-width: 0; }
+.tl-readout__rank {
+  grid-row: 1 / 3; align-self: start; display: grid; place-items: center; height: 22px; margin-top: 1px;
+  background: var(--guild); color: var(--ink-900); font-family: var(--f-mono); font-size: 12px; font-weight: 800;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 0 100%);
+}
+.tl-readout__name { font-size: 14px; font-weight: 600; color: var(--paper); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tl-readout__k { font-family: var(--f-mono); font-size: 13px; font-weight: 700; color: var(--paper); }
+.tl-readout__boss { grid-column: 2 / 4; font-size: 12px; color: var(--paper-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tl-readout.is-picked { border-color: var(--ink-600); }
+
+/* The bar above the chart: Grafiek | Replay, the period, a one-line hint, full screen. Flush
+   blocks like NL | EN, a step smaller; the period's open block in paper on ink-700. */
+.seg { display: inline-flex; flex: 0 0 auto; height: 32px; }
+.seg button {
+  font: inherit; font-size: 12px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; cursor: pointer;
+  padding: 0 12px; border: 0; background: var(--ink-850); color: var(--ink-300);
+  transition: color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.seg button:hover { color: var(--paper); }
+.seg button[aria-pressed="true"] { background: var(--jade); color: var(--ink-900); }
+.seg--quiet button[aria-pressed="true"] { background: var(--ink-700); color: var(--paper); }
+.seg button:focus-visible { outline-offset: -2px; }
+.tl-hint { flex: 1 1 240px; min-width: 0; font-size: 13px; color: var(--ink-300); }
+.tl-box:not([data-mode="chart"]) .tl-only, .tl-box:not([data-mode="chart"]) .tl-readout { display: none !important; }
+/* One guild in focus: the rest fade (setFocus in voortgang.js). */
+#timelineBox .is-dim { opacity: .18; transition: opacity var(--t-fast) var(--ease); }
+#timelineBox .tl-readout li.is-dim { opacity: .4; }
+#timelineBox [data-guild] { transition: opacity var(--t-fast) var(--ease); }
+.svg-end, .tl-readout__list li { cursor: pointer; }
+
+/* Plaatsen and Ronde: the chart well; Per guild: a grid of small wells. */
+.tl-alt { background: var(--ink-850); border: 1px solid var(--ink-700); padding: 14px 0 4px; }
+.svg-bump { fill: none; stroke: var(--guild); stroke-width: 4; stroke-linejoin: round; }
+.svg-pass { fill: var(--ink-900); stroke: var(--guild); stroke-width: 2.5; }
+.svg-pass__lbl { fill: var(--paper-dim); font: 12px var(--f-display); }
+.sm-grid { display: grid; grid-template-columns: repeat(var(--sm-cols, 3), minmax(0, 1fr)); gap: 10px; }
+.sm { background: var(--ink-850); border: 1px solid var(--ink-700); padding: 10px 0 2px; }
+.sm svg { display: block; }
+.sm__head { display: flex; align-items: baseline; gap: 8px; padding: 0 10px; }
+.sm__rank { align-self: center; display: grid; place-items: center; width: 22px; height: 22px; background: var(--guild); color: var(--ink-900); font-size: 12px; font-weight: 800; clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 0 100%); }
+.sm__name { flex: 1 1 auto; min-width: 0; font-size: 15px; font-weight: 600; color: var(--paper); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.sm__k { margin-left: 0; font-size: 13px; font-weight: 700; color: var(--paper); }
+.sm__go { font-size: 12px; color: var(--ink-300); white-space: nowrap; }
+.sm__k { white-space: nowrap; }
+.svg-ghost { fill: none; stroke: var(--ink-500); stroke-width: 1.25; }
+.svg-area { fill: var(--guild); fill-opacity: .14; stroke: none; }
+.svg-lane { fill: none; stroke: var(--ink-750); }
+.svg-lane__fill { fill: none; stroke: var(--guild); }
+.svg-runner { fill: var(--guild); stroke: var(--ink-850); stroke-width: 2.5; }
+.svg-ring__start { fill: var(--jade); font: 800 12px var(--f-display); letter-spacing: .14em; }
+.svg-ring__day { fill: var(--jade); font: 800 13px var(--f-display); letter-spacing: .14em; }
+.svg-ring__row { fill: var(--guild, var(--paper)); font: 700 15px var(--f-display); }
+.tl-box > .tl-stage > #tlPlayer { margin-bottom: 8px; }
+
+/* ---- Wedstrijdverslag: the race as a live blog, newest day first ------------------------ */
+.log { list-style: none; display: grid; border-left: 2px solid var(--ink-700); margin-left: 5px; }
+.log-day { position: relative; display: grid; grid-template-columns: 170px minmax(0, 1fr); gap: 18px; padding: 14px 0 22px 22px; }
+.log-day::before { content: ""; position: absolute; left: -7px; top: 18px; width: 12px; height: 12px; background: var(--jade); clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 0 100%); }
+.log-when { display: grid; gap: 2px; align-content: start; }
+.log-when b { font-size: 16px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--paper); }
+.log-when span { font-size: 13px; color: var(--ink-300); }
+.log-ev { list-style: none; display: grid; gap: 6px; }
+.log-e { display: grid; grid-template-columns: 50px minmax(0, 1fr); gap: 10px; font-size: 15px; line-height: 1.45; color: var(--paper-dim); }
+.log-e b { font-weight: 600; color: var(--paper); }
+.log-e b.log-guild { color: var(--guild); }
+.log-t { padding-top: 2px; font-size: 13px; color: var(--ink-300); }
+.log-e--first .log-t { color: var(--gold); }
+.log-e--pass .log-t { color: var(--jade); }
+.log-stand { list-style: none; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
+.log-stand li { display: inline-flex; align-items: center; gap: 8px; height: 26px; padding-right: 10px; background: var(--ink-800); font-size: 12px; color: var(--paper-dim); }
+.log-stand li .mono { color: var(--paper); }
+.log-stand__rank { align-self: stretch; display: grid; place-items: center; width: 22px; background: var(--guild); color: var(--ink-900) !important; font-weight: 800; clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 0 100%); }
+.log-more { margin-top: 6px; }
+@media (max-width: 720px) {
+  .log-day { grid-template-columns: minmax(0, 1fr); gap: 8px; padding-left: 18px; }
+  .log-e { grid-template-columns: 44px minmax(0, 1fr); font-size: 14px; }
+}
+
+/* ---- Replay: a lane per guild on the board's race track, the finish at the end ---------- */
+.tl-replay { padding: 16px 18px 18px; background: var(--ink-850); border: 1px solid var(--ink-700); }
+.rp-controls { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+.rp-play {
+  display: inline-flex; align-items: center; gap: 8px; height: 40px; padding: 0 16px 0 12px; border: 0; cursor: pointer;
+  background: var(--jade); color: var(--ink-900); font: inherit; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 8px) 100%, 0 100%);
+}
+.rp-play svg { width: 18px; height: 18px; fill: currentColor; }
+.rp-play[aria-pressed="true"] { background: var(--paper-dim); }
+.rp-play:focus-visible { outline-offset: 3px; }
+.rp-slider { flex: 1 1 auto; min-width: 0; height: 28px; margin: 0; background: transparent; cursor: pointer; -webkit-appearance: none; appearance: none; }
+.rp-slider::-webkit-slider-runnable-track { height: 6px; background: linear-gradient(90deg, var(--jade) var(--fill, 0%), var(--ink-700) 0); }
+.rp-slider::-moz-range-track { height: 6px; background: var(--ink-700); }
+.rp-slider::-moz-range-progress { height: 6px; background: var(--jade); }
+.rp-slider::-webkit-slider-thumb { -webkit-appearance: none; width: 12px; height: 24px; margin-top: -9px; border: 0; background: var(--paper); }
+.rp-slider::-moz-range-thumb { width: 12px; height: 24px; border: 0; border-radius: 0; background: var(--paper); }
+.rp-slider:focus-visible { outline-offset: 4px; }
+.rp-when { flex: 0 0 auto; min-width: 150px; text-align: right; font-family: var(--f-mono); font-size: 13px; color: var(--paper-dim); }
+.rp-lanes { list-style: none; display: grid; gap: 6px; }
+.rp-lane { display: grid; grid-template-columns: minmax(0, 280px) minmax(0, 1fr) 40px 64px; align-items: center; gap: 0 10px; min-height: 52px; }
+.rp-lane--head { min-height: 0; margin-bottom: 2px; }
+.rp-who { display: flex; align-items: center; gap: 12px; min-width: 0; height: 46px; padding-right: 18px; background: var(--ink-800); clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%); }
+.rp-rank { align-self: stretch; display: grid; place-items: center; flex: 0 0 40px; background: var(--guild); color: var(--ink-900); font-size: 18px; font-weight: 800; }
+.rp-name { display: grid; min-width: 0; line-height: 1.25; }
+.rp-name b { font-size: 16px; font-weight: 600; color: var(--paper); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rp-boss { font-size: 12px; color: var(--paper-dim); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.rp-track { height: 20px; }
+/* The finish line: jade, the height of the lane; the head row carries the CE boss. */
+.rp-finish { position: relative; align-self: stretch; }
+.rp-finish::before { content: ""; position: absolute; top: -3px; bottom: -3px; left: 0; width: 2px; background: var(--jade); }
+.rp-finish--head { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; padding-left: 0; }
+.rp-finish--head::before { display: none; }
+.rp-ce { width: 40px; height: 40px; margin: 0; }
+.rp-finish--head b { font-size: 12px; font-weight: 800; letter-spacing: .12em; color: var(--jade); }
+.rp-k { font-size: 22px; font-weight: 800; color: var(--paper); text-align: right; }
+.rp-k small { font-size: 13px; font-weight: 600; color: var(--ink-300); }
+.rp-lane.is-lead .rp-k { color: var(--gold); }
+.tl-box.is-full .tl-replay, .tl-box.is-full .tl-small { flex: 1; min-height: 0; overflow-y: auto; }
+.tl-box.is-full .tl-alt { flex: 1; min-height: 0; overflow: hidden; }
+@media (max-width: 720px) {
+  .rp-controls { flex-wrap: wrap; gap: 10px 12px; }
+  .rp-slider { flex-basis: 100%; order: 3; }
+  .rp-when { min-width: 0; margin-left: auto; }
+  .rp-lane { grid-template-columns: minmax(0, 1fr) 30px 52px; grid-template-areas: "who who k" "track finish finish"; gap: 6px 8px; }
+  .rp-lane--head { display: none; }
+  .rp-who { grid-area: who; height: 40px; }
+  .rp-rank { flex-basis: 34px; font-size: 15px; }
+  .rp-track { grid-area: track; height: 14px; }
+  .rp-finish { grid-area: finish; }
+  .rp-k { grid-area: k; font-size: 18px; }
+  .tl-replay { padding: 12px; }
+}
 
 /* Voortgang full screen: the box (bar, chart, legend) covers the screen; the chart takes the
    rest of the height and redraws to it. Outside full screen only the button shows in the bar. */
-.tl-bar { display: flex; align-items: center; justify-content: flex-end; gap: 12px; margin-bottom: 8px; }
+.tl-bar { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 12px; margin-bottom: 10px; }
+.tl-full { margin-left: auto; }
+@media (max-width: 720px) {
+  /* Phones: the view switch and full screen on one row, the period and the hint under it. */
+  #vgMode { order: 1; flex: 1 1 100%; max-width: 100%; overflow-x: auto; scrollbar-width: none; }
+  #vgMode button { flex: 0 0 auto; }
+  .tl-full { order: 2; }
+  #vgRange { order: 3; }
+  .tl-hint { order: 4; flex-basis: 100%; }
+}
 .tl-bar__title { display: none; }
 .tl-full__icon { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: square; }
 .tl-box.is-full {
@@ -174,7 +342,7 @@ details[open] > .disclose::before { transform: rotate(45deg); }
 .tl-box.is-full .tl-bar { justify-content: space-between; margin-bottom: 0; }
 .tl-box.is-full .tl-bar__title { display: block; font-size: clamp(18px, 2vw, 26px); font-weight: 800; text-transform: uppercase; color: var(--paper); }
 .tl-box.is-full .timeline-chart { flex: 1; min-height: 0; overflow: hidden; }
-.tl-box.is-full .legend { margin-top: 0; }
+.tl-box.is-full .tl-stage { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 body.has-full { overflow: hidden; }
 /* On a big screen the labels grow a step with the chart. */
 @media (min-width: 900px) {
@@ -192,12 +360,13 @@ body.has-full { overflow: hidden; }
 .gs-pulls-h, .gs-pulls { width: 230px; }
 .gs th, .gs td { text-align: left; vertical-align: middle; }
 .gs thead th { vertical-align: bottom; padding: 0 0 4px; font-weight: 500; }
-.gs-boss { font-size: 11px; color: var(--ink-300); }
+.gs-boss { font-size: 12px; line-height: 1.25; color: var(--ink-200); }
 .gs-boss .boss-thumb { display: grid; margin: 0 0 6px; }
-.gs-boss__label { display: flex; align-items: baseline; gap: 5px; min-width: 0; }
-.gs-boss__name { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.gs-boss__label { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0 5px; min-width: 0; min-height: 2.5em; }
+/* Two lines, so a long boss name reads whole instead of ending in an ellipsis. */
+.gs-boss__name { min-width: 0; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; overflow-wrap: anywhere; }
 .gs-boss .ce-tag { margin-left: 0; flex: 0 0 auto; }
-.gs thead .gs-pulls-h { font-size: 11px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-300); }
+.gs thead .gs-pulls-h { font-size: 12px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-300); }
 .gs-who, .gs-corner { position: sticky; left: 0; z-index: 1; padding: 0; background: var(--ink-900); }
 .gs-who__in {
   display: grid; grid-template-columns: 42px minmax(0, 1fr) auto; align-items: center; gap: 0 10px; min-height: 58px; padding-right: 18px;
@@ -208,14 +377,14 @@ body.has-full { overflow: hidden; }
 .gs-who__name a { color: var(--paper); text-decoration: none; line-height: 1.15; overflow-wrap: break-word; display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 2; overflow: hidden; }
 .gs-who__name a:hover { color: var(--jade); }
 .gs-who__name .row__live { margin-left: 0; }
-.gs-who__wr { font-size: 12px; font-weight: 500; line-height: 1.3; color: var(--ink-300); font-variant-numeric: tabular-nums; }
+.gs-who__wr { font-size: 13px; font-weight: 500; line-height: 1.3; color: var(--ink-300); font-variant-numeric: tabular-nums; }
 .gs-who__k { font-size: 22px; font-weight: 800; color: var(--paper); }
 .gs-who__k small { font-size: 13px; font-weight: 600; color: var(--ink-300); }
 .gs-row--lead .gs-who__k { color: var(--gold); }
 .gs-cell { padding: 8px 9px; min-height: 58px; background: var(--ink-850); border: 1px solid var(--ink-700); }
 .gs-cell > span { display: block; }
-.gs-cell__main { font-family: var(--f-mono); font-size: 12px; color: var(--paper); white-space: nowrap; }
-.gs-cell__sub { margin-top: 3px; font-size: 11px; color: var(--ink-300); white-space: nowrap; }
+.gs-cell__main { font-family: var(--f-mono); font-size: 13px; color: var(--paper); white-space: nowrap; }
+.gs-cell__sub { margin-top: 3px; font-size: 12px; color: var(--ink-300); white-space: nowrap; }
 /* Drawn marks (one stroke family): a check for a kill, a star for the race's first kill. */
 .gs-cell--kill .gs-cell__main::before {
   content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 6px; vertical-align: -1px;
@@ -233,16 +402,56 @@ body.has-full { overflow: hidden; }
 .gs-bars { display: flex; align-items: flex-end; gap: 1px; height: 32px; border-bottom: 1px solid var(--ink-600); }
 .gs-bars i { flex: 1; min-width: 1px; height: var(--h, 4%); background: var(--ink-500); }
 .gs-bars i.is-best { background: var(--guild); }
-.gs-pulls__cap { display: block; margin-top: 5px; font-size: 11px; line-height: 1.4; color: var(--paper-dim); }
+.gs-pulls__cap { display: block; margin-top: 6px; font-size: 13px; line-height: 1.4; color: var(--paper-dim); }
 .gs-pulls__src-wrap { white-space: nowrap; }
 .gs-pulls__best { color: var(--guild); font-weight: 600; white-space: nowrap; }
 .gs-pulls__src { color: var(--ink-300); text-decoration: none; }
 .gs-pulls__src:hover { color: var(--jade); }
 
 /* ---- footer ------------------------------------------------------------------- */
-.site-footer {
-  border-top: 1px solid var(--ink-700); padding-top: 22px;
-  display: flex; flex-direction: column; gap: 8px; font-size: 13px; color: var(--ink-300); max-width: 90ch;
+/* The page's close: a full-width ink-850 band (the ticker's width) under every view. The name
+   quietly with season and race day, the views again, back to top; then the sources as a list
+   (name, then what it gives) and how the race counts, ending in the code. */
+.site-footer { background: var(--ink-850); border-top: 1px solid var(--ink-700); font-size: 14px; line-height: 1.55; color: var(--ink-300); }
+.ft { max-width: 1320px; margin: 0 auto; padding: 28px 24px 44px; }
+.ft__head { display: flex; flex-wrap: wrap; align-items: center; gap: 14px 32px; padding-bottom: 22px; border-bottom: 1px solid var(--ink-700); }
+.ft__id { display: grid; gap: 2px; margin-right: auto; }
+.ft__name { font-size: 18px; font-weight: 800; letter-spacing: .04em; text-transform: uppercase; color: var(--paper); }
+.ft__meta { font-family: var(--f-mono); font-size: 12px; color: var(--ink-300); }
+.ft__nav { display: flex; gap: 22px; }
+.ft__nav a {
+  padding: 6px 0; font-size: 13px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+  color: var(--ink-200); text-decoration: none; box-shadow: inset 0 -2px 0 transparent;
+}
+.ft__nav a:hover { color: var(--paper); }
+.ft__nav a[aria-current="page"] { color: var(--paper); box-shadow: inset 0 -2px 0 var(--jade); }
+.ft__up {
+  display: inline-flex; align-items: center; gap: 8px; height: 36px; padding: 0 14px; border: 0; background: var(--ink-800);
+  font: inherit; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--paper-dim); cursor: pointer;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%); padding-right: 18px;
+  transition: color var(--t-fast) var(--ease), background var(--t-fast) var(--ease);
+}
+.ft__up svg { width: 14px; height: 14px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: square; }
+.ft__up:hover { color: var(--jade); background: var(--ink-750); }
+.ft__cols { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr); gap: 28px 64px; padding-top: 24px; }
+.ft__h { margin-bottom: 10px; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-200); }
+.ft__src { list-style: none; display: grid; gap: 6px; }
+.ft__src li { display: grid; grid-template-columns: 120px minmax(0, 1fr); gap: 12px; align-items: baseline; }
+.ft__src a { font-weight: 600; text-decoration: none; }
+.ft__src a:hover { text-decoration: underline; }
+.ft__cols p { max-width: 62ch; }
+.ft__cols p + p { margin-top: 8px; }
+.ft__code { display: inline-flex; align-items: center; gap: 8px; margin-top: 14px; font-weight: 600; text-decoration: none; }
+.ft__code svg { width: 15px; height: 15px; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: square; }
+.ft__code:hover { text-decoration: underline; }
+@media (max-width: 720px) {
+  .ft { padding: 24px 16px 36px; }
+  .ft__cols { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .ft__head { gap: 14px 20px; }
+  .ft__id { flex: 1 1 100%; }
+  .ft__nav { gap: 16px; margin-right: auto; }
+  .ft__nav a { font-size: 12px; }
+  .ft__src li { grid-template-columns: 108px minmax(0, 1fr); }
 }
 .updated { font-size: 15px; color: var(--paper-dim); }
 
@@ -256,7 +465,7 @@ body.has-full { overflow: hidden; }
   /* Per guild scrolls sideways with the guild column pinned. */
   .gs { min-width: 1120px; }
   .gs-cell { padding: 7px 6px; }
-  .gs-cell__main { font-size: 11px; }
+  .gs-cell__main { font-size: 12px; }
   .gs-cell--kill .gs-cell__main::before { margin-right: 4px; }
   .gs-corner, .gs-who { width: 150px; }
   .gs-pulls-h, .gs-pulls { width: 190px; }

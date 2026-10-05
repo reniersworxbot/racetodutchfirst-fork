@@ -54,7 +54,13 @@
     </div>
   </div>
 
-  <div class="sp__stage">
+  <nav class="views" data-i18n-aria-label="nav.label" aria-label="Weergave">
+    <a href="#race" data-view="race" aria-current="page" data-i18n="nav.race">Race</a>
+    <a href="#guilds" data-view="guilds" data-i18n="nav.guilds">Guilds</a>
+    <a id="navHof" href="#halloffame" data-view="hof" class="js-nav-hof" data-i18n="nav.hof" hidden>Hall of fame</a>
+  </nav>
+
+  <div class="sp__stage v-race">
     <div id="heroArt" class="sp__art" aria-hidden="true" hidden></div>
     <h1 class="sp__title"><span data-i18n="title.a">Wie haalt als eerste</span> <em data-i18n="title.b">Cutting Edge?</em></h1>
     <p class="sp__lead" data-i18n="lead">De race tussen Nederlandstalige guilds naar de laatste Mythic-boss van de huidige raid tier, live gevolgd via Raider.IO en Warcraft Logs.</p>
@@ -66,7 +72,7 @@
     </section>
   </div>
 
-  <div class="ticker">
+  <div class="ticker v-race">
     <h2 class="ticker__label" data-i18n="feed.h">Laatste kills</h2>
     <ol id="killFeed" class="ticker__list"></ol>
   </div>
@@ -77,19 +83,30 @@
 
   <div id="globalError" class="error-capsule" role="alert" hidden></div>
 
-  <section id="winnerBanner" class="winner" aria-live="polite" hidden></section>
-  <div id="sideRaids" class="side-raids" hidden></div>
+  <section id="winnerBanner" class="winner v-race" aria-live="polite" hidden></section>
+  <div id="sideRaids" class="side-raids v-race" hidden></div>
 
-<section class="view" aria-labelledby="timelineHeading">
+  <section class="view v-race" aria-labelledby="timelineHeading">
     <h2 id="timelineHeading" class="view__title" data-i18n="timeline.h">Voortgang</h2>
     <p class="section-caption" data-i18n="timeline.cap">Trede = kill · tussenstap = nieuwe beste pull · ster = eerste kill van de race</p>
     <div id="timelineBox" class="tl-box">
       <div class="tl-bar">
         <span class="tl-bar__title" data-i18n="timeline.h">Voortgang</span>
+        <div id="vgMode" class="seg" role="group" data-i18n-aria-label="vg.mode" aria-label="Weergave van de voortgang"></div>
+        <div id="vgRange" class="seg seg--quiet tl-only" role="group" data-i18n-aria-label="vg.range" aria-label="Periode"></div>
+        <span id="vgHint" class="tl-hint tl-only"></span>
         <button id="timelineFull" type="button" class="pill pill--action tl-full" aria-pressed="false" aria-controls="timelineBox"><span id="timelineFullLabel">Volledig scherm</span></button>
       </div>
-      <div id="timeline" class="chart timeline-chart"></div>
-      <ul id="timelineLegend" class="legend"></ul>
+      <div class="tl-stage">
+        <div id="timeline" class="chart timeline-chart" tabindex="0" role="group"></div>
+        <div id="tlBrush" class="tl-brush" hidden></div>
+        <div id="tlReadout" class="tl-readout" role="status"></div>
+        <div id="tlBump" class="chart tl-alt" hidden></div>
+        <div id="tlSmall" class="chart tl-small" hidden></div>
+        <div id="tlPlayer" class="rp-controls" hidden></div>
+        <div id="tlReplay" class="tl-replay" hidden></div>
+        <div id="tlRing" class="chart tl-alt" hidden></div>
+      </div>
     </div>
     <details class="as-table">
       <summary class="disclose" data-i18n="timeline.asTable">Toon als tabel</summary>
@@ -97,7 +114,14 @@
     </details>
   </section>
 
-<section class="view" aria-labelledby="guildHeading">
+  <section id="raceLog" class="view v-race" aria-labelledby="logHeading">
+    <h2 id="logHeading" class="view__title" data-i18n="log.h">Wedstrijdverslag</h2>
+    <p class="section-caption" data-i18n="log.cap">De race dag na dag: kills, eerste kills en inhaalbewegingen, met de stand aan het eind van de dag.</p>
+    <ol id="logList" class="log"></ol>
+    <div id="logMore" class="log-more"></div>
+  </section>
+
+  <section class="view v-guilds" aria-labelledby="guildHeading">
     <h2 id="guildHeading" class="view__title" data-i18n="guild.h">Per guild</h2>
     <p class="section-caption" data-i18n="guild.cap">Per boss de killdatum of de beste pull; rechts elke pull op de huidige boss.</p>
     <div class="table-wrap gs-wrap" tabindex="0" role="region" aria-labelledby="guildHeading">
@@ -105,7 +129,7 @@
     </div>
   </section>
 
-<section id="hallOfFame" class="view" aria-labelledby="hofHeading" hidden>
+  <section id="hallOfFame" class="view v-hof" aria-labelledby="hofHeading" hidden>
     <h2 id="hofHeading" class="view__title" data-i18n="hof.h">Hall of fame</h2>
     <p class="section-caption" data-i18n="hof.cap">Kies een boss: wie hem als eerste versloeg, met welk team, en wie volgde.</p>
     <div id="hofTabs" class="hof-tabs" role="tablist" aria-label="Bosses" data-i18n-aria-label="hof.tabs"></div>
@@ -123,17 +147,44 @@
     </div>
   </section>
 
-  <footer class="site-footer">
-    <p><span data-i18n="footer.src1">Bronnen:</span> <a href="https://raider.io" rel="noopener">Raider.IO</a> <span data-i18n="footer.src2">(guildprofielen, kills en live tracking)</span><span id="srcWcl">, <a href="https://www.warcraftlogs.com" rel="noopener">Warcraft Logs</a> <span data-i18n="footer.src3">(gelogde fights)</span></span><span id="srcLive">, <a href="https://decapi.me" rel="noopener">DecAPI</a> <span data-i18n="footer.srcLive">(wie er live is op Twitch)</span></span> <span data-i18n="footer.and">en</span> <a href="https://worldofwarcraft.blizzard.com" rel="noopener">Blizzard</a> <span data-i18n="footer.srcArt">(de boss-renders)</span>.</p>
-    <p><span id="wclNote"></span> <span id="pullNote">Een pull die nergens gevolgd of gelogd werd, ontbreekt hier ook.</span></p>
-    <p><a href="https://github.com/reniersworx/racetodutchfirst" rel="noopener" data-i18n="footer.code">Broncode op GitHub</a></p>
-  </footer>
 
 </div>
+
+<footer class="site-footer">
+  <div class="ft">
+    <div class="ft__head">
+      <p class="ft__id"><span class="ft__name">Race to Dutch First</span><span id="ftMeta" class="ft__meta"></span></p>
+      <nav class="ft__nav" data-i18n-aria-label="nav.label" aria-label="Weergave">
+        <a href="#race" data-view="race" data-i18n="nav.race">Race</a>
+        <a href="#guilds" data-view="guilds" data-i18n="nav.guilds">Guilds</a>
+        <a href="#halloffame" data-view="hof" class="js-nav-hof" data-i18n="nav.hof" hidden>Hall of fame</a>
+      </nav>
+      <button id="toTop" type="button" class="ft__up"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 14l6-6 6 6"/></svg><span data-i18n="footer.top">Naar boven</span></button>
+    </div>
+    <div class="ft__cols">
+      <section aria-labelledby="ftSrcH">
+        <h2 id="ftSrcH" class="ft__h" data-i18n="footer.src1">Bronnen</h2>
+        <ul class="ft__src">
+          <li><a href="https://raider.io" rel="noopener">Raider.IO</a><span data-i18n="footer.src2">guildprofielen, kills en live tracking</span></li>
+          <li id="srcWcl"><a href="https://www.warcraftlogs.com" rel="noopener">Warcraft Logs</a><span data-i18n="footer.src3">gelogde fights</span></li>
+          <li id="srcLive"><a href="https://decapi.me" rel="noopener">DecAPI</a><span data-i18n="footer.srcLive">wie er live is op Twitch</span></li>
+          <li><a href="https://worldofwarcraft.blizzard.com" rel="noopener">Blizzard</a><span data-i18n="footer.srcArt">de boss-renders</span></li>
+        </ul>
+      </section>
+      <section aria-labelledby="ftHowH">
+        <h2 id="ftHowH" class="ft__h" data-i18n="footer.howH">Zo tellen we</h2>
+        <p id="wclNote"></p>
+        <p id="pullNote">Een pull die nergens gevolgd of gelogd werd, ontbreekt hier ook.</p>
+        <a class="ft__code" href="https://github.com/reniersworx/racetodutchfirst" rel="noopener"><span data-i18n="footer.code">Broncode op GitHub</span><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M14 5h5v5M19 5l-8 8M17 14v5H5V7h5"/></svg></a>
+      </section>
+    </div>
+  </div>
+</footer>
 
 <script src="bossart.js"></script>
 <script src="i18n.js"></script>
 <script src="app.js"></script>
+<script src="voortgang.js"></script>
 <script src="halloffame.js"></script>
 <script src="live.js"></script>
 </body>

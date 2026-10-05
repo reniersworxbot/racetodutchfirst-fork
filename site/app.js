@@ -71,6 +71,10 @@ function leaderName(data) { return data.winner ? data.winner.guild : (data.guild
 
 /* What the track shows: a guild that killed the CE boss stands on the finish. */
 function trackPosition(g, total) { return g.ceKilledAt ? total : Math.min(g.racePosition, total); }
+/* The board's race track: the winner stands on the finish. */
+function barPos(data, g) {
+  return data.winner && data.winner.guild === g.name ? data.tier.totalBosses : trackPosition(g, data.tier.totalBosses);
+}
 
 /* Every Mythic kill of a guild, oldest first. */
 function killsOf(g) {
@@ -208,6 +212,39 @@ function bossArtFor(name) {
     .filter(Boolean).slice(0, 2).map(m => `img/boss/creature-display-${m[1]}.png`);
 }
 
+/* Blizzard's renders are uneven: in a council one body can be a tiny figure in its frame
+ * (Zul'jan on The Coiled Altar: 78x107 of 600x600) next to a full-frame one, and some are cut
+ * off at the top (Hex Lord Malacrass's crown). Once loaded: a body under 40% of its partner's
+ * height is dropped (the pair class goes with it), and a render whose top row is opaque fades
+ * in from the top instead of ending in a hard edge (.is-cut-top). */
+function cutAtTop(img) {
+  try {
+    const w = img.naturalWidth, c = document.createElement('canvas');
+    c.width = w; c.height = 1;
+    const ctx = c.getContext('2d');
+    ctx.drawImage(img, 0, 0);
+    const px = ctx.getImageData(0, 0, w, 1).data;
+    let solid = 0;
+    for (let i = 3; i < px.length; i += 4) if (px[i] > 200) solid++;
+    return solid > w * 0.04;
+  } catch (_) { return false; }
+}
+function tidyBossArt(box, pairClass) {
+  const imgs = [...box.querySelectorAll('img')];
+  if (!imgs.length) return;
+  const check = () => {
+    if (!imgs.every(i => i.complete && i.naturalHeight)) return;
+    if (imgs.length === 2) {
+      const [a, b] = imgs;
+      const small = a.naturalHeight < b.naturalHeight * 0.4 ? a : b.naturalHeight < a.naturalHeight * 0.4 ? b : null;
+      if (small) { small.remove(); box.classList.remove(pairClass); }
+    }
+    for (const i of box.querySelectorAll('img')) i.classList.toggle('is-cut-top', cutAtTop(i));
+  };
+  for (const i of imgs) if (!i.complete) i.addEventListener('load', check, { once: true });
+  check();
+}
+
 // A boss head: a slanted tile with the top of the render (the face reads, a long body doesn't);
 // a boss without art gets the same tile with its initial, so every head lines up.
 function bossThumb(name, cls = 'boss-thumb') {
@@ -260,11 +297,12 @@ function renderHero(data) {
     });
   }
   art.replaceChildren(...imgs);
+  tidyBossArt(art, 'sp__art--pair');
 
   if (!g) { $('#lowerThirds').replaceChildren(); return; }
 
-  // The board: each guild as an overlay ribbon, its kills, and a bar for how far it has
-  // brought the boss it is on (best pull), labelled like a raid frame.
+  // The board: each guild as an overlay ribbon, its kills, and a race track of one segment per
+  // boss: killed bosses full, the current one as far as its best pull. Bar length = race place.
   $('#lowerThirds').replaceChildren(...data.guilds.map(x => {
     const isLead = x.name === lead;
     const c = x.current;
@@ -273,22 +311,38 @@ function renderHero(data) {
       : !c ? tr('tile.done')
       : c.bestPercent === null ? `${c.name} · ${noPullsText(data)}`
       : `${c.name} · ${tr('tile.best', { pct: pct(c.bestPercent), pulls: pulls(c.pullCount) })}`;
-    const fill = h('i', {});
-    fill.style.setProperty('--w', `${won ? 100 : c && c.bestPercent !== null ? 100 - c.bestPercent : 0}%`);
     const url = raiderioUrl(x.profileUrl);
     const rib = h('div', { class: 'rib' },
       h('div', { class: 'rib__bar' }, h('div', { class: 'rib__in' },
         h('span', { class: 'rib__acc mono', text: String(x.rank), 'aria-label': tr('tile.place', { n: x.rank }) }),
-        url ? h('a', { class: 'rib__val', href: url, rel: 'noopener', text: x.name }) : h('span', { class: 'rib__val', text: x.name }))));
+        // The name, with Raider.IO's world rank for the CE raid under it in the ribbon.
+        h('span', { class: 'rib__txt' },
+          url ? h('a', { class: 'rib__val', href: url, rel: 'noopener', text: x.name }) : h('span', { class: 'rib__val', text: x.name }),
+          worldRank(data, x)))));
     rib.style.setProperty('--acc', colour(x.colour));
     return setGuild(h('li', { class: `row${isLead ? ' row--lead' : ''}`, 'data-guild': x.name },
       rib,
       h('span', { class: 'row__kills mono' }, h('span', { class: 'row__n', text: String(x.mythicKills) }), h('small', { text: `/${total}` })),
       h('div', { class: 'row__fight' },
         // The raiding badge sits on the label line, so it never squeezes the guild name.
-        h('div', { class: 'row__top' }, h('span', { class: 'row__label', text: label }), worldRankTag(data, x, 'row__wr'), liveBadge(x, 'row__live')),
-        h('span', { class: 'row__hp', role: 'img', 'aria-label': label }, fill))), x);
+        h('div', { class: 'row__top' }, h('span', { class: 'row__label', text: label }), liveBadge(x, 'row__live')),
+        raceTrack(data, x, label))), x);
   }));
+}
+
+/* One segment per boss of the tier; each fills from --p (the race position, animatable) minus
+ * its own index --i, so 7.27 fills seven segments and a quarter of the eighth. The last one is
+ * the finish (CE). */
+function raceTrack(data, g, label) {
+  const total = data.tier.totalBosses;
+  const track = h('span', { class: 'row__hp', role: 'img', 'aria-label': `${label} · ${tr('tile.track', { pos: num(barPos(data, g), 1), total })}` },
+    ...Array.from({ length: total }, (_, i) => {
+      const seg = h('i', {});
+      seg.style.setProperty('--i', String(i));
+      return seg;
+    }));
+  track.style.setProperty('--p', String(barPos(data, g)));
+  return track;
 }
 
 /* An archived season (race.json `season.archived`, see the season switch) ends on its
@@ -379,127 +433,9 @@ function currentProgress(g) {
   return { points: stepPoints(steps), frac: (100 - cur.bestPercent) / 100, cur };
 }
 
-/* The path through one tread, from `from` to `to` on level n: up to where the guild already stood
- * on this boss when the tread began, then up with each new best. Returns SVG path commands. */
-function treadPath(points, from, to, n, x, y, off) {
-  let d = '';
-  const base = points.filter(p => p.at <= from).reduce((m, p) => Math.max(m, p.frac), 0);
-  if (base) d += ` V${y(n + base) + off}`;
-  let level = base;
-  for (const p of points) {
-    if (p.at <= from || p.at >= to || p.frac <= level) continue;
-    level = p.frac;
-    d += ` H${x(p.at)} V${y(n + level) + off}`;
-  }
-  return d;
-}
 const progressPct = frac => `${Math.round(frac * 100)}%`;
 
-function drawTimeline(el, data) {
-  const total = data.tier.totalBosses;
-  const start = timelineStart(data);
-  const end = Math.max(seasonEnd(data), start + 86400000);
-  const lead = leaderName(data);
-  // Leader drawn last, so it sits on top where lines overlap.
-  const order = [...data.guilds].reverse();
-  const isRaidDay = raidDays(data);
-
-  chart(el, w => {
-    // Wide: guild names at the line ends instead of a legend; narrow: only the count there
-    // and the legend below (#timelineLegend shows on phones only).
-    const narrow = w < 560;
-    // Full screen: as tall as the box allows (its 18px of padding off); else a fixed height.
-    const full = el.closest('.is-full');
-    const H = full ? Math.max(240, Math.floor(el.clientHeight) - 18) : narrow ? 280 : 380;
-    const m = { l: narrow ? 36 : 46, r: narrow ? 42 : 250, t: 12, b: 26 };
-    const x = tm => m.l + ((tm - start) / (end - start)) * (w - m.l - m.r);
-    const y = k => m.t + (1 - k / total) * (H - m.t - m.b);
-    const svg = s('svg', { width: w, height: H, viewBox: `0 0 ${w} ${H}`, role: 'img' });
-    svg.append(svgTitle(data.guilds.map(g => tr('timeline.kills', { guild: g.name, n: g.mythicKills })).join(', ')));
-
-    const night = new Date(start);
-    night.setHours(0, 0, 0, 0);
-    for (; night.getTime() < end; night.setDate(night.getDate() + 1)) {
-      if (!isRaidDay(night.getTime() + 12 * 3600000)) continue;
-      const a = x(Math.max(night.getTime(), start));
-      const next = new Date(night);
-      next.setDate(next.getDate() + 1);
-      const b = x(Math.min(next.getTime(), end));
-      if (b > a) svg.append(s('rect', { class: 'svg-night', x: a, y: m.t, width: b - a, height: H - m.t - m.b }));
-    }
-    for (let k = 0; k <= total; k++) {
-      svg.append(s('line', { class: `svg-grid${k === total ? ' svg-grid--ce' : ''}`, x1: m.l, x2: x(end), y1: y(k), y2: y(k) }));
-      if (k && (!narrow || k % 3 === 0 || k === total)) {
-        svg.append(s('text', { class: 'svg-axis', x: m.l - 8, y: y(k) + 4, 'text-anchor': 'end', text: k === total ? 'CE' : `${k}/${total}` }));
-      }
-    }
-    // A tick per weekly reset, labelled where there's room.
-    const week = 7 * 86400000;
-    const every = Math.max(1, Math.ceil(54 / (x(start + week) - x(start))));
-    for (let tm = start, i = 0; tm <= end; tm += week, i++) {
-      svg.append(s('line', { class: 'svg-grid', x1: x(tm), x2: x(tm), y1: H - m.b, y2: H - m.b + 4 }));
-      if (i % every === 0) {
-        svg.append(s('text', { class: 'svg-axis', x: x(tm), y: H - 8, 'text-anchor': 'middle', text: day(new Date(tm).toISOString()) }));
-      }
-    }
-
-    const ends = [];
-    const drawFrom = [];
-    order.forEach((g, i) => {
-      const off = (i - (order.length - 1) / 2) * 2; // keep equal lines apart
-      const kills = killsOf(g);
-      // Each tread climbs with the best pulls on the boss killed at its end; the open tread with
-      // those on the current boss. Points before the chart starts count from its left edge.
-      const cx = t => x(Math.min(Math.max(t, start), end));
-      let d = `M${x(start)},${y(0) + off}`;
-      let from = start;
-      kills.forEach((k, n) => {
-        d += treadPath(stepPoints(k.progress), from, k.at, n, cx, y, off);
-        d += ` H${cx(k.at)} V${y(n + 1) + off}`;
-        from = k.at;
-      });
-      const prog = currentProgress(g);
-      d += treadPath(prog.points, from, Infinity, kills.length, cx, y, off);
-      if (prog.frac && !prog.points.length) d += ` H${x(end)} V${y(kills.length + prog.frac) + off}`;
-      d += ` H${x(end)}`;
-      const line = s('path', { d, class: 'svg-step', 'stroke-width': g.name === lead ? 3 : 2.25 });
-      line.style.setProperty('--guild', colour(g.colour));
-      svg.append(line);
-      const since = motionNow && motionNow.guilds.get(g.name);
-      if (since && since.lastAt) drawFrom.push({ line, fromX: cx(since.lastAt) });
-      kills.forEach((k, n) => {
-        const title = svgTitle(tr('timeline.point', { guild: g.name, boss: k.name, date: day(k.iso), n: n + 1 }));
-        if (isFirstKill(data, k, g)) {
-          svg.append(s('path', { class: 'svg-star', d: STAR, transform: `translate(${x(k.at)},${y(n + 1) + off})` }, title));
-        } else {
-          const dot = s('circle', { class: 'svg-node', cx: x(k.at), cy: y(n + 1) + off, r: 4 }, title);
-          dot.style.setProperty('--guild', colour(g.colour));
-          svg.append(dot);
-        }
-      });
-      ends.push({ g, y: y(kills.length + prog.frac) + off, prog });
-    });
-    // Line-end labels, pushed apart where guilds share a count.
-    const gap = narrow ? 15 : 19;
-    ends.sort((a, b) => a.y - b.y);
-    ends.forEach((e, i) => { if (i && e.y - ends[i - 1].y < gap) e.y = ends[i - 1].y + gap; });
-    for (const e of ends) {
-      const label = s('text', { class: 'svg-end', x: x(end) + 10, y: e.y + 5 },
-        narrow ? '' : `${e.g.name} `,
-        s('tspan', { class: 'svg-end__n', text: `${e.g.mythicKills}/${total}` }),
-        e.prog.frac && !narrow ? s('tspan', { class: 'svg-end__pct', text: ` · ${progressPct(e.prog.frac)}` }) : null,
-        svgTitle(e.prog.frac
-          ? tr('timeline.endPct', { guild: e.g.name, n: e.g.mythicKills, boss: e.prog.cur.name, pct: progressPct(e.prog.frac), best: pct(e.prog.cur.bestPercent) })
-          : tr('timeline.end', { guild: e.g.name, n: e.g.mythicKills })));
-      label.style.setProperty('--guild', colour(e.g.colour));
-      svg.append(label);
-    }
-    el.replaceChildren(svg);
-    for (const f of drawFrom) drawLineFrom(f.line, f.fromX);
-  });
-}
-
-/* "Volledig scherm": the chart (with its legend) over the whole screen. The Fullscreen API where
+/* "Volledig scherm": the chart (with its standings) over the whole screen. The Fullscreen API where
    the browser has it for elements; otherwise (iPhone) the box covers the window. Esc, the button
    or leaving full screen closes it. On a phone it asks for landscape where that's allowed. */
 let timelineNative = false;
@@ -549,10 +485,9 @@ function renderTimeline(data) {
     btn.addEventListener('click', () => setTimelineFull(!$('#timelineBox').classList.contains('is-full')));
   }
   if (btn) paintTimelineButton();
-  drawTimeline($('#timeline'), data);
-  $('#timelineLegend').replaceChildren(...data.guilds.map(g => setGuild(h('li', {},
-    h('span', { class: 'swatch', 'aria-hidden': 'true' }),
-    `${g.name}: ${g.mythicKills}/${data.tier.totalBosses}${currentProgress(g).frac ? ` · ${progressPct(currentProgress(g).frac)}` : ''}`), g)));
+  // The chart, its moment and the replay live in voortgang.js (it draws from `race` itself when
+  // race.json arrives before it has loaded).
+  if (typeof Voortgang === 'object') Voortgang.render(data);
 
   const rows = data.guilds.map(g => h('tr', {},
     h('th', { scope: 'row', text: g.name }),
@@ -630,16 +565,23 @@ function mainRanks(data, g) {
   const raid = data.tier.raids.find(x => x.slug === data.tier.ceBoss.raid);
   return { world: r.worldRank, region: r.regionRank, realm: r.realmRank, raidName: raid ? raid.name : '' };
 }
-function worldRankTag(data, g, cls) {
+/* Raider.IO's ranks for the CE raid in the board's ribbon: world, region and realm, each its own
+ * part, so on a narrow ribbon the realm drops out whole instead of losing half its number. */
+function worldRank(data, g) {
   const r = mainRanks(data, g);
   if (!r.world) return null;
-  return h('span', { class: cls, title: tr('rank.title', { raid: r.raidName }) }, tr('rank.world', { n: num(r.world) }));
+  const parts = [tr('rank.world', { n: num(r.world) }),
+    r.region ? `${String(g.region || '').toUpperCase()} ${num(r.region)}` : null,
+    r.realm ? `${g.realm} ${num(r.realm)}` : null].filter(Boolean);
+  return h('span', { class: 'rib__wr', title: tr('rank.title', { raid: r.raidName }) },
+    ...parts.map(p => h('span', { text: p })));
 }
 function rankLine(data, g) {
   const r = mainRanks(data, g);
   if (!r.world) return null;
-  const more = [r.region ? `${String(g.region || '').toUpperCase()} ${num(r.region)}` : null,
-    r.realm ? `${g.realm} ${num(r.realm)}` : null].filter(Boolean);
+  // No-break spaces: a rank never splits from its label ("EU 1.405") when the line wraps.
+  const more = [r.region ? `${String(g.region || '').toUpperCase()}\u00a0${num(r.region)}` : null,
+    r.realm ? `${g.realm}\u00a0${num(r.realm)}` : null].filter(Boolean);
   return h('span', { class: 'gs-who__wr', title: tr('rank.title', { raid: r.raidName }) },
     tr('rank.world', { n: num(r.world) }),
     more.length ? h('span', { class: 'gs-who__wr-more', text: ` · ${more.join(' · ')}` }) : null);
@@ -734,14 +676,9 @@ let motionNow = null;
 const reducedMotion = () => typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 const EASE_OUT = 'cubic-bezier(0.16, 1, 0.3, 1)';
 if (window.CSS && CSS.registerProperty) {
-  try { CSS.registerProperty({ name: '--w', syntax: '<percentage>', inherits: false, initialValue: '0%' }); } catch (_) { /* already */ }
+  // --p inherits, so the board's segments follow an animation on their track.
+  try { CSS.registerProperty({ name: '--p', syntax: '<number>', inherits: true, initialValue: '0' }); } catch (_) { /* already */ }
 }
-
-const barPct = (data, g) => {
-  const won = data.winner && data.winner.guild === g.name;
-  const c = g.current;
-  return won ? 100 : c && c.bestPercent !== null ? 100 - c.bestPercent : 0;
-};
 // The latest moment a guild's line already showed: its last kill or its last new best.
 function lastShownAt(g) {
   const pullsAt = g.current && Array.isArray(g.current.pulls) ? g.current.pulls.map(p => Date.parse(p.at)) : [];
@@ -757,7 +694,7 @@ function diffRace(prev, data) {
     const fresh = killsOf(g).filter(k => !had.has(`${k.raid}/${k.slug}`));
     fresh.forEach(k => out.newKills.add(`${g.name}|${k.raid}/${k.slug}`));
     const moved = g.racePosition !== o.racePosition || fresh.length > 0;
-    if (moved) out.guilds.set(g.name, { oldW: barPct(prev, o), newW: barPct(data, g), killed: fresh.length > 0, lastAt: lastShownAt(o) });
+    if (moved) out.guilds.set(g.name, { oldP: barPos(prev, o), newP: barPos(data, g), killed: fresh.length > 0, lastAt: lastShownAt(o) });
   }
   return out;
 }
@@ -786,16 +723,14 @@ function playBoard(motion, tops) {
     const dy = top === undefined ? 0 : top - li.getBoundingClientRect().top;
     if (dy && !reduced) li.animate([{ transform: `translateY(${dy}px)` }, { transform: 'none' }], { duration: 650, easing: EASE_OUT });
     if (!m) continue;
-    const fill = li.querySelector('.row__hp i');
+    const track = li.querySelector('.row__hp');
     const n = li.querySelector('.row__n');
     if (reduced) {
       if (m.killed && n) n.animate([{ color: 'var(--jade)' }, {}], { duration: 1600, easing: 'ease-out' });
       continue;
     }
-    // On a kill the bar runs to full, then falls back to the next boss's best; else old → new.
-    const frames = m.killed ? [{ '--w': `${m.oldW}%` }, { '--w': '100%', offset: 0.55 }, { '--w': `${m.newW}%` }]
-      : [{ '--w': `${m.oldW}%` }, { '--w': `${m.newW}%` }];
-    if (fill) fill.animate(frames, { duration: m.killed ? 1400 : 900, easing: m.killed ? 'ease-in-out' : EASE_OUT });
+    // The track runs from the old place to the new one (through a whole segment on a kill).
+    if (track) track.animate([{ '--p': m.oldP }, { '--p': m.newP }], { duration: m.killed ? 1400 : 900, easing: EASE_OUT });
     if (m.killed && n) {
       n.animate([{ transform: 'translateY(45%)', opacity: 0 }, { transform: 'none', opacity: 1 }],
         { duration: 500, delay: 700, easing: EASE_OUT, fill: 'backwards' });
@@ -843,6 +778,7 @@ function render(data) {
   $('#srcLive').hidden = isArchive(data) || !data.streams;
   $('#pullNote').textContent = tr(isArchive(data) && !(data.sources && data.sources.warcraftlogs) ? 'footer.src4Past' : 'footer.src4');
   renderUpdated();
+  $('#ftMeta').textContent = [data.season && data.season.label, $('#bugDay').hidden ? null : $('#bugDay').textContent].filter(Boolean).join(' · ');
   // Other scripts draw their own sections from the same data (halloffame.js).
   document.dispatchEvent(new CustomEvent('race:data', { detail: data }));
 }
@@ -999,8 +935,48 @@ function setupLangSwitch() {
   }
 }
 
+/* ---- views --------------------------------------------------------------------------------
+ * The page is three views behind the nav under the top bar: Race (hero, ticker, Voortgang),
+ * Guilds (Per guild) and Hall of fame. The hash picks one (#guilds, #halloffame), so a view can
+ * be linked and the back button works; ?season and ?lang are untouched. */
+const VIEWS = { race: 'race', guilds: 'guilds', halloffame: 'hof', hof: 'hof' };
+
+function currentView() {
+  const v = VIEWS[location.hash.slice(1).toLowerCase()] || 'race';
+  return v === 'hof' && $('#navHof').hidden ? 'race' : v;
+}
+
+function showView(scroll) {
+  const v = currentView();
+  if (document.body.dataset.view === v) return;
+  document.body.dataset.view = v;
+  for (const a of document.querySelectorAll('a[data-view]')) {
+    if (a.dataset.view === v) a.setAttribute('aria-current', 'page');
+    else a.removeAttribute('aria-current');
+  }
+  if (scroll) window.scrollTo(0, 0);
+}
+
+function setupViews() {
+  showView(false);
+  window.addEventListener('hashchange', () => showView(true));
+  // A button, not a #top link: the hash picks the view.
+  $('#toTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: reducedMotion() ? 'auto' : 'smooth' }));
+  // The Hall of fame links exist only while the season has one: they follow the section, which
+  // halloffame.js shows or hides (whenever it gets the data, before or after app.js renders).
+  const hof = $('#hallOfFame');
+  const syncHof = () => {
+    for (const a of document.querySelectorAll('.js-nav-hof')) a.hidden = hof.hidden;
+    document.body.dataset.view = '';
+    showView(false);
+  };
+  if (typeof MutationObserver === 'function') new MutationObserver(syncHof).observe(hof, { attributes: true, attributeFilter: ['hidden'] });
+  syncHof();
+}
+
 i18n.applyStatic();
 setupLangSwitch();
+setupViews();
 load();
 setInterval(() => { if (!archiveEntry()) load(); }, REFRESH_MS);
 setInterval(renderUpdated, 30 * 1000);
