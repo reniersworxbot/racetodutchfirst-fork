@@ -90,7 +90,7 @@
       'data-key': key(b),
     }, art(b, 'hof-tab__head'), h('span', { class: 'hof-tab__name', text: b.name }),
       h('span', { class: `hof-tab__sub${b.first && !b.side ? ' mono' : ''}${!b.first && b.isCe ? ' hof-tab__sub--ce' : ''}` }, sub));
-    el.addEventListener('click', () => choose(key(b)));
+    el.addEventListener('click', () => { choose(key(b)); track('hof-boss', { boss: b.name }); });
     return el;
   }
 
@@ -235,7 +235,7 @@
       type: 'button', class: 'pill pill--action', 'aria-controls': 'hofAll', 'aria-expanded': String(showAll),
       text: showAll ? tr('hof.less') : tr('hof.more', { n: raiders.length }),
     });
-    btn.addEventListener('click', () => { showAll = !showAll; moreButton(raiders); });
+    btn.addEventListener('click', () => { showAll = !showAll; moreButton(raiders); if (showAll) track('hof-all'); });
     $('#hofMore').replaceChildren(btn);
   }
 

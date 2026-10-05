@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://static-cdn.jtvnw.net; frame-src https://player.twitch.tv; connect-src 'self' https://decapi.me; object-src 'none'; base-uri 'none'; form-action 'none';">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://stats.bmiest.be; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data: https://static-cdn.jtvnw.net; frame-src https://player.twitch.tv; connect-src 'self' https://decapi.me https://stats.bmiest.be; object-src 'none'; base-uri 'none'; form-action 'none';">
 <title>Race to Dutch First · Nederlandstalige WoW-guilds naar Cutting Edge</title>
 <meta name="description" content="Welke Nederlandstalige World of Warcraft-guild haalt als eerste Cutting Edge? De race naar de laatste Mythic-boss, live gevolgd.">
 <link rel="canonical" href="https://racetodutchfirst.bmiest.be/">
@@ -173,6 +173,9 @@
   </div>
 </footer>
 
+<!-- Visitor stats: self-hosted Umami (senate), cookieless, no IPs stored, so no banner.
+     data-domains: only the live site counts, never a local copy. Events: track() in app.js. -->
+<script defer src="https://stats.bmiest.be/script.js" data-website-id="514164e1-6304-4b2c-859b-b26171b799f8" data-domains="racetodutchfirst.bmiest.be"></script>
 <script src="bossart.js"></script>
 <script src="i18n.js"></script>
 <script src="app.js"></script>

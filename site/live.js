@@ -133,7 +133,7 @@
       still,
       h('span', { class: 'onair__btn' }, icon('play')),
       h('span', { class: 'onair__hint' }, h('b', { text: tr('live.play', { name }) }), h('span', { text: tr('live.play_note') })));
-    btn.addEventListener('click', () => { playing = name; drawPlayer(ch, true); });
+    btn.addEventListener('click', () => { playing = name; drawPlayer(ch, true); track('stream-play', { channel: name }); });
     return btn;
   }
 
@@ -178,6 +178,7 @@
     btn.addEventListener('click', () => {
       if (featured === name) return;
       featured = name;
+      track('stream-pick', { channel: name });
       if (playing) playing = name; // already watching: switch the stream, stay in the player
       render();
     });
@@ -208,7 +209,7 @@
         ch.title ? h('p', { class: 'onair__title', text: ch.title }) : null,
         h('p', { class: 'onair__sub' },
           h('span', { class: 'onair__since', text: meta(ch) }),
-          h('a', { class: 'onair__out', href: ch.url, rel: 'noopener' }, tr('live.open'), icon('out')))),
+          h('a', { class: 'onair__out', href: ch.url, rel: 'noopener', 'data-umami-event': 'stream-open', 'data-umami-event-channel': ch.twitch }, tr('live.open'), icon('out')))),
       live.length > 1 ? h('div', { class: 'onair__list' }, live.map(ribbon)) : null,
     ].filter(Boolean));
     box.hidden = false;
@@ -240,7 +241,7 @@
   function channelRow(ch, isFresh) {
     const name = login(ch);
     return h('li', { class: 'streamers__row' },
-      h('a', { class: 'streamers__ch', href: ch.url, rel: 'noopener', target: '_blank', 'aria-label': tr('streams.open', { name: ch.twitch }) },
+      h('a', { class: 'streamers__ch', href: ch.url, rel: 'noopener', target: '_blank', 'data-umami-event': 'stream-open', 'data-umami-event-channel': ch.twitch, 'aria-label': tr('streams.open', { name: ch.twitch }) },
         h('span', { class: 'streamers__name', text: name }), icon('out')),
       status(ch, isFresh),
       liveMeta(ch, isFresh));
@@ -299,7 +300,11 @@
     if (refocus) $('#streamersBtn').focus();
   }
   if ($('#streamersBtn')) {
-    $('#streamersBtn').addEventListener('click', () => ($('#streamersPanel').hidden ? openStreamers() : closeStreamers(true)));
+    $('#streamersBtn').addEventListener('click', () => {
+      if (!$('#streamersPanel').hidden) { closeStreamers(true); return; }
+      openStreamers();
+      track('streamers-open');
+    });
     document.addEventListener('keydown', e => { if (e.key === 'Escape' && !$('#streamersPanel').hidden) closeStreamers(true); });
     document.addEventListener('click', e => { if (!e.target.closest('#streamers')) closeStreamers(false); });
   }

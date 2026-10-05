@@ -838,6 +838,7 @@ function renderSeason(data) {
       h('span', { class: 'season-switch__short', 'aria-hidden': 'true', text: s.id.toUpperCase() }));
     b.addEventListener('click', () => {
       if (s.id === active) return;
+      track('season', { season: s.id });
       wanted = s.current ? null : s.id;
       const url = new URL(location.href);
       if (wanted) url.searchParams.set('season', wanted); else url.searchParams.delete('season');
@@ -871,11 +872,20 @@ function showLoadError() {
   $('#updated').textContent = tr('upd.none');
 }
 
+/* Visitor stats (Umami, see index.html): a named event. The tracker loads deferred from another
+ * host and may be blocked: then nothing. */
+function track(name, data) {
+  try {
+    if (window.umami) window.umami.track(name, data);
+  } catch { /* stats never break the page */ }
+}
+
 /* NL | EN: redraw everything in the other language, no reload. */
 function setupLangSwitch() {
   for (const b of document.querySelectorAll('.lang-switch [data-lang]')) {
     b.addEventListener('click', () => {
       if (!i18n.set(b.dataset.lang)) return;
+      track('lang', { lang: b.dataset.lang });
       if (race) render(race);
       else if (loadError) showLoadError();
     });
@@ -906,7 +916,10 @@ function showView(scroll) {
 
 function setupViews() {
   showView(false);
-  window.addEventListener('hashchange', () => showView(true));
+  // A view is a page to the stats. The tracker only notices history.pushState/replaceState (it
+  // keeps the URL it saw last), so a hash change is re-stated: it then counts the view, and
+  // later events are filed under it.
+  window.addEventListener('hashchange', () => { showView(true); history.replaceState(history.state, '', location.href); });
   // A button, not a #top link: the hash picks the view.
   $('#toTop').addEventListener('click', () => window.scrollTo({ top: 0, behavior: reducedMotion() ? 'auto' : 'smooth' }));
   // The Hall of fame links exist only while the season has one: they follow the section, which
