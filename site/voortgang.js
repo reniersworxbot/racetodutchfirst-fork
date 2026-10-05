@@ -462,7 +462,7 @@ const Voortgang = (() => {
     else { redrawTimeline(); paintScrub(); logShownUpTo = null; renderLog(); }
     for (const id of ['#tlBump', '#tlRing']) {
       const c = charts.get($(id));
-      if (c && !$(id).hidden) requestAnimationFrame(() => { c.width = Math.floor($(id).clientWidth); c.draw(c.width); });
+      if (c && !$(id).hidden) requestAnimationFrame(() => { const w = Math.floor($(id).clientWidth); if (w > 0) { c.width = w; c.draw(w); } });
     }
   }
 

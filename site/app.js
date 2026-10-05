@@ -475,7 +475,12 @@ function paintTimelineButton() {
 }
 function redrawTimeline() {
   const el = $('#timeline'), c = charts.get(el);
-  if (c) requestAnimationFrame(() => { c.width = Math.floor(el.clientWidth); c.height = Math.floor(el.clientHeight); c.draw(c.width); });
+  // Not while the chart has no width (its view or mode is hidden): it would draw at 0 and give
+  // negative sizes. The ResizeObserver draws it once it is shown.
+  if (c) requestAnimationFrame(() => {
+    const w = Math.floor(el.clientWidth);
+    if (w > 0) { c.width = w; c.height = Math.floor(el.clientHeight); c.draw(w); }
+  });
 }
 document.addEventListener('fullscreenchange', () => {
   if (!document.fullscreenElement && timelineNative) { timelineNative = false; setTimelineFull(false); }
