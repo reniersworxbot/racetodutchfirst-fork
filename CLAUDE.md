@@ -3,8 +3,9 @@
 A public, static site that follows Dutch-speaking WoW guilds racing to be the first to reach
 Cutting Edge (the CE boss on Mythic) in the current raid tier. **The UI is Dutch by default**,
 with an English translation behind the NL | EN switch (see *Languages*).
-Live at https://racetodutchfirst.bmiest.be/ (GitHub Pages, custom domain set in the
-repo's Pages settings, DNS at Cloudflare as DNS-only).
+Live at https://racetodutchfirst.bmiest.be/. Moving from GitHub Pages to self-hosting on the
+operator's homelab (see *Hosting*): a container fetches on its own schedule, so the data no
+longer waits for GitHub's cron.
 
 ## Layout
 
@@ -17,7 +18,9 @@ src/racetodutchfirst/
   twitch.py                  who of [streams] is live on Twitch, via DecAPI
   race.py                    responses → per-guild state, race position, ranking, winner
   __main__.py                CLI: writes site/data/race.json (atomically; never on failure)
-  prerender.py               CI: the board + tier pills into index.html for crawlers; site/sitemap.xml
+  prerender.py               the board + tier pills into index.html for crawlers; site/sitemap.xml
+  schedule.py                when the self-hosted site fetches (cron lines, UTC)
+  serve.py                   the container's fetch loop: fetch → prerender → og.png into the published folder
 tests/
   conftest.py                FixtureHTTP: replays tests/fixtures/raiderio/*.json, no network
   test_race.py
@@ -27,7 +30,9 @@ tests/
   test_site.py               frontend contracts: same keys in nl + en, no innerHTML, no inline style
   fixtures/api/              older single responses from the first version (unused but kept)
   test_fixtures.py           --record never writes outside its directory (src/racetodutchfirst/fixtures.py)
-scripts/og-image.sh          headless Chrome: site/og.html → site/og.png (run by site.yml)
+  test_serve.py              the schedule, and what the fetch loop writes or keeps
+scripts/og-image.sh          headless Chrome: site/og.html → og.png (SITE_DIR picks the folder; serve.py runs it hourly)
+Dockerfile                   the self-hosted image: python + uv + chromium, CMD racetodutchfirst.serve
 site/                        static, no build step, no framework, no CDN scripts
   index.html                 three views behind a nav under the top bar (hash: #race default, #guilds, #halloffame): Race = splash hero (title, Nu live, board, kills ticker) + Voortgang; Guilds = Per guild; Hall of fame; footer on all
   i18n.js                    NL + EN strings and the global `i18n` (loaded before app.js)
@@ -42,7 +47,8 @@ site/                        static, no build step, no framework, no CDN scripts
   tokens.css                 copied UNCHANGED from Bmiest/bmiest_wow_streaming_theme css/tokens.css
   data/race.json             sample data; CI regenerates it into the Pages artifact only
   robots.txt, sitemap.xml    sitemap = every season in NL and EN (test_prerender checks it matches guilds.toml)
-.github/workflows/site.yml   every 2 h; every 15 min on raid evenings (Sun, Mon, Wed, Thu, 17-22 UTC); + main pushes + manual
+.github/workflows/image.yml  PRs build the image; main publishes ghcr.io/reniersworx/racetodutchfirst
+.github/workflows/site.yml   GitHub Pages (every 2 h; every 15 min on raid evenings): retired once the DNS points at the homelab
 .github/workflows/test.yml   PRs and main: ruff, pytest, node --check
 .github/dependabot.yml       weekly grouped update PRs for uv.lock and the SHA-pinned Actions
 ```
@@ -339,6 +345,33 @@ committed archive made once with
 - **sitemap.xml** is generated from guilds.toml's seasons by prerender (CI) and committed;
   after adding a season, regenerate it (test_prerender says so). robots.txt points at it.
 
+## Hosting
+
+Self-hosted on the operator's homelab (repo reniersworx/senate, `apps/compose/racetodutchfirst`
+on docker-web-1, public through a Cloudflare tunnel). Two containers share one folder, the
+**published folder** (`/srv/www`):
+
+- **fetch** (this repo's Dockerfile, `python -m racetodutchfirst.serve`): on start it copies
+  site/ (the template in the image) into the published folder, then on the schedule in
+  `schedule.py` runs the fetcher (`--output` and `--history` = the published race.json),
+  prerenders a fresh copy of the template's index.html (+ sitemap.xml), and at most hourly, on
+  new data, draws og.png with chromium. Every write is a temp file renamed into place; a failed
+  step keeps what was there, so the site always shows the last good data.
+- **web** (stock nginx, config in senate): serves the folder read-only. race.json, index.html and
+  sitemap.xml are `no-cache` (an unchanged one is a 304); the rest 5 min.
+
+**Schedule** (UTC, `schedule.SCHEDULE`): every 5 min on raid evenings (Sun, Mon, Wed, Thu,
+17-23 h = 19-01 h summer, 18-00 h winter), else on the hour. Faster is pointless: Raider.IO
+answers with `max-age=240`. A run is ~80 Raider.IO requests and ~85 s; WCL ~120 of 3600
+points/hour per run. The page asks for race.json every minute (`REFRESH_MS`) and on tab return.
+
+**Deploys**: only code needs one. A merge to main publishes the image (image.yml); Renovate in
+senate bumps its digest. Data never needs a deploy. WCL credentials live in senate's SOPS
+(`WCL_CLIENT_ID`/`WCL_CLIENT_SECRET`); without them RoyalTeam races as one guild.
+
+Run it locally: `docker build -t rtdf . && docker run --rm -v "$PWD/www:/srv/www" rtdf`
+(the folder must be writable by uid 10001), then serve `www/` with any static server.
+
 ## Changing the tier
 
 Edit `[tier]` in guilds.toml: `start`, `ce_boss = { raid, boss }`, and `[[tier.raids]]` with
@@ -347,6 +380,5 @@ Re-record fixtures afterwards and update the tests' expectations.
 
 ## Shipping
 
-PR → green `Test` → squash-merge. A merge to main deploys the site. Scheduled workflows
-on a public repo stop after 60 days without commits; GitHub emails first. Re-enable in
-the Actions tab.
+PR → green `Test` (+ `Image`) → squash-merge. A merge to main publishes the image; the senate
+digest bump deploys it (until the DNS switch, site.yml still deploys GitHub Pages too).

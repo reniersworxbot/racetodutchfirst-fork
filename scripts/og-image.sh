@@ -1,18 +1,20 @@
 #!/usr/bin/env bash
 # Renders site/og.html, the share image for link previews, into site/og.png
-# with headless Chrome. site.yml runs it after the fetch, so the image shows the
-# fresh standings; run it by hand to refresh the committed fallback.
+# with headless Chrome. The self-hosted container (serve.py) runs it hourly on new data,
+# so the image shows the fresh standings; run it by hand to refresh the committed fallback.
 #   scripts/og-image.sh [out.png]
 # CHROME_FLAGS adds flags (CI passes --no-sandbox: the runner's AppArmor blocks
 # Chrome's sandbox, and the page is this repo's own).
 set -euo pipefail
 
 root="$(cd "$(dirname "$0")/.." && pwd)"
-out="${1:-$root/site/og.png}"
+# SITE_DIR: the folder to serve (the self-hosted container passes its published copy).
+site="${SITE_DIR:-$root/site}"
+out="${1:-$site/og.png}"
 port="${OG_PORT:-8765}"
 chrome="${CHROME:-google-chrome}"
 
-python3 -m http.server "$port" --bind 127.0.0.1 --directory "$root/site" >/dev/null 2>&1 &
+python3 -m http.server "$port" --bind 127.0.0.1 --directory "$site" >/dev/null 2>&1 &
 server=$!
 tmp="$(mktemp -d)"
 trap 'kill "$server" 2>/dev/null || true; rm -rf "$tmp"' EXIT

@@ -12,7 +12,9 @@
 const DATA_URL = 'data/race.json';
 const SITE_URL = 'https://racetodutchfirst.bmiest.be/';
 const SEASON_FILE = /^data\/[a-z0-9-]+\.json$/; // an archived season's file, from race.json's `seasons`
-const REFRESH_MS = 5 * 60 * 1000;
+// The self-hosted fetcher runs every 5 min on raid evenings (src/racetodutchfirst/schedule.py).
+// Asking every minute is cheap: an unchanged race.json is a 304, and only a new generatedAt redraws.
+const REFRESH_MS = 60 * 1000;
 const LIVE_MIN = 60;   // a pull or kill this close to the fetch = raiding now
 const RECENT_H = 12;   // "raided at 21:57" for this long afterwards
 const FEED_SIZE = 8;
@@ -941,5 +943,7 @@ i18n.applyStatic();
 setupLangSwitch();
 setupViews();
 load();
-setInterval(() => { if (!archiveEntry()) load(); }, REFRESH_MS);
+setInterval(() => { if (!archiveEntry() && !document.hidden) load(); }, REFRESH_MS);
+// Back on a tab that was hidden: catch up at once instead of on the next tick.
+document.addEventListener('visibilitychange', () => { if (!document.hidden && !archiveEntry()) load(); });
 setInterval(renderUpdated, 30 * 1000);

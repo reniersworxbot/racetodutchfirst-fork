@@ -19,3 +19,12 @@ updates:
     groups:
       actions:
         patterns: ["*"]
+  # The Dockerfile's base images (python, uv), pinned by digest.
+  - package-ecosystem: docker
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+    groups:
+      docker:
+        patterns: ["*"]
