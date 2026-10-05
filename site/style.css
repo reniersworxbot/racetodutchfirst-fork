@@ -124,17 +124,6 @@ a:hover { text-decoration-color: var(--jade); }
 .swatch { width: 14px; height: 4px; background: var(--guild, var(--jade)); flex: 0 0 14px; }
 .dot { width: 9px; height: 9px; border-radius: var(--r-pill); background: var(--guild, var(--jade)); flex: 0 0 9px; display: inline-block; }
 
-.as-table { margin-top: 14px; font-size: 14px; color: var(--paper-dim); }
-.as-table summary { cursor: pointer; color: var(--jade); width: max-content; }
-/* One drawn disclosure mark for every <details> on the page (no browser triangle). */
-.disclose { list-style: none; display: flex; align-items: center; gap: 10px; }
-.disclose::-webkit-details-marker { display: none; }
-.disclose::before {
-  content: ""; flex: 0 0 auto; width: 7px; height: 7px; margin: 0 2px; border-right: 2px solid var(--jade); border-bottom: 2px solid var(--jade);
-  transform: rotate(-45deg); transition: transform var(--t-fast) var(--ease);
-}
-details[open] > .disclose::before { transform: rotate(45deg); }
-.as-table[open] summary { margin-bottom: 10px; }
 .table-wrap { max-width: 100%; }
 .data-table { border-collapse: collapse; font-size: 13px; }
 .data-table th, .data-table td { text-align: left; padding: 6px 14px 6px 0; border-bottom: 1px solid var(--ink-700); vertical-align: top; }

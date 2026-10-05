@@ -498,14 +498,6 @@ function renderTimeline(data) {
   // race.json arrives before it has loaded).
   if (typeof Voortgang === 'object') Voortgang.render(data);
 
-  const rows = data.guilds.map(g => h('tr', {},
-    h('th', { scope: 'row', text: g.name }),
-    h('td', { text: [killsOf(g).map(k => `${k.name} (${day(k.iso)})`).join(', ') || tr('timeline.none'),
-      currentProgress(g).frac ? tr('timeline.nowAt', { boss: g.current.name, pct: progressPct(currentProgress(g).frac) }) : null]
-      .filter(Boolean).join(' · ') })));
-  $('#timelineTable').replaceChildren(
-    h('thead', {}, h('tr', {}, h('th', { scope: 'col', text: tr('timeline.thGuild') }), h('th', { scope: 'col', text: tr('timeline.thKills') }))),
-    h('tbody', {}, rows));
 }
 
 /* ---- 5. Per guild ----------------------------------------------------------------- */
