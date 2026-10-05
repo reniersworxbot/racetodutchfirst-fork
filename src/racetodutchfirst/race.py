@@ -496,12 +496,15 @@ def first_kills(guilds: list[dict]) -> dict[str, dict]:
 
 
 def wcl_fights_for(wcl: WarcraftLogs, guild: Guild, tier: Tier) -> tuple[int | None, list[dict] | None]:
-    """(guild id, Mythic fights) from Warcraft Logs; a failure is only a warning (fights None)."""
+    """(guild id, Mythic fights) from Warcraft Logs; a failure is only a warning (fights None).
+    A team reads every zone: its raid logs can sit under another zone (see wcl.py)."""
     try:
         gid = guild.wcl_id or wcl.guild_id(guild)
         if not gid:
             _warn(f"{guild.name}: niet gevonden op Warcraft Logs")
             return None, []
+        if guild.is_team:
+            return gid, wcl.mythic_fights(gid, None, tier.start)
         fights = []
         for zone in tier.wcl_zones:
             fights += wcl.mythic_fights(gid, zone, tier.start)

@@ -82,7 +82,7 @@ def _teams(race):
 
 
 def test_royalteam_races_as_two_teams_from_their_own_logs(rio, config):
-    # Raider.IO only knows RoyalTeam; its teams log to their own WCL guilds (recorded 2026-10-05).
+    # Raider.IO only knows RoyalTeam; its teams log to their own WCL guilds (recorded 2026-10-06).
     race = build_race(rio, config, NOW, log=lambda _m: None, wcl=_wcl())
     teams = _teams(race)
     assert set(teams) == {"RoyalTeam Crusaders", "RoyalTeam Templars"}
@@ -91,8 +91,9 @@ def test_royalteam_races_as_two_teams_from_their_own_logs(rio, config):
     assert cru["sources"] == ["warcraftlogs"] and cru["team"] == {"of": "RoyalTeam"}
     assert cru["wclUrl"] == "https://www.warcraftlogs.com/guild/id/744461"
     assert cru["worldRank"] is None  # Raider.IO ranks the guild, not a team
-    assert cru["mythicKills"] == 1 and cru["current"]["slug"] == "the-lost-explorers"
-    assert cru["current"]["bestPercent"] == 0.49 and len(cru["current"]["pulls"]) == 26
+    # The Lost Explorers fell on 5 Oct in a log WCL filed under the Mythic+ zone: teams read every zone.
+    assert cru["mythicKills"] == 2 and _boss(cru, "the-lost-explorers")["defeatedAt"].startswith("2026-10-05T19:00")
+    assert cru["current"]["slug"] == "entombed-sentinels" and cru["current"]["bestPercent"] == 18.24
     assert tem["mythicKills"] == 2 and tem["current"]["slug"] == "entombed-sentinels"
     assert _boss(tem, "the-lost-explorers")["defeatedAt"].startswith("2026-10-01T20:30")
 

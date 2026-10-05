@@ -48,6 +48,13 @@ REPORTS_QUERY = (
     "reports(guildID:$g,zoneID:$z,startTime:$t,limit:40,page:$p){has_more_pages data{"
     "code startTime fights(difficulty:5){encounterID kill fightPercentage startTime endTime}}}}}"
 )
+# Every report since the tier start, whatever zone WCL gave it: a raid log can end up under the
+# Mythic+ zone (RoyalTeam Crusaders, 28 Sep and 5 Oct). Fights still map to bosses by encounter.
+REPORTS_ALL_ZONES_QUERY = (
+    "query($g:Int!,$t:Float!,$p:Int!){reportData{"
+    "reports(guildID:$g,startTime:$t,limit:40,page:$p){has_more_pages data{"
+    "code startTime fights(difficulty:5){encounterID kill fightPercentage startTime endTime}}}}}"
+)
 
 
 class WCLError(RuntimeError):
@@ -110,12 +117,15 @@ class WarcraftLogs:
         found = (data.get("guildData") or {}).get("guild")
         return found.get("id") if found else None
 
-    def mythic_fights(self, guild_id: int, zone: int, since: str) -> list[dict]:
-        """Every Mythic fight since `since` (YYYY-MM-DD), oldest first."""
+    def mythic_fights(self, guild_id: int, zone: int | None, since: str) -> list[dict]:
+        """Every Mythic fight since `since` (YYYY-MM-DD), oldest first; zone None = every zone."""
         t0 = datetime.fromisoformat(since).replace(tzinfo=UTC).timestamp() * 1000
         fights, page = [], 1
         while True:
-            data = self.query(REPORTS_QUERY, {"g": guild_id, "z": zone, "t": t0, "p": page})
+            if zone is None:
+                data = self.query(REPORTS_ALL_ZONES_QUERY, {"g": guild_id, "t": t0, "p": page})
+            else:
+                data = self.query(REPORTS_QUERY, {"g": guild_id, "z": zone, "t": t0, "p": page})
             reports = (data.get("reportData") or {}).get("reports") or {}
             for rep in reports.get("data") or []:
                 base = rep.get("startTime") or 0
@@ -161,7 +171,7 @@ def dedupe(fights: list[dict]) -> list[dict]:
 def fixture_name(body: dict) -> str:
     v = body.get("variables") or {}
     if "reportData" in body.get("query", ""):
-        return f"wcl__reports__{name_part(v['g'])}__{name_part(v['z'])}__p{name_part(v['p'])}.json"
+        return f"wcl__reports__{name_part(v['g'])}__{name_part(v.get('z', 'all'))}__p{name_part(v['p'])}.json"
     return f"wcl__guild__{name_part(v['s'])}__{name_part(v['n'])}.json"
 
 
