@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <!-- Race to Dutch First: the Voortgang step line climbing to the finish, on raid-night ink. -->
-  <rect width="64" height="64" fill="#0a0b0d"/>
-  <path d="M9 53H23V39H36V25H48V12" fill="none" stroke="#3fd9a4" stroke-width="8" stroke-linecap="square" stroke-linejoin="miter"/>
-  <path d="M40 9h16l-3 6H40z" fill="#d8b263"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Race to Dutch First: the Voortgang step line climbing to a gold finish, on raid-night ink. Drawn on a 32 grid so it stays crisp at 16px. -->
+  <rect width="32" height="32" fill="#0a0b0d"/>
+  <path d="M2 28H10V20H18V12H24V8" fill="none" stroke="#3fd9a4" stroke-width="4" stroke-linecap="square" stroke-linejoin="miter"/>
+  <path d="M19 2H31L29 8H19Z" fill="#d8b263"/>
 </svg>
