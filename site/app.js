@@ -10,7 +10,7 @@
 'use strict';
 
 const DATA_URL = 'data/race.json';
-const SITE_URL = 'https://racetodutchfirst.bmiest.be/';
+const SITE_URL = 'https://racetodutchfirst.nl/';
 const SEASON_FILE = /^data\/[a-z0-9-]+\.json$/; // an archived season's file, from race.json's `seasons`
 // The self-hosted fetcher runs every 5 min on raid evenings (src/racetodutchfirst/schedule.py).
 // Asking every minute is cheap: an unchanged race.json is a 304, and only a new generatedAt redraws.

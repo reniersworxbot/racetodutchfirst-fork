@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://racetodutchfirst.bmiest.be/sitemap.xml
+Sitemap: https://racetodutchfirst.nl/sitemap.xml

@@ -65,9 +65,9 @@ def test_sitemap_is_committed_and_current():
     assert (SITE / "sitemap.xml").read_text(encoding="utf-8") == expected
     ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
     locs = [e.text for e in ET.fromstring(expected.encode()).findall("s:url/s:loc", ns)]
-    assert locs[:2] == ["https://racetodutchfirst.bmiest.be/", "https://racetodutchfirst.bmiest.be/?lang=en"]
-    assert "https://racetodutchfirst.bmiest.be/?season=s1&lang=en" in locs
-    assert "Sitemap: https://racetodutchfirst.bmiest.be/sitemap.xml" in (SITE / "robots.txt").read_text()
+    assert locs[:2] == ["https://racetodutchfirst.nl/", "https://racetodutchfirst.nl/?lang=en"]
+    assert "https://racetodutchfirst.nl/?season=s1&lang=en" in locs
+    assert "Sitemap: https://racetodutchfirst.nl/sitemap.xml" in (SITE / "robots.txt").read_text()
 
 
 def test_share_image_url_carries_the_fetch_time(race):

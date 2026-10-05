@@ -3,7 +3,8 @@
 A public, static site that follows Dutch-speaking WoW guilds racing to be the first to reach
 Cutting Edge (the CE boss on Mythic) in the current raid tier. **The UI is Dutch by default**,
 with an English translation behind the NL | EN switch (see *Languages*).
-Live at https://racetodutchfirst.bmiest.be/. Moving from GitHub Pages to self-hosting on the
+Live at https://racetodutchfirst.nl/ (the old https://racetodutchfirst.bmiest.be/ redirects there
+with a 301, path and query kept). Moving from GitHub Pages to self-hosting on the
 operator's homelab (see *Hosting*): a container fetches on its own schedule, so the data no
 longer waits for GitHub's cron.
 

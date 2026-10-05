@@ -51,5 +51,5 @@ def test_no_innerhtml_and_no_inline_styles():
 def test_share_image_tags_are_absolute():
     html = (SITE / "index.html").read_text(encoding="utf-8")
     image = re.search(r'property="og:image" content="([^"]+)"', html)
-    assert image and image.group(1) == "https://racetodutchfirst.bmiest.be/og.png"
+    assert image and image.group(1) == "https://racetodutchfirst.nl/og.png"
     assert (SITE / "og.png").is_file()

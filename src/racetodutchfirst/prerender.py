@@ -22,7 +22,7 @@ from .config import ConfigError, load_config
 from .race import season_index
 
 ROOT = Path(__file__).resolve().parents[2]
-SITE_URL = "https://racetodutchfirst.bmiest.be/"
+SITE_URL = "https://racetodutchfirst.nl/"
 
 # The Dutch strings app.js uses for the board and pills (i18n.js; a test keeps them equal).
 NL = {
@@ -43,7 +43,7 @@ MONTHS = ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", 
 BOARD = '<ol id="lowerThirds" class="board"></ol>'
 # The share image's URL gets the fetch time as a version, so a chat app that caches link
 # previews by URL (Discord) shows the fresh image for a newly shared link.
-OG_IMAGE = '<meta property="og:image" content="https://racetodutchfirst.bmiest.be/og.png">'
+OG_IMAGE = '<meta property="og:image" content="https://racetodutchfirst.nl/og.png">'
 PILLS = '<div id="tierPills" class="sp__tier"></div>'
 
 
