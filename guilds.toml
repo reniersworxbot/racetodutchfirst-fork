@@ -112,3 +112,7 @@ guild = "Kameraden"
 [[streams.channels]]
 twitch = "missybellaa"
 guild = "Knikkerende Krijgers"
+
+[[streams.channels]]
+twitch = "royalteam90"
+guild = "RoyalTeam"
