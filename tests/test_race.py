@@ -44,10 +44,10 @@ def test_position_fraction_is_clamped():
 
 def test_kelderklasse_position_from_fixtures(rio, config):
     g = fetch_guild(rio, guild(config, "Kelderklasse"), config.tier)
-    assert g["mythicKills"] == 6  # 5/8 Venomous Abyss + 1/1 Tidebound Grotto
+    assert g["mythicKills"] == 5  # 5/8 Venomous Abyss; Tidebound Grotto (1/1) doesn't count
     assert g["current"]["slug"] == "the-twin-fangs"
     assert g["current"]["bestPercent"] == 27.02
-    assert g["racePosition"] == pytest.approx(6.7298)
+    assert g["racePosition"] == pytest.approx(5.7298)
 
 
 # -- the live-data traps ----------------------------------------------------
@@ -185,7 +185,7 @@ def test_ce_kill_is_read_from_the_configured_boss(rio, http, config):
         http.overrides[f"pulls__draenor__kelderklasse__the-venomous-abyss__{boss}.json"] = {"pulls": []}
     g = fetch_guild(rio, guild(config, "Kelderklasse"), config.tier)
     assert g["ceKilledAt"] == "2026-10-14T21:12:00.000Z"
-    assert g["current"] is None and g["racePosition"] == 9.0
+    assert g["current"] is None and g["racePosition"] == 8.0
     assert find_winner([g]) == {"guild": "Kelderklasse", "defeatedAt": "2026-10-14T21:12:00.000Z"}
 
 
@@ -212,7 +212,7 @@ def test_full_run_on_fixtures(rio, config):
     assert [g["rank"] for g in race["guilds"]] == [1, 2, 3, 4, 5]
     assert race["generatedAt"] == "2026-10-02T21:05:00Z"
     assert race["winner"] is None
-    assert race["tier"]["totalBosses"] == 9
+    assert race["tier"]["totalBosses"] == 8
     assert race["tier"]["ceBoss"] == {"raid": "the-venomous-abyss", "slug": "ulatek", "name": "Ula'tek"}
     va = race["tier"]["raids"][0]["bosses"]
     assert va[0]["firstKill"]["guild"] == "Kelderklasse"

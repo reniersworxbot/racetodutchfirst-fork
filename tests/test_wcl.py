@@ -145,7 +145,7 @@ def test_new_wcl_kill_raises_the_kill_count(rio, config):
     gid, fights = wcl_fights_for(_wcl(), g, config.tier)
     fights.append(_fight(1_759_440_000_000, kill=True, pct=0.0))  # 2026-10-02 21:20Z
     out = fetch_guild(rio, g, config.tier, wcl_fights=fights, wcl_id=gid)
-    assert out["mythicKills"] == 6
+    assert out["mythicKills"] == 5
     assert _boss(out, "sszorak")["state"] == "killed"
     assert out["current"]["slug"] != "sszorak"
 
@@ -153,7 +153,7 @@ def test_new_wcl_kill_raises_the_kill_count(rio, config):
 def test_wcl_down_means_raiderio_only(rio, config, capsys):
     race = build_race(rio, config, NOW, log=lambda _m: None, wcl=_wcl(status=503))
     assert race["sources"]["warcraftlogs"] is False
-    assert [g["racePosition"] for g in race["guilds"]] == [6.7298, 5.5627, 4.3304, 2.9765, 2.0]
+    assert [g["racePosition"] for g in race["guilds"]] == [5.7298, 4.5627, 4.3304, 2.9765, 2.0]
     assert "Warcraft Logs overgeslagen" in capsys.readouterr().err
 
 

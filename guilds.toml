@@ -38,7 +38,7 @@ realm = "Silvermoon"
 colour = "#f472b6"
 wcl_id = 665432
 
-# The current tier (EU since 2026-08-19): 8 + 1 = 9 bosses.
+# The current tier (EU since 2026-08-19): 8 bosses race; Nymrissa (+1) is shown but doesn't count.
 # The first raid is the main one: the fractional race position comes from the
 # guild's current boss there. Boss names here are a fallback; the site uses
 # Raider.IO's names. encounter is the Blizzard encounter ID: Warcraft Logs'
@@ -72,6 +72,9 @@ bosses = [
 [[tier.raids]]
 slug = "the-tidebound-grotto"
 name = "The Tidebound Grotto"
+# Shown, but it doesn't count: the race is Cutting Edge Ula'tek, so it runs over the 8 bosses
+# of The Venomous Abyss. Her kills stay in the side-raid note and the hall of fame.
+race = false
 bosses = [
   { slug = "nymrissa-wavecaller", name = "Nymrissa Wavecaller", encounter = 3379 },
 ]

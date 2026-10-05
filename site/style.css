@@ -354,7 +354,7 @@ body.has-full { overflow: hidden; }
 
 /* ---- Per guild: a row per guild, a cell per boss, then its current-boss pulls ---------- */
 .gs-wrap { position: relative; overflow-x: auto; margin: -6px; } /* relative: clips the cells' visually-hidden text too */
-/* Fixed layout: the guild and pulls columns keep their width, the nine bosses share the rest. */
+/* Fixed layout: the guild and pulls columns keep their width, the counted bosses share the rest. */
 .gs { width: 100%; min-width: 1040px; table-layout: fixed; border-collapse: separate; border-spacing: 6px; font-size: 13px; }
 .gs-corner, .gs-who { width: 240px; }
 .gs-pulls-h, .gs-pulls { width: 230px; }

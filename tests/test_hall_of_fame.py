@@ -54,9 +54,9 @@ def test_ranking_race_firsts_then_kills(race):
     keys = [(-r["firsts"], -r["kills"], r["name"].casefold()) for r in raiders]
     assert keys == sorted(keys)
     top = raiders[0]
-    assert (top["firsts"], top["kills"], top["guild"]) == (6, 6, "Kelderklasse")
+    assert (top["firsts"], top["kills"], top["guild"]) == (5, 5, "Kelderklasse")
     kam = next(r for r in raiders if r["guild"] == "Kameraden")
-    assert kam["firsts"] == 0 and kam["kills"] == 5
+    assert kam["firsts"] == 0 and kam["kills"] == 4
 
 
 def test_raider_links_go_to_raiderio(race):

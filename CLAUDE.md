@@ -98,7 +98,8 @@ Found in the live data (each has a test):
 - **`boss-pulls` includes resets** (`is_reset`, ~0 s, boss at 100%) that `pullCount`
   doesn't count; they're dropped.
 - The profile also returns **older raids** (`tier-mn-1`, `sporefall`). Read only the
-  slugs in guilds.toml. `total_bosses` for The Venomous Abyss is 8; the tier is 8 + 1 = 9.
+  slugs in guilds.toml. `total_bosses` for The Venomous Abyss is 8; the tier is 8 + 1, but The Tidebound Grotto
+  (Nymrissa) has `race = false` since 2026-10-05, so the race counts 8 (CE = Ula'tek).
 - World rank 0 means unranked (shown as "–").
 - Raider.IO goes down regularly (500/502/504). Check with a plain curl before "fixing" code.
 - **Progress per killed boss** (`race.best_steps()`): `boss-pulls` with `period=until_kill` also
