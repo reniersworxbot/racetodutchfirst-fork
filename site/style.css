@@ -226,6 +226,11 @@ details[open] > .disclose::before { transform: rotate(45deg); }
 .svg-bump { fill: none; stroke: var(--guild); stroke-width: 4; stroke-linejoin: round; }
 .svg-pass { fill: var(--ink-900); stroke: var(--guild); stroke-width: 2.5; }
 .svg-pass__lbl { fill: var(--paper-dim); font: 12px var(--f-display); }
+.guild-small { margin-bottom: 28px; }
+@media (max-width: 599px) {
+  .guild-small .sm-grid { display: flex; gap: 8px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; }
+  .guild-small .sm { flex: 0 0 84%; scroll-snap-align: start; }
+}
 .sm-grid { display: grid; grid-template-columns: repeat(var(--sm-cols, 3), minmax(0, 1fr)); gap: 10px; }
 .sm { background: var(--ink-850); border: 1px solid var(--ink-700); padding: 10px 0 2px; }
 .sm svg { display: block; }
@@ -307,7 +312,7 @@ details[open] > .disclose::before { transform: rotate(45deg); }
 .rp-k { font-size: 22px; font-weight: 800; color: var(--paper); text-align: right; }
 .rp-k small { font-size: 13px; font-weight: 600; color: var(--ink-300); }
 .rp-lane.is-lead .rp-k { color: var(--gold); }
-.tl-box.is-full .tl-replay, .tl-box.is-full .tl-small { flex: 1; min-height: 0; overflow-y: auto; }
+.tl-box.is-full .tl-replay { flex: 1; min-height: 0; overflow-y: auto; }
 .tl-box.is-full .tl-alt { flex: 1; min-height: 0; overflow: hidden; }
 @media (max-width: 720px) {
   .rp-controls { flex-wrap: wrap; gap: 10px 12px; }

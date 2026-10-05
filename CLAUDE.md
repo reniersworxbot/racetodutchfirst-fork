@@ -32,7 +32,7 @@ site/                        static, no build step, no framework, no CDN scripts
   index.html                 three views behind a nav under the top bar (hash: #race default, #guilds, #halloffame): Race = splash hero (title, Nu live, board, kills ticker) + Voortgang; Guilds = Per guild; Hall of fame; footer on all
   i18n.js                    NL + EN strings and the global `i18n` (loaded before app.js)
   app.js                     loads data/race.json, draws everything (inline SVG)
-  voortgang.js               Voortgang (Grafiek, Plaatsen, Per guild, Replay, Ronde) and the Wedstrijdverslag (#raceLog)
+  voortgang.js               Voortgang (Grafiek, Plaatsen, Replay, Ronde), the Wedstrijdverslag (#raceLog) and the per-guild small charts on Guilds (#guildSmall)
   og.html, og.css, og.js     the 1200x630 share image page (v2, as the hero: bug, poster question, ribbons, the hero boss); scripts/og-image.sh screenshots it to og.png
   og.png                     committed fallback share image; CI replaces it in the Pages artifact
   splash.css                 the hero (design language v2: the overlay's language as a raid poster)
@@ -240,10 +240,10 @@ Read `DESIGN.md` before UI work: it records the visual system (tokens, component
 - Voortgang (`site/voortgang.js`, `Voortgang.render(data)` from renderTimeline()): one model, every guild's
   race position over time (`seriesOf()`: a kill = the next whole number, a new best pull = n + (100 - best %) / 100
   from `progress` on each killed boss and the current boss's pulls; pulls before a tread began count from its start).
-  Five views sharing one chosen moment: Grafiek (step lines under a jade finish band with the CE boss, mouse drag =
+  Four views sharing one chosen moment: Grafiek (step lines under a jade finish band with the CE boss, mouse drag =
   zoom, Alles / 2 weken / 1 week, hover/tap/arrows = moment, the standings strip under it, click a guild = focus),
-  Plaatsen (bump chart, overtakes ringed), Per guild (small multiples), Replay (lanes on the board's race track) and
-  Ronde (an athletics track); Replay and Ronde share slider + play and play on opening. Overtakes (`passesOf()`,
+  Plaatsen (bump chart, overtakes ringed), Replay (lanes on the board's race track) and
+  Ronde (an athletics track); Replay and Ronde share slider + play and play on opening. The small multiples (one chart per guild) sit on the Guilds view above the Per guild table. Overtakes (`passesOf()`,
   sampled every 3 h) also feed the Wedstrijdverslag section (#raceLog, newest day first, 3 days + "Toon het hele verslag"). The choice survives refreshes and NL | EN
   and resets with the season. Its strings (`vg.*`) are in i18n.js like all others.
 - Voortgang has a "Volledig scherm" button (`setTimelineFull()`): the box (bar, chart or replay, standings) covers

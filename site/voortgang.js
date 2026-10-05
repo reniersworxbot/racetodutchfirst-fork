@@ -6,11 +6,12 @@
  *   1 week pick one. Hover, tap or the arrow keys pick a moment: a crosshair and the standings at
  *   that moment.
  * - Plaatsen: the place in the race over time (a bump chart), every overtake ringed.
- * - Per guild: a small chart per guild, its own line in colour, the others faint behind it.
  * - Replay: a lane per guild on the board's race track (a segment per boss, the finish at the
  *   end), at the chosen moment; a slider and a play button run the race again.
  * - Ronde: the race as an athletics track, CE at the top, a lane per guild; same slider and play.
- * And the Wedstrijdverslag (#raceLog): the race day by day as a live blog.
+ * And on other parts of the page: the Wedstrijdverslag (#raceLog), the race day by day as a live
+ * blog, and on the Guilds view a small chart per guild (#guildSmall), its own line in colour and
+ * the others faint behind it.
  *
  * app.js's renderTimeline() calls Voortgang.render(data). Uses app.js's globals: h, s, svgTitle,
  * chart, tr, num, day, colour, setGuild, killsOf, stepPoints, currentProgress, timelineStart,
@@ -24,7 +25,7 @@ const Voortgang = (() => {
 
   // What the visitor chose; survives refreshes and NL | EN, resets with the season.
   const st = { mode: 'chart', zoom: null, t: null, pinned: false, season: null, focus: null, logAll: false };
-  const MODES = ['chart', 'bump', 'small', 'replay', 'ring'];
+  const MODES = ['chart', 'bump', 'replay', 'ring'];
   const PLAYER = new Set(['replay', 'ring']);
   let data = null, model = null, geo = null, scrubLayer = null, play = null;
 
@@ -432,13 +433,12 @@ const Voortgang = (() => {
     $('#timelineBox').dataset.mode = mode;
     $('#timeline').hidden = mode !== 'chart';
     $('#tlBump').hidden = mode !== 'bump';
-    $('#tlSmall').hidden = mode !== 'small';
     $('#tlPlayer').hidden = !PLAYER.has(mode);
     $('#tlReplay').hidden = mode !== 'replay';
     $('#tlRing').hidden = mode !== 'ring';
     if (PLAYER.has(mode)) { redrawTimeline(); paintReplay(true); }
     else { redrawTimeline(); paintScrub(); }
-    for (const id of ['#tlBump', '#tlSmall', '#tlRing']) {
+    for (const id of ['#tlBump', '#tlRing']) {
       const c = charts.get($(id));
       if (c && !$(id).hidden) requestAnimationFrame(() => { c.width = Math.floor($(id).clientWidth); c.draw(c.width); });
     }
@@ -605,8 +605,10 @@ const Voortgang = (() => {
 
   function drawSmall(el) {
     chart(el, w => {
-      const cols = Math.max(1, Math.min(model.series.length, Math.floor((w + 10) / 250)));
-      const pw0 = Math.floor((w - (cols - 1) * 10) / cols);
+      // Phones: one card per guild in a row that swipes sideways, the next one peeking in.
+      const swipe = w < 600;
+      const cols = swipe ? 1 : Math.max(1, Math.min(model.series.length, Math.floor((w + 10) / 250)));
+      const pw0 = swipe ? Math.floor(w * 0.84) : Math.floor((w - (cols - 1) * 10) / cols);
       const H = 170, m = { l: 8, r: 8, t: 16, b: 20 };
       const pw = pw0 - m.l - m.r, ph = H - m.t - m.b, total = model.total;
       const x = t => m.l + (t - model.start) / (model.end - model.start) * pw, y = k => m.t + (1 - k / total) * ph;
@@ -775,7 +777,7 @@ const Voortgang = (() => {
     wireChart($('#timeline'));
     drawChart($('#timeline'));
     drawBump($('#tlBump'));
-    drawSmall($('#tlSmall'));
+    drawSmall($('#guildSmall'));
     buildReplay();
     drawRing($('#tlRing'));
     applyMode();
