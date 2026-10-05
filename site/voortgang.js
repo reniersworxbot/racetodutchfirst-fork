@@ -24,7 +24,7 @@ const Voortgang = (() => {
   const PLAY_MS = 14000;
 
   // What the visitor chose; survives refreshes and NL | EN, resets with the season.
-  const st = { mode: 'chart', zoom: null, t: null, pinned: false, season: null, focus: null, logAll: false };
+  const st = { mode: 'chart', zoom: null, t: null, pinned: false, season: null, focus: null, logAll: false, logOpen: new Set() };
   const MODES = ['chart', 'bump', 'replay', 'ring'];
   const PLAYER = new Set(['replay', 'ring']);
   let data = null, model = null, geo = null, scrubLayer = null, play = null;
@@ -744,7 +744,7 @@ const Voortgang = (() => {
     });
   }
   const guildName = sr => setGuild(h('b', { class: 'log-guild', text: sr.g.name }), sr.g);
-  /* A short tag per guild for the quiet standings line: initials for a name of several words
+  /* A short tag per guild for the marks on the field: initials for a name of several words
    * (Knikkerende Krijgers → KK), else its first three letters (Kelderklasse → KEL); a clash adds
    * letters until every tag is unique. The full name stays in the tooltip. */
   function guildTags(names) {
@@ -769,6 +769,51 @@ const Voortgang = (() => {
     }
     return out;
   }
+  /* The day's standings as "the field" (chosen from three mockups, 2026-10-06: variant C): every guild
+   * a mark in its colour on one shared race track to the CE boss (the last segment, jade), so the gaps
+   * read at a glance; a tag over each mark, on a second row when two marks sit close. A click opens a
+   * lane per guild: full name, the board's segmented track, kills and what was left of its boss.
+   * Which days are open survives refreshes and replays (st.logOpen). */
+  function logField(rows, d0, tags) {
+    const total = model.total;
+    const label = `${tr('log.stand')}: ${rows.map((r, i) => `${i + 1}. ${r.sr.g.name} ${killsHp(r, total)}`).join(', ')}`;
+    const rowOf = new Map();
+    let lastX = -1, row = 0;
+    for (const r of [...rows].sort((a, b) => a.pos - b.pos)) {
+      const x = Math.min(r.pos / total, 1);
+      row = x - lastX < 0.07 ? 1 - row : 0;
+      rowOf.set(r.sr, row);
+      lastX = x;
+    }
+    const track = h('span', { class: 'log-field__track', role: 'img', 'aria-label': label },
+      ...Array.from({ length: total }, (_, i) => h('i', { class: `log-field__seg${i === total - 1 ? ' log-field__seg--ce' : ''}` })),
+      ...rows.map((r, i) => {
+        const mark = setGuild(h('span', { class: 'log-field__mark', title: `${i + 1}. ${r.sr.g.name}: ${killsHp(r, total)}` },
+          h('span', { class: 'log-field__tag mono', text: tags.get(r.sr.g.name) })), r.sr.g);
+        mark.style.setProperty('--x', String(Math.min(r.pos / total, 1)));
+        mark.style.setProperty('--row', String(rowOf.get(r.sr)));
+        return mark;
+      }));
+    const lanes = h('ol', { class: 'log-field__lanes' }, ...rows.map((r, i) => setGuild(h('li', {},
+      h('span', { class: 'log-field__rank mono', text: String(i + 1) }),
+      h('span', { class: 'log-field__name', text: r.sr.g.name }),
+      h('span', { class: 'log-field__bar', 'aria-hidden': 'true' }, ...Array.from({ length: total }, (_, j) => {
+        const seg = h('i', {});
+        seg.style.setProperty('--f', String(Math.max(0, Math.min(1, r.pos - j))));
+        return seg;
+      })),
+      h('span', { class: 'log-field__val mono', title: r.boss || '', text: killsHp(r, total) })), r.sr.g)));
+    const box = h('details', { class: 'log-field' },
+      h('summary', { class: 'log-field__sum' },
+        track,
+        s('svg', { class: 'log-field__chev', viewBox: '0 0 12 12', 'aria-hidden': 'true', focusable: 'false' },
+          s('path', { d: 'M3 4.5 6 7.5 9 4.5' }))),
+      lanes);
+    box.open = st.logOpen.has(d0);
+    box.addEventListener('toggle', () => { if (box.open) st.logOpen.add(d0); else st.logOpen.delete(d0); });
+    return box;
+  }
+
   /* While Replay or Ronde runs the race again, the log runs with it: only what had happened by the
    * moment on screen, and what just happened lights up once. */
   const logCut = () => (PLAYER.has(st.mode) && st.t !== null ? st.t : Infinity);
@@ -819,11 +864,7 @@ const Voortgang = (() => {
                 : sentence(e.kind === 'first' ? 'log.first' : 'log.kill', { guild: guildName(e.sr), boss: h('b', { text: e.k.name }) })),
               e.kind === 'pass' ? '.' : ` (${tr('log.detail', { n: e.n })}${e.k.pullCount ? `, ${pulls(e.k.pullCount)}` : ''}${
                 e.k.slug === data.tier.ceBoss.slug && close !== null && close > e.t ? `, ${i18n.tn('season.before', daysBetween(e.t, close))}` : ''}).`)))),
-          h('ol', { class: 'log-stand', 'aria-label': tr('log.stand') }, ...standingsAt(endOfDay).map((r, i) => setGuild(h('li', {},
-            h('span', { class: 'log-stand__rank mono', text: `${i + 1}.` }),
-            h('i', { class: 'log-stand__dot', 'aria-hidden': 'true' }),
-            h('abbr', { class: 'log-stand__tag', title: r.sr.g.name, text: tags.get(r.sr.g.name) }),
-            h('span', { class: 'mono', title: r.boss || '', text: killsHp(r, model.total) })), r.sr.g)))));
+          logField(standingsAt(endOfDay), d0, tags)));
     }) : [h('li', { class: 'muted-note', text: tr('log.empty') })]));
     if (all.length > 3) {
       const b = h('button', { type: 'button', class: 'pill pill--action', text: st.logAll ? tr('log.less') : tr('log.more', { n: all.length }) });
@@ -847,7 +888,7 @@ const Voortgang = (() => {
 
   function render(d) {
     const season = d.season ? d.season.id : null;
-    if (season !== st.season) { stopPlay(); Object.assign(st, { zoom: null, t: null, pinned: false, season }); }
+    if (season !== st.season) { stopPlay(); Object.assign(st, { zoom: null, t: null, pinned: false, season, logOpen: new Set() }); }
     data = d;
     model = buildModel(d);
     model.passes = passesOf();

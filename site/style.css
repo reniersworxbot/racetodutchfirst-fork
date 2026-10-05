@@ -259,13 +259,44 @@ a:hover { text-decoration-color: var(--jade); }
 .log-t { padding-top: 2px; font-size: 13px; color: var(--ink-300); }
 .log-e--first .log-t { color: var(--gold); }
 .log-e--pass .log-t { color: var(--jade); }
-.log-stand { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 8px; font-size: 12.5px; color: var(--ink-300); }
-/* The day's standings as a quiet line under the events: a small guild-colour mark, no blocks. */
-.log-stand li { display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap; }
-.log-stand li .mono { color: var(--ink-200); font-size: 12px; }
-.log-stand__rank { color: var(--ink-400); font-size: 12px; }
-.log-stand__tag { text-decoration: none; font-weight: 700; letter-spacing: .04em; color: var(--ink-200); cursor: help; }
-.log-stand__dot { align-self: center; width: 7px; height: 7px; background: var(--guild); clip-path: polygon(0 0, 100% 0, calc(100% - 2px) 100%, 0 100%); }
+/* The day's standings as the field (voortgang.js logField()): one shared race track to the CE
+   boss with a guild-colour mark per guild; open = a lane per guild with the board's segments. */
+.log-field { margin-top: 12px; min-width: 0; }
+.log-field__sum { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 12px; list-style: none; cursor: pointer; }
+.log-field__sum::-webkit-details-marker { display: none; }
+.log-field__sum:focus-visible { outline: 2px solid var(--jade); outline-offset: 4px; }
+.log-field__track {
+  position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px;
+  height: 40px; min-width: 0;
+}
+.log-field__seg { display: block; align-self: end; height: 6px; background: var(--ink-700); }
+.log-field__seg--ce { background: var(--jade-deep); }
+.log-field__mark {
+  position: absolute; bottom: 0; left: calc(var(--x) * 100%); width: 4px; height: 14px; margin-left: -2px;
+  background: var(--guild);
+}
+.log-field__tag {
+  position: absolute; bottom: calc(100% + 3px + var(--row) * 12px); left: 50%; transform: translateX(-50%);
+  font-size: 10.5px; font-weight: 700; letter-spacing: .04em; color: var(--ink-200); white-space: nowrap;
+}
+.log-field__chev { width: 12px; height: 12px; margin-bottom: -3px; fill: none; stroke: var(--ink-300); stroke-width: 2; stroke-linecap: square; transition: transform var(--t-fast) var(--ease), stroke var(--t-fast) var(--ease); }
+.log-field__sum:hover .log-field__chev { stroke: var(--paper); }
+.log-field[open] .log-field__chev { transform: rotate(180deg); }
+.log-field__lanes { list-style: none; display: grid; gap: 4px; margin-top: 12px; }
+.log-field__lanes li {
+  display: grid; grid-template-columns: 18px minmax(120px, 190px) minmax(0, 1fr) 132px; align-items: center; gap: 12px;
+  padding: 6px 10px; background: var(--ink-850); font-size: 13px;
+}
+.log-field__rank { color: var(--ink-400); font-size: 12px; }
+.log-field__name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--paper); font-weight: 600; }
+.log-field__bar { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; }
+.log-field__bar i { display: block; height: 8px; background: linear-gradient(90deg, var(--guild) calc(var(--f) * 100%), var(--ink-700) 0); }
+.log-field__val { color: var(--ink-300); font-size: 11.5px; text-align: right; white-space: nowrap; }
+@media (max-width: 600px) {
+  .log-field__lanes li { grid-template-columns: 14px minmax(0, 1fr) auto; gap: 6px 10px; }
+  .log-field__bar { grid-column: 2 / -1; }
+  .log-field__val { grid-row: 1; grid-column: 3; font-size: 11px; }
+}
 .log-more { margin-top: 6px; }
 .log-day--ahead::before { background: transparent; box-shadow: inset 0 0 0 2px var(--jade); clip-path: none; }
 .log-day--ahead .log-when b { color: var(--jade); }

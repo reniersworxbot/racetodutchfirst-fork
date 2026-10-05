@@ -1,0 +1,116 @@
+/* Mock: standings under each Wedstrijdverslag day. Tokens and rules from DESIGN.md (v2):
+   flat ink, slanted cuts, guild colour only as a chip, jade = climbed, rose = dropped. */
+
+body:not([data-ms="now"]) .log-stand { display: none; }
+
+/* Shared bits */
+.ms-chip { flex: 0 0 auto; width: 10px; height: 10px; background: var(--guild); clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 0 100%); }
+.ms-chev { width: 12px; height: 12px; flex: 0 0 12px; transition: transform var(--t-fast) var(--ease); }
+details[open] > summary .ms-chev { transform: rotate(180deg); }
+.ms-arrow { width: 9px; height: 9px; flex: 0 0 9px; fill: currentColor; }
+.ms-delta { display: inline-flex; align-items: center; justify-content: flex-end; gap: 3px; min-width: 28px; font-family: var(--f-mono); font-size: 12px; }
+.ms-delta--up { color: var(--jade); }
+.ms-delta--down { color: var(--rose); }
+.ms-delta--same { color: var(--ink-400); }
+.ms-out { min-width: 0; max-width: 100%; }
+.ms-out summary { list-style: none; cursor: pointer; }
+.ms-out summary::-webkit-details-marker { display: none; }
+.ms-out summary:focus-visible { outline: 2px solid var(--jade); outline-offset: 2px; }
+
+/* ---- A · Uitklapstand ------------------------------------------------------------------------- */
+.msA { margin-top: 10px; }
+.msA__sum {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 6px 14px; padding: 7px 12px;
+  background: var(--ink-850); color: var(--ink-300); font-size: 13px;
+  transition: background var(--t-fast) var(--ease);
+}
+.msA__sum:hover { background: var(--ink-800); }
+.msA__label { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-200); }
+.msA__lead { display: inline-flex; align-items: center; gap: 7px; color: var(--paper); }
+.msA__lead b { font-weight: 600; }
+.msA__lead .mono { font-family: var(--f-mono); font-size: 12px; color: var(--gold); }
+.msA__moved { color: var(--jade); }
+.msA__moved--quiet { color: var(--ink-400); }
+.msA__sum .ms-chev { margin-left: auto; color: var(--ink-300); }
+.msA__table { width: 100%; border-collapse: collapse; margin-top: 2px; background: var(--ink-850); font-size: 13.5px; }
+.msA__table td { padding: 7px 12px; border-top: 1px solid var(--ink-700); vertical-align: baseline; }
+.msA__rank { width: 28px; color: var(--ink-400); font-family: var(--f-mono); font-size: 12px; }
+.msA__name { color: var(--paper); font-weight: 600; white-space: nowrap; }
+.msA__name .ms-chip { display: inline-block; margin-right: 8px; vertical-align: baseline; }
+.msA__kills { width: 46px; font-family: var(--f-mono); font-size: 12px; color: var(--ink-300); }
+.msA__kills b { color: var(--paper); font-weight: 700; }
+.msA__prog { color: var(--ink-300); font-size: 12.5px; }
+.msA__d { width: 40px; text-align: right; }
+@media (max-width: 600px) {
+  .msA__prog { display: none; }
+  .msA__table td { padding: 7px 8px; }
+}
+
+/* ---- B · Wat veranderde ----------------------------------------------------------------------- */
+.msB { margin-top: 10px; }
+.msB__sum { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 14px; }
+.msB__line { display: flex; flex-wrap: wrap; gap: 6px; }
+.msB__mv {
+  display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 12px 0 10px;
+  background: var(--ink-850); font-size: 13px; color: var(--ink-200);
+  clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%);
+}
+.msB__mv b { font-weight: 600; color: var(--paper); }
+.msB__mv--up .ms-arrow { color: var(--jade); }
+.msB__mv--down .ms-arrow { color: var(--rose); }
+.msB__calm { font-size: 13px; color: var(--ink-400); }
+.msB__open { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--jade); }
+.msB__all { list-style: none; display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 4px; margin-top: 10px; }
+.msB__all li { display: flex; align-items: center; gap: 8px; min-width: 0; padding: 7px 10px; background: var(--ink-850); font-size: 13px; }
+.msB__rk { width: 16px; color: var(--ink-400); font-family: var(--f-mono); font-size: 12px; }
+.msB__nm { flex: 1 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--paper); font-weight: 600; }
+.msB__k { color: var(--ink-300); font-family: var(--f-mono); font-size: 11.5px; white-space: nowrap; }
+
+/* ---- C · Het veld ----------------------------------------------------------------------------- */
+.msC { margin-top: 12px; }
+.msC__sum { display: grid; grid-template-columns: minmax(0, 1fr) auto; min-width: 0; align-items: center; gap: 12px; }
+.msC__open { color: var(--ink-300); }
+.msC__track {
+  position: relative; display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px;
+  height: 34px; padding: 22px 0 0;
+}
+.msC__seg { display: block; height: 6px; align-self: end; background: var(--ink-700); }
+.msC__seg:last-of-type { background: var(--jade-deep); }
+.msC__notch {
+  position: absolute; bottom: 0; left: calc(var(--x) * 100%); width: 4px; height: 14px; margin-left: -2px;
+  background: var(--guild);
+}
+.msC__nt {
+  position: absolute; bottom: calc(100% + 2px + var(--row) * 12px); left: 50%; transform: translateX(-50%);
+  font-family: var(--f-mono); font-size: 10.5px; font-weight: 700; letter-spacing: .04em; color: var(--ink-200); white-space: nowrap;
+}
+.msC__lanes { list-style: none; display: grid; gap: 4px; margin-top: 12px; }
+.msC__lanes li {
+  display: grid; grid-template-columns: 18px minmax(120px, 190px) minmax(0, 1fr) 132px; align-items: center; gap: 12px;
+  padding: 6px 10px; background: var(--ink-850); font-size: 13px;
+}
+.msC__rk { color: var(--ink-400); font-family: var(--f-mono); font-size: 12px; }
+.msC__nm { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--paper); font-weight: 600; }
+.msC__bar { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 3px; }
+.msC__bar i { display: block; height: 8px; background: linear-gradient(90deg, var(--guild) calc(var(--f) * 100%), var(--ink-700) 0); }
+.msC__k { color: var(--ink-300); font-family: var(--f-mono); font-size: 11.5px; text-align: right; white-space: nowrap; }
+@media (max-width: 600px) {
+  .msC__lanes li { grid-template-columns: 14px minmax(0, 1fr) auto; gap: 6px 10px; }
+  .msC__bar { grid-column: 2 / -1; }
+  .msC__k { grid-row: 1; grid-column: 3; font-size: 11px; }
+}
+
+/* ---- the switch bar ---------------------------------------------------------------------------- */
+.ms-bar {
+  position: fixed; z-index: 50; left: 50%; bottom: 16px; transform: translateX(-50%);
+  display: flex; align-items: stretch; max-width: calc(100vw - 32px); overflow-x: auto;
+  background: var(--ink-900); border: 1px solid var(--ink-700);
+}
+.ms-bar__t { display: flex; align-items: center; padding: 0 14px; font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-300); white-space: nowrap; }
+.ms-bar button {
+  height: 40px; padding: 0 14px; border: 0; background: none; color: var(--ink-200); font: inherit;
+  font-size: 13px; font-weight: 700; white-space: nowrap; cursor: pointer;
+}
+.ms-bar button:hover { color: var(--paper); }
+.ms-bar button[aria-pressed="true"] { background: var(--jade); color: var(--ink-900); }
+@media (max-width: 600px) { .ms-bar__t { display: none; } }

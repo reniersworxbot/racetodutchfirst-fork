@@ -265,7 +265,8 @@ Read `DESIGN.md` before UI work: it records the visual system (tokens, component
   zoom, Alles / 2 weken / 1 week, hover/tap/arrows = moment, the standings strip under it, click a guild = focus),
   Plaatsen (bump chart, overtakes ringed), Replay (lanes on the board's race track) and
   Ronde (an athletics track); Replay and Ronde share slider + play and play on opening. The small multiples (one chart per guild) sit on the Guilds view above the Per guild table. Overtakes (`passesOf()`,
-  sampled every 3 h) also feed the Wedstrijdverslag section (#raceLog, newest day first, 3 days + "Toon het hele verslag").
+  sampled every 3 h) also feed the Wedstrijdverslag section (#raceLog, newest day first, 3 days + "Toon het hele verslag"),
+  each day closing with its standings as "the field" (`logField()`: guild marks on one race track, a click opens a lane per guild).
   The log follows Replay/Ronde (only events up to the moment, new lines lit). Season end: `seasonClose()` in app.js =
   the archive's `season.end`, or `season.plannedEnd` from guilds.toml `[tier] planned_end` (only written to race.json
   when set; `end` would make the season an archive). It adds the end line + CE bracket to Grafiek, "nog N dagen" to
