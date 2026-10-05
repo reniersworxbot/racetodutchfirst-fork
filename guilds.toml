@@ -116,3 +116,7 @@ guild = "Knikkerende Krijgers"
 [[streams.channels]]
 twitch = "royalteam90"
 guild = "RoyalTeam"
+
+[[streams.channels]]
+twitch = "v0lky1"
+guild = "RoyalTeam"
