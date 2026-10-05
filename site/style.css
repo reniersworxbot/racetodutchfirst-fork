@@ -82,6 +82,7 @@ a:hover { text-decoration-color: var(--jade); }
   content: ""; flex: 0 0 14px; width: 14px; height: .9em; background: var(--jade);
   clip-path: polygon(0 0, 100% 0, calc(100% - 5px) 100%, 0 100%);
 }
+.view__title { margin-bottom: 18px; }
 .section-caption { font-size: 14px; line-height: 1.5; color: var(--ink-300); max-width: 72ch; margin-bottom: 18px; }
 .chart { width: 100%; min-width: 0; }
 .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
@@ -155,6 +156,8 @@ details[open] > .disclose::before { transform: rotate(45deg); }
 .svg-star { fill: var(--gold); stroke: var(--ink-850); stroke-width: 1.5; }
 .svg-end { fill: var(--guild); font: 700 14px var(--f-display); }
 .svg-end__n { fill: var(--paper-dim); font: 500 12px var(--f-mono); }
+.svg-key { fill: var(--paper-dim); font: 12px var(--f-display); }
+.svg-node--key { stroke: var(--paper-dim); }
 .svg-end__go { fill: var(--ink-200); font: 500 12px var(--f-mono); }
 /* The finish: a jade band over the top level, the CE boss's head and name in it, a 2px line. */
 .svg-finish { fill: rgba(63, 217, 164, .1); }
@@ -487,6 +490,3 @@ body.has-full { overflow: hidden; }
   *, *::before, *::after { animation-duration: .001ms !important; transition-duration: .001ms !important; }
 }
 
-/* ---- side raids (a raid that doesn't count, e.g. Sporefall in Season 1) ------------------ */
-.side-raids { display: grid; gap: 4px; padding: 12px 16px; background: var(--ink-800); border: 1px solid var(--ink-700); font-size: 14px; color: var(--paper-dim); }
-.side-raids__h { color: var(--paper); font-weight: 600; }

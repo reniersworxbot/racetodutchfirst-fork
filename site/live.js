@@ -274,7 +274,6 @@
     $('#streamersPanel').replaceChildren(...[
       h('div', { class: 'streamers__head' },
         h('h2', { id: 'streamersTitle', class: 'streamers__h', tabindex: '-1', text: tr('streams.h') }), close),
-      h('p', { class: 'streamers__cap', text: tr('streams.cap') }),
       ...groups.map(({ g, own }) => setGuild(h('section', { class: 'streamers__grp' },
         h('h3', { class: 'streamers__guild' }, h('i', { 'aria-hidden': 'true' }), h('span', { text: g.name })),
         h('ul', {}, own.map(c => channelRow(c, isFresh)))), g)),

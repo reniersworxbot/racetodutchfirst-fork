@@ -84,11 +84,9 @@
   <div id="globalError" class="error-capsule" role="alert" hidden></div>
 
   <section id="winnerBanner" class="winner v-race" aria-live="polite" hidden></section>
-  <div id="sideRaids" class="side-raids v-race" hidden></div>
 
   <section class="view v-race" aria-labelledby="timelineHeading">
     <h2 id="timelineHeading" class="view__title" data-i18n="timeline.h">Voortgang</h2>
-    <p class="section-caption" data-i18n="timeline.cap">Trede = kill · tussenstap = nieuwe beste pull · ster = eerste kill van de race</p>
     <div id="timelineBox" class="tl-box">
       <div class="tl-bar">
         <span class="tl-bar__title" data-i18n="timeline.h">Voortgang</span>
@@ -116,14 +114,12 @@
 
   <section id="raceLog" class="view v-race" aria-labelledby="logHeading">
     <h2 id="logHeading" class="view__title" data-i18n="log.h">Wedstrijdverslag</h2>
-    <p class="section-caption" data-i18n="log.cap">De race dag na dag: kills, eerste kills en inhaalbewegingen, met de stand aan het eind van de dag.</p>
     <ol id="logList" class="log"></ol>
     <div id="logMore" class="log-more"></div>
   </section>
 
   <section class="view v-guilds" aria-labelledby="guildHeading">
     <h2 id="guildHeading" class="view__title" data-i18n="guild.h">Per guild</h2>
-    <p class="section-caption" data-i18n="guild.cap">Per boss de killdatum of de beste pull; rechts elke pull op de huidige boss.</p>
     <div class="table-wrap gs-wrap" tabindex="0" role="region" aria-labelledby="guildHeading">
       <table id="guildSheets" class="gs"></table>
     </div>
@@ -131,16 +127,13 @@
 
   <section id="hallOfFame" class="view v-hof" aria-labelledby="hofHeading" hidden>
     <h2 id="hofHeading" class="view__title" data-i18n="hof.h">Hall of fame</h2>
-    <p class="section-caption" data-i18n="hof.cap">Kies een boss: wie hem als eerste versloeg, met welk team, en wie volgde.</p>
     <div id="hofTabs" class="hof-tabs" role="tablist" aria-label="Bosses" data-i18n-aria-label="hof.tabs"></div>
     <div id="hofStage" class="hof-box" role="tabpanel" tabindex="0"></div>
     <h3 id="hofPresentHeading" class="hof-subtitle" data-i18n="hof.present.h">Altijd paraat</h3>
-    <p class="section-caption" data-i18n="hof.present.cap">Per guild de raiders die bij elke Mythic-kill van hun guild waren. Een alt telt apart.</p>
     <div id="hofPresent" class="hof-present"></div>
     <div id="hofMore" class="hof-more"></div>
     <div id="hofAll" class="hof-all" hidden>
       <h3 id="hofRaidersHeading" class="hof-subtitle" data-i18n="hof.raiders.h">Raiders</h3>
-      <p class="section-caption" data-i18n="hof.raiders.cap">Eerst wie het vaakst bij de eerste kill van de race was, dan wie de meeste bosses mee versloeg met zijn guild. Het zijn characters, geen spelers: een alt telt apart.</p>
       <div class="table-wrap hof-table-wrap" tabindex="0" role="region" aria-labelledby="hofRaidersHeading">
         <table id="hofRaiders" class="data-table hof-table"></table>
       </div>

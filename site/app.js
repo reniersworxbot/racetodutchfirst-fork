@@ -633,7 +633,8 @@ function renderUpdated() {
   el.textContent = today ? tr('upd.at', { time: clock(at) }) : tr('upd.atDay', { day: day(at), time: clock(at) });
   const next = nextRun(new Date());
   if (next) el.append(` · ${tr('upd.next', { time: clock(next) })}`);
-  el.title = dayTime(at);
+  // The schedule is GitHub's, which runs late at times: "rond" says so, the tooltip explains.
+  el.title = next ? `${dayTime(at)}\n${tr('upd.nextNote', { time: clock(next) })}` : dayTime(at);
   liveBadges.forEach(paintLive);
 }
 
@@ -796,21 +797,11 @@ function archiveEntry() {
   return seasons.find(s => s.id === wanted && !s.current && SEASON_FILE.test(s.file || '')) || null;
 }
 
-/* A raid with counts: false (Sporefall in Season 1) is shown, but doesn't count for the race:
- * it leaves tier.raids and the guilds' bosses here, so every chart and table below counts only
- * the race, and comes back as data.sideRaids for its own note. */
+/* A raid with counts: false (Sporefall in Season 1, The Tidebound Grotto in Season 2) doesn't
+ * count for the race: it leaves tier.raids and the guilds' bosses here, so every chart and table
+ * counts only the race. Its kills stay in the Hall of fame ("telt niet mee"). */
 function splitSideRaids(data) {
   const side = data.tier.raids.filter(r => r.counts === false);
-  data.sideRaids = side.map(r => ({
-    name: r.name,
-    bosses: r.bosses.map(b => ({
-      name: b.name,
-      kills: data.guilds
-        .map(g => ({ g, st: g.bosses.find(x => x.raid === r.slug && x.slug === b.slug) }))
-        .filter(x => x.st && x.st.defeatedAt)
-        .sort((a, c) => Date.parse(a.st.defeatedAt) - Date.parse(c.st.defeatedAt)),
-    })),
-  }));
   if (side.length) {
     const keep = new Set(data.tier.raids.filter(r => r.counts !== false).map(r => r.slug));
     data.tier.raids = data.tier.raids.filter(r => keep.has(r.slug));
@@ -865,9 +856,7 @@ function renderSeason(data) {
     : tr('lead');
   document.title = archived ? tr('doc.titlePast', { season: data.season.label || data.season.id }) : tr('doc.title');
   setPageLinks(archived ? data.season.id : null);
-  $('[data-i18n="guild.cap"]').textContent = tr(archived ? 'guild.capPast' : 'guild.cap');
   $('#srcWcl').hidden = archived && !(data.sources && data.sources.warcraftlogs);
-  renderSideRaids(data);
   if (!box) return;
   box.hidden = seasons.length < 2;
   const active = archived ? data.season.id : (seasons.find(s => s.current) || {}).id;
@@ -903,20 +892,6 @@ function setPageLinks(season) {
   for (const l of document.querySelectorAll('link[rel="alternate"][hreflang]')) {
     l.href = url(l.hreflang === 'en' ? 'en' : 'nl');
   }
-}
-
-/* Sporefall-style raids: one quiet line under the winner banner, never in the race itself. */
-function renderSideRaids(data) {
-  const box = $('#sideRaids');
-  if (!box) return;
-  const side = data.sideRaids || [];
-  box.hidden = !side.length;
-  box.replaceChildren(...side.flatMap(r => r.bosses.map(b => h('p', { class: 'side-raids__row' },
-    h('span', { class: 'side-raids__h', text: tr('side.h', { raid: r.name }) }),
-    ' ',
-    b.kills.length
-      ? tr('side.kills', { boss: b.name, list: b.kills.map(k => `${k.g.name} ${day(k.st.defeatedAt)}`).join(', ') })
-      : tr('side.none', { boss: b.name })))));
 }
 
 function showLoadError() {

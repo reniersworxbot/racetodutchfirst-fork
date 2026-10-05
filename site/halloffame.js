@@ -223,7 +223,8 @@
         h('td', { class: 'hof-num', text: String(r.kills), title: r.bosses.map(b => b.name).join(', ') }));
     });
     $('#hofRaiders').replaceChildren(
-      h('thead', {}, h('tr', {}, cols.map(c => h('th', { scope: 'col', class: c === 'raider' ? '' : c === 'guild' ? 'hof-guild' : 'hof-num', text: tr(`hof.col.${c}`) })))),
+      // The ranking's order is shown on the column it sorts by, not explained in a caption.
+      h('thead', {}, h('tr', {}, cols.map(c => h('th', { scope: 'col', class: c === 'raider' ? '' : c === 'guild' ? 'hof-guild' : `hof-num${c === 'firsts' ? ' is-sorted' : ''}`, 'aria-sort': c === 'firsts' ? 'descending' : null, text: tr(`hof.col.${c}`) })))),
       h('tbody', {}, rows));
   }
 

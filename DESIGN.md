@@ -254,7 +254,7 @@ components:
 
 The bmiest stream overlay's language, grown into a poster. The page opens on the boss the leading guild is fighting right now, cut out and standing in a jade-and-void glow with nothing drawn on it; the question ("Wie haalt als eerste Cutting Edge?") is the title, and the standings sit beside it as overlay ribbons with a race track per guild (a slanted segment per boss). A broadcast bug crowns the page and a kills ticker closes the hero from edge to edge, both taken from the overlay's broadcast grammar. The page is three views behind a nav under the bug: Race (the hero, the ticker and Voortgang), Guilds and Hall of fame. Below the hero the same parts (slanted rank blocks, slanted pills, square dark cells and panels) carry the data: Voortgang, then Per guild (a row per guild, a cell per boss, then its pulls), then the Hall of fame as a raid journal (boss heads as tabs, a stage per boss with the race's first kill and its team as a WoW raid frame).
 
-Everything is flat near-black ink: no rounded cards, no drop shadows, no glass. Shape comes from slanted cuts on the right edge of every ribbon, pill, bar, rank block and boss head. Colour is scarce and semantic: jade is the race and its live state, gold is the leader, the first kill and the winner, and each guild brings its own colour to its rank block, bar, line, meter and chip. The poster is loud only at the top; the sections below are a dense, honest data surface whose explanation sits in the marks themselves, with one-line captions.
+Everything is flat near-black ink: no rounded cards, no drop shadows, no glass. Shape comes from slanted cuts on the right edge of every ribbon, pill, bar, rank block and boss head. Colour is scarce and semantic: jade is the race and its live state, gold is the leader, the first kill and the winner, and each guild brings its own colour to its rank block, bar, line, meter and chip. The poster is loud only at the top; the sections below are a dense, honest data surface whose explanation sits in the marks themselves; there are no captions.
 
 Confirmed rejections (from the direction history): the generic dark data dashboard ("too generic, AI-looking") and the sports-broadcast theme laid on top ("still a dashboard, not WoW"). More gamer-like is welcome; a dashboard is not.
 
@@ -325,7 +325,7 @@ WoW's class colours are game data, like the guild colours: held in halloffame.js
 - **Lead** (lead): the hero lead line, max 40ch, paper-dim; 17px on phones.
 - **Stage guild** (stage-guild): [race] the guild with the race's first kill on the Hall of fame stage, behind a 22px slanted guild-colour block (6px slant, 0.9em tall). A boss nobody has beaten shows its own name there instead, 26-40px/800 uppercase in ink-300.
 - **Ribbon** (ribbon): guild names on the board ribbons; 16px on lane ribbons, 14px under 400px. Per guild names are 16px/600 (14px on phones), clamped to two lines.
-- **Body** (body): section captions (one line, max 72ch, ink-300), tables at 13px, ticker items at 15px. In the Hall of fame: tab names 13px/600 paper on two lines, raid-frame names 14px/600 paper with the spec at 12px ink-300, the stage meta line at 15px paper-dim, Altijd paraat names at 15px/1.6 paper.
+- **Body** (body): tables at 13px, ticker items at 15px. In the Hall of fame: tab names 13px/600 paper on two lines, raid-frame names 14px/600 paper with the spec at 12px ink-300, the stage meta line at 15px paper-dim, Altijd paraat names at 15px/1.6 paper.
 - **Bug** (bug): the broadcast bug and its blocks, uppercase; LIVE at 13px/.14em; 12px on phones.
 - **Label** (label): pills, language blocks, the Per guild pulls column head (12px/.1em, ink-300); uppercase.
 - **Label micro** (label-micro): raid-group rows, role labels ("Tanks · 2" in the raid frame), the Daarna and Altijd paraat caps, first-kill labels, raiding badges; 12px/.12em (the board's raiding badge .08em), uppercase, ink-300.
@@ -337,7 +337,7 @@ WoW's class colours are game data, like the guild colours: held in halloffame.js
 
 **The Compared Number Rule.** A number a visitor compares across guilds is JetBrains Mono with tabular figures.
 
-**The One-Line Caption Rule.** A section caption is one line that names the marks ("Trede = kill · tussenstap = nieuwe beste pull · ster = eerste kill van de race"); the explanation lives in the marks themselves, not in a paragraph.
+**The No Caption Rule.** Sections carry no explanatory caption under their head (a sentence describing what is visible reads as filler). The marks explain themselves: Voortgang names its own marks once in a key at the right of the finish band (the gold star "eerste kill van de race", the ring "kill"); Altijd paraat says "bij alle N kills" per guild; the Raiders table shows its order with a drawn jade chevron on the column it sorts by (aria-sort).
 
 ## Layout
 
@@ -347,7 +347,7 @@ The board is a grid per guild: ribbon (340px), kills (96px), race track (rest), 
 
 [race] Views: a nav row under the bug (18px below it; 12px on phones) with Race | Guilds | Hall of fame as 40px blocks (34px under 900px), 13px/800 caps, ink-200 on ink-900 at 55%; the open one paper on ink-900 with a 3px jade foot. The hash picks the view (#guilds, #halloffame; none = Race), so views link and the back button works. Off the Race view the header is only the bug and the nav on a short band of the hero ground. Within a view, sections stack with 40px between (32px on phones): Race = Voortgang; Guilds = Per guild; Hall of fame = the journal, Altijd paraat and the Raiders; the footer closes every view. Voortgang is a full-width chart (420px tall, 320px under 560px) with a 276px right margin (a 40px gutter for the distance bars, then the guild names at the line ends; under 560px 58px and the count only), and the standings strip under it. Per guild is one fixed-layout table: a 240px pinned guild column, a column per counted boss sharing the rest, a 230px pulls column, 6px between cells, at least 1040px wide; under 600px it scrolls sideways (min 1120px) with the guild column (150px) and the corner pinned, and the pulls column at 190px. A 1px rule separates the main raid's bosses from the next raid's. Card grids (Nu live) are auto-fill with 280-340px minimums and 16px gaps. Everything works at 360px.
 
-[race] The Hall of fame: the section head and caption, then a row of boss-head tabs (columns of at least 104px sharing the width, 4px apart, scrolling sideways when they don't fit, the chosen tab kept in view), the stage 4px under it (art column minmax(280px, 36%), info column the rest, at least 460px tall), then Altijd paraat 48px below (a 260px ribbon column and the names beside it; stacked under 720px) and the "Toon alle N raiders" pill 18px under that. The raid frame is an auto-fill grid of 124px+ cells, 4px apart, 14px between role groups; two columns under 600px. Daarna is a five-column row (position, guild chip, date, "+n d", pulls); under 720px the pulls drop. Under 900px the art becomes a 280px band above the info (240px under 600px), showing the whole body. The Raiders table is capped at 880px.
+[race] The Hall of fame: the section head, then a row of boss-head tabs (columns of at least 104px sharing the width, 4px apart, scrolling sideways when they don't fit, the chosen tab kept in view), the stage 4px under it (art column minmax(280px, 36%), info column the rest, at least 460px tall), then Altijd paraat 48px below (a 260px ribbon column and the names beside it; stacked under 720px) and the "Toon alle N raiders" pill 18px under that. The raid frame is an auto-fill grid of 124px+ cells, 4px apart, 14px between role groups; two columns under 600px. Daarna is a five-column row (position, guild chip, date, "+n d", pulls); under 720px the pulls drop. Under 900px the art becomes a 280px band above the info (240px under 600px), showing the whole body. The Raiders table is capped at 880px.
 
 ## Elevation & Depth
 
@@ -366,10 +366,10 @@ Flat. No drop shadows anywhere. Depth comes from the ink ramp (ink-900 ground, i
 ## Components
 
 ### Broadcast bug [race]
-Flush square blocks at 40px (34px under 900px), no gaps: LIVE (live-red, pulsing dot, hidden unless a guild is raiding), the name on ink-900, "Dag N" in jade (tier start = day 1, stops on the winning day). The update line sits beside it in paper-dim: when the data was fetched ("Bijgewerkt om 13:42") and when the schedule normally fetches next ("volgende normaal om 14:07"), never coloured.
+Flush square blocks at 40px (34px under 900px), no gaps: LIVE (live-red, pulsing dot, hidden unless a guild is raiding), the name on ink-900, "Dag N" in jade (tier start = day 1, stops on the winning day). The update line sits beside it in paper-dim: when the data was fetched ("Bijgewerkt om 13:42") and around when the schedule fetches next ("volgende rond 14:07"; the tooltip says GitHub can start it later), never coloured.
 
 ### Streamers [race]
-A button in the bug's flush blocks next to NL | EN: STREAMERS on ink-900 (jade with ink text while open), and in front a broadcast-red "● n live" block while a listed channel is live on a fresh check. It opens a flat ink-850 panel (1px ink-700 border, no shadow) under the bar, the full bar's width on phones: the title, a one-line caption, then per guild in race order a slanted guild chip with the guild name in label type and its channels as paper links to Twitch with a drawn out-arrow; on the right the status: a broadcast-red LIVE tag, or "Offline" / "Status onbekend" in ink-300; a live channel's game, viewers and start on a line under it in paper-dim; at the foot when it was checked (a stale check in rose, never live).
+A button in the bug's flush blocks next to NL | EN: STREAMERS on ink-900 (jade with ink text while open), and in front a broadcast-red "● n live" block while a listed channel is live on a fresh check. It opens a flat ink-850 panel (1px ink-700 border, no shadow) under the bar, the full bar's width on phones: the title, then per guild in race order a slanted guild chip with the guild name in label type and its channels as paper links to Twitch with a drawn out-arrow; on the right the status: a broadcast-red LIVE tag, or "Offline" / "Status onbekend" in ink-300; a live channel's game, viewers and start on a line under it in paper-dim; at the foot when it was checked (a stale check in rose, never live).
 
 ### Language switch [race]
 NL | EN as two flush blocks at the bug's height, label type at 13px/800; the active one solid jade with ink text, the other ink-900 with ink-300 text (paper on hover). Dutch is the default.
@@ -387,7 +387,7 @@ One 14px slanted segment per boss of the tier (5px trailing slant, 3px apart), s
 A 52px ink-900 band spanning the viewport, with only a 2px jade top edge (no side or bottom borders), a solid jade label block ("Laatste kills") flush at the left edge, items "Guild · boss · date · eerste kill" in paper-dim with the guild bold in paper. The list is rendered twice and slides one width in 48s; it pauses on hover and focus, and under reduced motion it becomes a static scrollable row. A 64px fade hides the right edge.
 
 ### Section head [family]
-Headline type behind a slanted jade cap (14px wide, 0.9em tall), 8px above a one-line caption. Subsections use headline-sub with an 11px cap.
+Headline type behind a slanted jade cap (14px wide, 0.9em tall), 18px above the section's content; no caption. Subsections use headline-sub with an 11px cap.
 
 ### Voortgang [race]
 The race over time in two views that share one chosen moment (site/voortgang.js), behind a bar of flush blocks a step smaller than NL | EN (32px, 12px/800 caps): Grafiek | Plaatsen | Per guild | Replay | Ronde (the open one jade with ink text; on phones the row scrolls sideways), in chart mode the period Alles | 2 weken | 1 week (the open one paper on ink-700), a one-line ink-300 hint, and the "Volledig scherm" pill on the right. On phones the view switch and the pill share the first row.
@@ -461,7 +461,7 @@ Easing is `cubic-bezier(0.16, 1, 0.3, 1)`: no bounce. Constant motion stays limi
 - **Do** drop a council body whose render is under 40% of its partner's height, and fade a render cut off at the top (app.js `tidyBossArt()`), rather than show a tiny upscaled body or a flat crop.
 - **Do** slant the trailing edge of ribbons, pills, bars, rank blocks and boss heads; keep the bug, the language switch and the ticker flush and square.
 - **Do** let a label wrap rather than cut a number off.
-- **Do** keep a section caption to one line and put the explanation in the marks.
+- **Do** put the explanation in the marks (a key with the real marks, a sort chevron), never in a caption.
 - **Do** ship every string in Dutch and English (Dutch default); game names are never translated.
 - **Do** keep the CSP: script-src 'self', no inline styles; set custom properties with `style.setProperty()` only.
 - **Do** apply the stream-bitrate rules from tokens.css (no gradients, no full-width animation, no pure white) to the overlay; the race page may use the hero glow (on the hero and behind an earned Hall of fame stage) and the ticker because it is not encoded.

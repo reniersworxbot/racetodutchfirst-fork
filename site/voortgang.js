@@ -117,7 +117,7 @@ const Voortgang = (() => {
       const H = full ? Math.max(260, Math.floor(el.clientHeight) - 18) : narrow ? 320 : 420;
       // Right: the guild names (wide) or only the counts (narrow).
       const gut = narrow ? 6 : 12;
-      const m = { l: narrow ? 30 : 44, r: (narrow ? 40 : 236) + gut, t: narrow ? 42 : 48, b: 30 };
+      const m = { l: narrow ? 30 : 44, r: (narrow ? 40 : 262) + gut, t: narrow ? 42 : 48, b: 30 };
       const [d0, d1] = domain();
       const pw = w - m.l - m.r, ph = H - m.t - m.b;
       const x = t => m.l + ((t - d0) / (d1 - d0)) * pw;
@@ -161,6 +161,17 @@ const Voortgang = (() => {
         lx = m.l + sz + 12;
       }
       svg.append(s('text', { class: 'svg-finish__label', x: lx, y: y(total) - bandH / 2 + 4.5, text: tr('vg.finish', { boss: model.ceName }) }));
+      // The key: the chart's own marks, named once, at the right of the band (no caption needed).
+      // Laid out right to left once the svg is in the page (text widths need a rendered svg).
+      let key = null;
+      if (!narrow) {
+        key = { y: y(total) - bandH / 2, x: m.l + pw - 8,
+          kill: s('text', { class: 'svg-key', 'text-anchor': 'end', text: tr('vg.keyKill') }),
+          node: s('circle', { class: 'svg-node svg-node--key', r: 4 }),
+          first: s('text', { class: 'svg-key', 'text-anchor': 'end', text: tr('vg.keyFirst') }),
+          star: s('path', { class: 'svg-star', d: STAR }) };
+        svg.append(key.kill, key.node, key.first, key.star);
+      }
 
       // Time ticks: weekly resets when zoomed out, days when zoomed in; labelled where there's room.
       const span = d1 - d0;
@@ -228,6 +239,17 @@ const Voortgang = (() => {
       scrubLayer = s('g', { class: 'svg-scrub', 'aria-hidden': 'true' });
       svg.append(scrubLayer);
       el.replaceChildren(svg);
+      if (key) {
+        let x2 = key.x;
+        const ty = key.y + 4;
+        key.kill.setAttribute('x', x2); key.kill.setAttribute('y', ty);
+        x2 -= key.kill.getComputedTextLength() + 10;
+        key.node.setAttribute('cx', x2); key.node.setAttribute('cy', key.y);
+        x2 -= 16;
+        key.first.setAttribute('x', x2); key.first.setAttribute('y', ty);
+        x2 -= key.first.getComputedTextLength() + 12;
+        key.star.setAttribute('transform', `translate(${x2},${key.y})`);
+      }
       for (const f of drawFrom) drawLineFrom(f.line, f.fromX);
       paintFocus();
       paintScrub();

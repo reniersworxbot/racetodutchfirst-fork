@@ -296,8 +296,8 @@ committed archive made once with
 - Footer sources: Raider.IO, Warcraft Logs, DecAPI and Blizzard (the boss renders), each named once;
   `#wclNote` says how the two are merged (or that WCL was missing), `#pullNote` which pulls are absent.
 - `splitSideRaids()` drops `counts: false` raids from `tier.raids` and the guilds' `bosses` right
-  after the fetch, so every chart and table counts only the race; they come back as one line
-  under the winner banner (`#sideRaids`).
+  after the fetch, so every chart and table counts only the race; their kills show only in the
+  Hall of fame (as "telt niet mee"), no separate note (removed 2026-10-05 at the user's request).
 - `race = false` on a raid (Sporefall in Season 1): fetched and shown (`counts: false` in
   `tier.raids` and `hallOfFame.bosses`), but its kills don't count for kills, the current
   boss, the ranking, latestKillAt or the raider ranking. The first raid and the CE boss must count.
