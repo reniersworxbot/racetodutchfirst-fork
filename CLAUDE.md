@@ -162,7 +162,13 @@ season shows its own hall of fame: race.json for the live season, the archive fo
 filter (World of Warcraft; removed as a test in PR #9, so every live stream shows). `twitch.py` asks DecAPI (https://decapi.me/twitch/<what>/<login>,
 plain text, no key; the overlay uses it too) per channel: `uptime` ("<login> is offline" or
 "1 hour, 2 minutes, …"), and only for live ones `game`, `title`, `viewercount`. A failure
-makes that channel `live: null` and never stops the run. `site/live.js` draws "Nu live" in the
+makes that channel `live: null` and never stops the run. Because GitHub starts scheduled runs late
+or skips them (5 of 24 ran on raid evening 2026-10-04), the page also asks DecAPI itself (live.js
+`check()`, CSP `connect-src https://decapi.me`, DecAPI sends `Access-Control-Allow-Origin: *`):
+the same questions for race.json's channel list, on load, every 2 min while the tab is visible
+and when a hidden tab comes back. A channel the page checked more recently replaces race.json's
+entry (guild and url stay race.json's); if every page check fails, race.json's answer stands.
+`site/live.js` draws "Nu live" in the
 hero (`#onAir`) for `shown` channels and hides it once `streams.checkedAt` is over 75 min old:
 at the foot of the boss column on wide screens (ink-900 backing, so no text sits on the art),
 after the tier pills below 1281px. The leader's guild's stream comes first, then most viewers;

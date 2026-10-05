@@ -1,9 +1,13 @@
 /* Race to Dutch First: "Nu live", the listed raiders streaming right now, in the hero.
  *
  * race.json's `streams` comes from DecAPI on every fetch run (twitch.py), so it is
- * as old as the data. Older than STALE_MIN and the block hides: better nothing
- * than "live" for someone who stopped an hour ago. Same rules as app.js:
- * textContent only, no innerHTML; links only to https://www.twitch.tv/<login>.
+ * as old as the data, and GitHub starts scheduled runs late or skips them. So the page
+ * asks DecAPI itself too (check()): every POLL_MS while the tab is visible, the same
+ * questions as twitch.py for race.json's channel list. A newer page check overrides
+ * race.json per channel; if every page check fails, race.json's answer stands.
+ * Older than STALE_MIN and the block hides: better nothing than "live" for someone
+ * who stopped an hour ago. Same rules as app.js: textContent only, no innerHTML;
+ * links only to https://www.twitch.tv/<login>; DecAPI's answers are plain text.
  *
  * The player is a click-to-load facade: until a visitor presses play, the page asks
  * Twitch for nothing but the preview still (static-cdn.jtvnw.net). Pressing play swaps
@@ -15,12 +19,16 @@
 
 (() => {
   const STALE_MIN = 75;
+  const POLL_MS = 2 * 60 * 1000;
+  const DECAPI = 'https://decapi.me/twitch';
   const TWITCH = /^https:\/\/www\.twitch\.tv\/([a-z0-9_]{3,25})$/;
   const tn = (key, n, vars) => i18n.tn(key, n, vars);
   let data = null;
   let featured = null;   // login shown in the player
   let playing = null;    // login whose embed is loaded, or null for the facade
   let frame = null;      // the persistent player box
+  let page = null;       // this page's own DecAPI check: { checkedAt, byLogin: { login: entry } }
+  let checking = false;
 
   function clock(iso) {
     return new Date(iso).toLocaleTimeString(i18n.locale, { hour: '2-digit', minute: '2-digit' });
@@ -39,9 +47,71 @@
         'stroke-width': 2.2, 'stroke-linecap': 'square', 'stroke-linejoin': 'miter' }));
   }
 
+  /* ---- The page's own DecAPI check (same answers as twitch.py) ---- */
+  const UNIT = { day: 86400, hour: 3600, minute: 60, second: 1 };
+
+  // Seconds live from "1 hour, 59 minutes, 58 seconds"; null when offline; throws when unclear.
+  function parseUptime(text) {
+    if (/offline/i.test(text)) return null;
+    const parts = [...text.matchAll(/(\d+)\s+(day|hour|minute|second)s?/g)];
+    if (!parts.length) throw new Error(`unexpected uptime answer: ${text.slice(0, 80)}`);
+    return parts.reduce((sum, [, n, unit]) => sum + Number(n) * UNIT[unit], 0);
+  }
+
+  async function ask(what, name) {
+    const resp = await fetch(`${DECAPI}/${what}/${name}`, { cache: 'no-store' });
+    if (!resp.ok) throw new Error(`DecAPI ${what} ${name}: HTTP ${resp.status}`);
+    return (await resp.text()).trim();
+  }
+
+  async function checkChannel(ch, game, now) {
+    const name = login(ch);
+    const entry = { ...ch, live: null, game: null, title: null, viewers: null, startedAt: null };
+    try {
+      const up = parseUptime(await ask('uptime', name));
+      entry.live = up !== null;
+      if (up !== null) {
+        entry.startedAt = new Date(now - up * 1000).toISOString();
+        const [g, title, viewers] = await Promise.all(['game', 'title', 'viewercount'].map(w => ask(w, name)));
+        Object.assign(entry, { game: g, title, viewers: /^\d+$/.test(viewers) ? Number(viewers) : null });
+      }
+    } catch (err) {
+      console.warn(err);
+    }
+    entry.shown = !!entry.live && (!game || entry.game === game);
+    return entry;
+  }
+
+  async function check() {
+    const st = data && data.streams;
+    if (checking || !st || document.hidden) return;
+    checking = true;
+    try {
+      const now = Date.now();
+      const entries = await Promise.all(st.channels.filter(c => login(c)).map(c => checkChannel(c, st.game, now)));
+      const answered = entries.filter(e => e.live !== null);
+      if (!answered.length) return; // DecAPI down or blocked: race.json's check stands
+      page = { checkedAt: new Date(now).toISOString(), byLogin: Object.fromEntries(answered.map(e => [login(e), e])) };
+      render(); renderStreamers();
+    } finally {
+      checking = false;
+    }
+  }
+
+  /* race.json's streams, with each channel the page checked more recently replaced by that answer. */
+  function streams() {
+    const st = data && data.streams;
+    if (!st || !page || Date.parse(page.checkedAt) <= Date.parse(st.checkedAt)) return st;
+    const channels = st.channels.map(c => {
+      const mine = page.byLogin[login(c)];
+      return mine ? { ...mine, twitch: c.twitch, guild: c.guild, url: c.url } : c;
+    });
+    return { ...st, checkedAt: page.checkedAt, channels };
+  }
+
   /* The leader's guild first, then the most viewers: the stream most visitors came for. */
   function liveChannels() {
-    const st = data && data.streams;
+    const st = streams();
     const fresh = st && (Date.now() - Date.parse(st.checkedAt)) / 60000 <= STALE_MIN;
     if (!fresh) return [];
     const rank = name => (data.guilds.find(g => g.name === name) || { rank: 99 }).rank;
@@ -57,7 +127,7 @@
   function facade(ch) {
     const name = login(ch);
     const still = h('img', { class: 'onair__still', alt: '', loading: 'lazy', decoding: 'async',
-      src: `https://static-cdn.jtvnw.net/previews-ttv/live_user_${name}-640x360.jpg?t=${Date.parse(data.streams.checkedAt)}` });
+      src: `https://static-cdn.jtvnw.net/previews-ttv/live_user_${name}-640x360.jpg?t=${Date.parse(streams().checkedAt)}` });
     still.addEventListener('error', () => still.remove());
     const btn = h('button', { type: 'button', class: 'onair__play', 'aria-label': tr('live.play', { name }) },
       still,
@@ -127,7 +197,8 @@
     if (!frame) frame = h('div', { class: 'onair__player' });
     drawPlayer(ch, false);
 
-    box.replaceChildren(
+    // replaceChildren turns a null into the text "null", so the absent ribbon list is filtered out.
+    box.replaceChildren(...[
       h('div', { class: 'onair__head' },
         h('span', { class: 'onair__tag' }, h('span', { class: 'live-dot', 'aria-hidden': 'true' }), tr('hero.live')),
         h('h2', { id: 'onAirHeading', class: 'onair__h', text: tr('live.h') }),
@@ -138,7 +209,8 @@
         h('p', { class: 'onair__sub' },
           h('span', { class: 'onair__since', text: meta(ch) }),
           h('a', { class: 'onair__out', href: ch.url, rel: 'noopener' }, tr('live.open'), icon('out')))),
-      live.length > 1 ? h('div', { class: 'onair__list' }, live.map(ribbon)) : null);
+      live.length > 1 ? h('div', { class: 'onair__list' }, live.map(ribbon)) : null,
+    ].filter(Boolean));
     box.hidden = false;
     document.body.classList.add('is-onair');
   }
@@ -177,7 +249,7 @@
   function renderStreamers() {
     const wrap = $('#streamers');
     if (!wrap) return;
-    const st = data && data.streams;
+    const st = streams();
     const channels = st ? st.channels.filter(c => login(c)) : [];
     wrap.hidden = !channels.length;
     if (!channels.length) { closeStreamers(false); return; }
@@ -233,7 +305,16 @@
     document.addEventListener('click', e => { if (!e.target.closest('#streamers')) closeStreamers(false); });
   }
 
-  document.addEventListener('race:data', e => { data = e.detail; render(); renderStreamers(); });
-  if (typeof race !== 'undefined' && race) { data = race; render(); renderStreamers(); }
+  document.addEventListener('race:data', e => {
+    const first = !page;
+    data = e.detail; render(); renderStreamers();
+    if (first) check();
+  });
+  if (typeof race !== 'undefined' && race) { data = race; render(); renderStreamers(); check(); }
   setInterval(() => { if (data) { render(); renderStreamers(); } }, 60 * 1000);
+  setInterval(check, POLL_MS);
+  // Back on a hidden tab: check now if the last check is older than a poll.
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && (!page || Date.now() - Date.parse(page.checkedAt) >= POLL_MS)) check();
+  });
 })();
