@@ -68,3 +68,9 @@ def test_sitemap_is_committed_and_current():
     assert locs[:2] == ["https://racetodutchfirst.bmiest.be/", "https://racetodutchfirst.bmiest.be/?lang=en"]
     assert "https://racetodutchfirst.bmiest.be/?season=s1&lang=en" in locs
     assert "Sitemap: https://racetodutchfirst.bmiest.be/sitemap.xml" in (SITE / "robots.txt").read_text()
+
+
+def test_share_image_url_carries_the_fetch_time(race):
+    html = prerender((SITE / "index.html").read_text(encoding="utf-8"), race)
+    version = "".join(ch for ch in race["generatedAt"] if ch.isdigit())[:12]
+    assert f'og.png?v={version}"' in html

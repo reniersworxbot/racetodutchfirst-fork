@@ -41,6 +41,9 @@ NL = {
 MONTHS = ["jan", "feb", "mrt", "apr", "mei", "jun", "jul", "aug", "sep", "okt", "nov", "dec"]
 
 BOARD = '<ol id="lowerThirds" class="board"></ol>'
+# The share image's URL gets the fetch time as a version, so a chat app that caches link
+# previews by URL (Discord) shows the fresh image for a newly shared link.
+OG_IMAGE = '<meta property="og:image" content="https://racetodutchfirst.bmiest.be/og.png">'
 PILLS = '<div id="tierPills" class="sp__tier"></div>'
 
 
@@ -125,6 +128,9 @@ def prerender(html: str, data: dict) -> str:
         if html.count(marker) != 1:
             raise ValueError(f"index.html: expected {marker!r} exactly once")
         html = html.replace(marker, filled)
+    version = "".join(ch for ch in str(data.get("generatedAt", "")) if ch.isdigit())[:12]
+    if version and html.count(OG_IMAGE) == 1:
+        html = html.replace(OG_IMAGE, OG_IMAGE.replace("og.png", f"og.png?v={version}"))
     return html
 
 

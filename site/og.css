@@ -52,8 +52,10 @@ html, body { width: 1200px; height: 630px; background: var(--ink-900); }
 .og__row--lead .og__kills { color: var(--gold); }
 .og__bar { display: grid; gap: 6px; min-width: 0; }
 .og__where { font-size: 14px; color: var(--paper-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.og__track { position: relative; height: 10px; background: rgba(255, 255, 255, .08);
-  clip-path: polygon(0 0, 100% 0, calc(100% - 6px) 100%, 0 100%); }
+.og__track { position: relative; height: 12px; background: rgba(255, 255, 255, .09);
+  /* The board's race track: a segment per boss, 3px apart. */
+  -webkit-mask: repeating-linear-gradient(90deg, #000 0 calc(100% / var(--n, 8) - 3px), transparent calc(100% / var(--n, 8) - 3px) calc(100% / var(--n, 8)));
+  mask: repeating-linear-gradient(90deg, #000 0 calc(100% / var(--n, 8) - 3px), transparent calc(100% / var(--n, 8) - 3px) calc(100% / var(--n, 8))); }
 .og__track::after { content: ""; position: absolute; inset: 0 auto 0 0; width: var(--pos); background: var(--guild); }
 
 .og__foot { display: flex; align-items: center; justify-content: space-between; }

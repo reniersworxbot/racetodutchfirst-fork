@@ -34,7 +34,7 @@ site/                        static, no build step, no framework, no CDN scripts
   app.js                     loads data/race.json, draws everything (inline SVG)
   voortgang.js               Voortgang (Grafiek, Plaatsen, Replay, Ronde), the Wedstrijdverslag (#raceLog) and the per-guild small charts on Guilds (#guildSmall)
   og.html, og.css, og.js     the 1200x630 share image page (v2, as the hero: bug, poster question, ribbons, the hero boss); scripts/og-image.sh screenshots it to og.png
-  og.png                     committed fallback share image; CI replaces it in the Pages artifact
+  og.png                     committed fallback share image; CI replaces it in the Pages artifact; prerender gives og:image a ?v=<fetch time> so chat apps that cache previews by URL (Discord) fetch the new one
   splash.css                 the hero (design language v2: the overlay's language as a raid poster)
   style.css                  the sections below the hero
   bossart.js                 boss renders per encounter, generated with the overlay's build-bossart.py for every season's raids (see below)

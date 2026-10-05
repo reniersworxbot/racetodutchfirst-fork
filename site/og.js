@@ -55,6 +55,15 @@
       i.src = src; i.alt = '';
       return i;
     }));
+    // As on the page (app.js tidyBossArt): a council body under 40% of its partner's height
+    // (Zul'jan's tiny render on The Coiled Altar) is dropped rather than shown as a speck.
+    const imgs = [...art.querySelectorAll('img')];
+    if (imgs.length === 2) {
+      await Promise.all(imgs.map(i => (i.complete ? null : new Promise(r => { i.onload = i.onerror = r; }))));
+      const [a, b] = imgs;
+      const small = a.naturalHeight < b.naturalHeight * 0.4 ? a : b.naturalHeight < a.naturalHeight * 0.4 ? b : null;
+      if (small) { small.remove(); art.classList.remove('og__art--pair'); }
+    }
     art.hidden = false;
   }
 
@@ -63,10 +72,11 @@
     const cur = g.current;
     const where = g.ceKilledAt ? 'Cutting Edge behaald' : !cur ? 'Alles verslagen'
       : cur.bestPercent === null ? `${cur.name} · nog geen pulls`
-        : `${cur.name} · beste ${nl(cur.bestPercent, 1)}%`;
+        : `${cur.name} · nog ${nl(cur.bestPercent, 1)}%`;
     const row = el('li', `og__row${g.name === lead ? ' og__row--lead' : ''}`);
     row.style.setProperty('--guild', HEX.test(g.colour) ? g.colour : '#818b98');
     row.style.setProperty('--pos', `${(pos / total) * 100}%`);
+    row.style.setProperty('--n', String(total));
     const rib = el('div', 'og__rib');
     rib.append(el('span', 'og__rank', String(g.rank)), el('span', 'og__guild', g.name));
     const kills = el('div', 'og__kills', String(g.mythicKills));
