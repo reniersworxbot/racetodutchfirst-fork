@@ -507,7 +507,7 @@ def build_race(rio: RaiderIO, config: Config, now: datetime, log=print,
     return {
         "generatedAt": now.isoformat(timespec="seconds").replace("+00:00", "Z"),
         "season": {"id": tier.id, "label": tier.label, "archived": tier.end is not None,
-                   "end": tier.end},
+                   "end": tier.end, **({"plannedEnd": tier.planned_end} if tier.planned_end else {})},
         "seasons": seasons if seasons is not None else season_index(config),
         "sources": {"raiderio": True,
                     "warcraftlogs": any("warcraftlogs" in g["sources"] for g in ranked)},

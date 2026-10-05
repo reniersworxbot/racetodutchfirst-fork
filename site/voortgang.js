@@ -162,6 +162,22 @@ const Voortgang = (() => {
         lx = m.l + sz + 12;
       }
       svg.append(s('text', { class: 'svg-finish__label', x: lx, y: y(total) - bandH / 2 + 4.5, text: tr('vg.finish', { boss: model.ceName }) }));
+      // The season's end, when it falls in view (an archive, or the live season near its end): a
+      // dashed jade line; and once someone has CE, a gold bracket from that kill to the end.
+      const close = seasonClose(data);
+      if (close !== null && close >= d0 && close <= d1 + DAY) {
+        const ex = Math.min(x(close), m.l + pw);
+        svg.append(s('line', { class: 'svg-season-end', x1: ex, x2: ex, y1: y(total) - bandH, y2: H - m.b }));
+        svg.append(s('text', { class: 'svg-season-end__lbl', x: ex - 6, y: H - m.b - 8, 'text-anchor': 'end', text: tr('season.endMark') }));
+        const wt = data.winner ? Date.parse(data.winner.defeatedAt) : NaN;
+        if (Number.isFinite(wt) && wt >= d0 && wt < close) {
+          const wx = x(wt), by = y(total) + 14;
+          svg.append(s('path', { class: 'svg-before', d: `M${wx},${by - 5} V${by} H${ex} V${by - 5}` }));
+          // Its words sit by the end line's own label at the foot, where no guild's line runs.
+          svg.append(s('text', { class: 'svg-before__lbl', x: ex - 6, y: H - m.b - 26, 'text-anchor': 'end',
+            text: tr('season.ceBefore', { n: num(daysBetween(wt, close)) }) }));
+        }
+      }
       // The key: the chart's own marks, named once, at the right of the band (no caption needed).
       // Laid out right to left once the svg is in the page (text widths need a rendered svg).
       let key = null;
@@ -176,10 +192,10 @@ const Voortgang = (() => {
 
       // Time ticks: weekly resets when zoomed out, days when zoomed in; labelled where there's room.
       const span = d1 - d0;
-      const step = [DAY, 2 * DAY, WEEK].find(st2 => (st2 / span) * pw >= 58) || WEEK;
+      const step = [DAY, 2 * DAY, WEEK, 2 * WEEK].find(st2 => (st2 / span) * pw >= 66) || 2 * WEEK;
       const ticks = [];
       if (step >= WEEK) {
-        for (let t = model.start + Math.ceil((d0 - model.start) / WEEK) * WEEK; t <= d1; t += WEEK) ticks.push(t);
+        for (let t = model.start + Math.ceil((d0 - model.start) / WEEK) * WEEK; t <= d1; t += step) ticks.push(t);
       } else {
         const dd = new Date(d0);
         dd.setHours(0, 0, 0, 0);
@@ -282,6 +298,8 @@ const Voortgang = (() => {
       h('div', { class: 'tl-readout__head' },
         h('span', { class: 'tl-readout__when', text: picked ? when(t, geo.d1 - geo.d0 <= 4 * DAY) : tr(isArchive(data) ? 'vg.end' : 'vg.now') }),
         h('span', { class: 'tl-readout__day', text: tr('vg.day', { n: dayNo(t) }) }),
+        !picked && !isArchive(data) && seasonClose(data) > model.end
+          ? h('span', { class: 'tl-readout__day', text: `· ${i18n.tn('season.left', daysBetween(model.end, seasonClose(data)))}` }) : null,
         st.pinned ? close : null),
       h('ol', { class: 'tl-readout__list' }, ...rows.map((r, i) => setGuild(h('li', { 'data-guild': r.sr.g.name, class: st.focus && st.focus !== r.sr.g.name ? 'is-dim' : null },
         h('span', { class: 'tl-readout__rank', text: String(i + 1) }),
@@ -437,7 +455,7 @@ const Voortgang = (() => {
     $('#tlReplay').hidden = mode !== 'replay';
     $('#tlRing').hidden = mode !== 'ring';
     if (PLAYER.has(mode)) { redrawTimeline(); paintReplay(true); }
-    else { redrawTimeline(); paintScrub(); }
+    else { redrawTimeline(); paintScrub(); logShownUpTo = null; renderLog(); }
     for (const id of ['#tlBump', '#tlRing']) {
       const c = charts.get($(id));
       if (c && !$(id).hidden) requestAnimationFrame(() => { c.width = Math.floor($(id).clientWidth); c.draw(c.width); });
@@ -486,6 +504,7 @@ const Voortgang = (() => {
     slider.value = String(t);
     slider.style.setProperty('--fill', `${((t - model.start) / (model.end - model.start)) * 100}%`);
     $('#rpWhen').textContent = `${when(t, false)} · ${tr('vg.day', { n: dayNo(t) })}`;
+    syncLog(t);
     if (st.mode === 'ring') { paintRing(t); return; }
     const rows = standingsAt(t);
     const list = $('#rpLanes');
@@ -721,12 +740,22 @@ const Voortgang = (() => {
     });
   }
   const guildName = sr => setGuild(h('b', { class: 'log-guild', text: sr.g.name }), sr.g);
+  /* While Replay or Ronde runs the race again, the log runs with it: only what had happened by the
+   * moment on screen, and what just happened lights up once. */
+  const logCut = () => (PLAYER.has(st.mode) && st.t !== null ? st.t : Infinity);
+  let logShownUpTo = null;
   function renderLog() {
     const list = $('#logList'), more = $('#logMore');
     if (!list) return;
+    const cut = logCut();
+    const fresh = Number.isFinite(cut) && logShownUpTo !== null && cut > logShownUpTo ? logShownUpTo : Infinity;
+    logShownUpTo = Number.isFinite(cut) ? cut : null;
     const ev = [];
     for (const sr of model.series) sr.kills.forEach((k, n) => ev.push({ t: k.at, kind: isFirstKill(data, k, sr.g) ? 'first' : 'kill', sr, k, n: n + 1 }));
     for (const o of model.passes) ev.push({ t: o.t, kind: 'pass', sr: o.sr, over: o.over, rank: o.rank });
+    const close = seasonClose(data);
+    if (close !== null && isArchive(data)) ev.push({ t: close, kind: 'end' });
+    for (let i = ev.length - 1; i >= 0; i--) if (ev[i].t > cut) ev.splice(i, 1);
     ev.sort((a, b) => b.t - a.t);
     const days = new Map();
     for (const e of ev) {
@@ -737,20 +766,29 @@ const Voortgang = (() => {
     }
     const all = [...days.entries()];
     const shown = st.logAll ? all : all.slice(0, 3);
-    list.replaceChildren(...(all.length ? shown.map(([d0, es]) => {
-      const endOfDay = Math.min(d0 + DAY - 1, model.end);
+    // While the season runs and its end is known: that day heads the log, still to come.
+    const ahead = close !== null && !isArchive(data) && close > model.end && !Number.isFinite(cut)
+      ? h('li', { class: 'log-day log-day--ahead' },
+        h('div', { class: 'log-when' }, h('b', { text: tr('season.endMark') }),
+          h('span', { text: new Date(close).toLocaleDateString(i18n.locale, { weekday: 'long', day: 'numeric', month: 'long' }) })),
+        h('div', { class: 'log-body' }, h('p', { class: 'log-ahead', text: i18n.tn('season.left', daysBetween(model.end, close)) })))
+      : null;
+    list.replaceChildren(...(ahead ? [ahead] : []), ...(all.length ? shown.map(([d0, es]) => {
+      const endOfDay = Math.min(d0 + DAY - 1, model.end, cut);
       return h('li', { class: 'log-day' },
         h('div', { class: 'log-when' },
           h('b', { text: tr('vg.day', { n: dayNo(d0 + 12 * HOUR) }) }),
           h('span', { text: new Date(d0).toLocaleDateString(i18n.locale, { weekday: 'long', day: 'numeric', month: 'long' }) })),
         h('div', { class: 'log-body' },
-          h('ul', { class: 'log-ev' }, ...es.map(e => h('li', { class: `log-e log-e--${e.kind}` },
+          h('ul', { class: 'log-ev' }, ...es.map(e => e.kind === 'end' ? h('li', { class: 'log-e log-e--end' },
+            h('span', { class: 'log-t mono' }), h('span', { class: 'log-txt', text: tr('log.seasonEnd') })) : h('li', { class: `log-e log-e--${e.kind}${e.t > fresh ? ' log-e--new' : ''}` },
             h('span', { class: 'log-t mono', text: clock(new Date(e.t).toISOString()) }),
             h('span', { class: 'log-txt' },
               ...(e.kind === 'pass'
                 ? sentence('log.pass', { guild: guildName(e.sr), other: h('b', { text: e.over.g.name }), rank: String(e.rank) })
                 : sentence(e.kind === 'first' ? 'log.first' : 'log.kill', { guild: guildName(e.sr), boss: h('b', { text: e.k.name }) })),
-              e.kind === 'pass' ? '.' : ` (${tr('log.detail', { n: e.n })}${e.k.pullCount ? `, ${pulls(e.k.pullCount)}` : ''}).`)))),
+              e.kind === 'pass' ? '.' : ` (${tr('log.detail', { n: e.n })}${e.k.pullCount ? `, ${pulls(e.k.pullCount)}` : ''}${
+                e.k.slug === data.tier.ceBoss.slug && close !== null && close > e.t ? `, ${i18n.tn('season.before', daysBetween(e.t, close))}` : ''}).`)))),
           h('ol', { class: 'log-stand', 'aria-label': tr('log.stand') }, ...standingsAt(endOfDay).map((r, i) => setGuild(h('li', {},
             h('span', { class: 'log-stand__rank mono', text: String(i + 1) }),
             h('span', { text: r.sr.g.name }),
@@ -763,6 +801,17 @@ const Voortgang = (() => {
     } else more.replaceChildren();
   }
 
+  // Redraw the log only when the replay passes an event (not every frame).
+  let logEvents = null;
+  function syncLog(t) {
+    if (!logEvents) {
+      logEvents = [...model.series.flatMap(sr => sr.kills.map(k => k.at)), ...model.passes.map(o => o.t)].sort((a, b) => a - b);
+    }
+    let n = 0;
+    while (n < logEvents.length && logEvents[n] <= t) n++;
+    if (n !== syncLog.n || t < (logShownUpTo ?? -Infinity)) { syncLog.n = n; renderLog(); }
+  }
+
   /* ---- entry ---------------------------------------------------------------------------- */
 
   function render(d) {
@@ -771,6 +820,8 @@ const Voortgang = (() => {
     data = d;
     model = buildModel(d);
     model.passes = passesOf();
+    logEvents = null;
+    syncLog.n = -1;
     if (st.zoom) st.zoom = [Math.max(st.zoom[0], model.start), Math.min(st.zoom[1], model.end)];
     if (st.t !== null) st.t = clampT(st.t);
     buildBar();

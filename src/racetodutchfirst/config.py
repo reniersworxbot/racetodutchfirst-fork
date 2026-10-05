@@ -61,6 +61,7 @@ class Tier:
     id: str = "now"
     label: str | None = None
     end: str | None = None  # set on an archived season: the day it closed
+    planned_end: str | None = None  # the live season's announced last day, while it runs
 
     @property
     def main_raid(self) -> Raid:
@@ -172,7 +173,8 @@ def parse_tier(t: dict) -> Tier:
     if not _SEASON_ID.match(tid):
         raise ConfigError(f"tier.id must be a short slug like s2, got {tid!r}")
     tier = Tier(start=str(t["start"]), raids=tuple(raids), ce_raid=ce_raid, ce_boss=ce_slug,
-                id=tid, label=t.get("label"), end=str(t["end"]) if t.get("end") else None)
+                id=tid, label=t.get("label"), end=str(t["end"]) if t.get("end") else None,
+                planned_end=str(t["planned_end"]) if t.get("planned_end") else None)
     try:
         tier.boss(ce_raid, ce_slug)
     except KeyError as exc:

@@ -191,7 +191,8 @@ function renderWinner(data) {
       h('p', {
         class: 'winner__text',
         text: tr('winner.text', { boss: data.tier.ceBoss.name, when: dayTime(data.winner.defeatedAt) }),
-      })));
+      }),
+      seasonClose(data) ? h('p', { class: 'winner__before', text: i18n.tn('season.before', daysBetween(Date.parse(data.winner.defeatedAt), seasonClose(data))) }) : null));
   if (g) setGuild(box, g);
   box.hidden = false;
 }
@@ -348,6 +349,14 @@ function raceTrack(data, g, label) {
 /* An archived season (race.json `season.archived`, see the season switch) ends on its
  * `season.end`; the live season runs up to the fetch. */
 function isArchive(data) { return !!(data.season && data.season.archived); }
+/* The season's last day: the archive's end, or the live season's announced end (guilds.toml
+ * planned_end), or null while unknown. Midnight UTC of that day. */
+function seasonClose(data) {
+  const day0 = data.season && (data.season.archived ? data.season.end : data.season.plannedEnd);
+  const t = day0 ? Date.parse(`${day0}T00:00:00Z`) : NaN;
+  return Number.isFinite(t) ? t : null;
+}
+const daysBetween = (a, b) => Math.round((b - a) / 86400000);
 function seasonEnd(data) {
   const end = isArchive(data) && data.season.end ? Date.parse(data.season.end) : NaN;
   return Number.isFinite(end) ? end : Date.parse(data.generatedAt);

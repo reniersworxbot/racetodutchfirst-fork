@@ -47,6 +47,9 @@ wcl_id = 665432
 id = "s2"
 label = "Season 2"
 start = "2026-08-19"
+# The season's announced last day (EU), once Blizzard has said it: the page then shows how
+# long is left, and how long before the end Cutting Edge fell. Leave out while unknown.
+# planned_end = "2027-02-23"
 
 # Cutting Edge: the first guild to kill this boss on Mythic wins. The operator
 # confirms which boss this is; it defaults to the last boss of the first raid.

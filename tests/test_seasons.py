@@ -128,3 +128,11 @@ def test_current_race_json_says_it_is_the_live_season(config, rio):
 def test_tier_without_output_is_refused(capsys):
     assert main(["--tier", str(ROOT / "seasons" / "season-1.toml")]) == 1
     assert "--output" in capsys.readouterr().err
+
+
+def test_planned_end_is_passed_on_while_the_season_runs(config, rio):
+    from dataclasses import replace
+    planned = replace(config, tier=replace(config.tier, planned_end="2027-02-23"))
+    race = build_race(rio, planned, NOW, log=lambda *a: None)
+    assert race["season"]["plannedEnd"] == "2027-02-23"
+    assert race["season"]["archived"] is False
