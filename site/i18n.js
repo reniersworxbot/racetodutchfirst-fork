@@ -133,6 +133,7 @@ i18n.add({
     'tile.best': 'nog {pct} · {pulls}',
     'tile.track': 'racepositie {pos} van {total}',
     'rank.world': 'Wereld {n}',
+    'team.of': 'team van {guild}',
     'rank.title': 'Raider.IO-rang in {raid} Mythic: wereld, regio en realm',
 
     'feed.empty': 'Nog geen Mythic-kills.',
@@ -329,6 +330,7 @@ i18n.add({
     'tile.best': '{pct} left · {pulls}',
     'tile.track': 'race position {pos} of {total}',
     'rank.world': 'World {n}',
+    'team.of': 'team of {guild}',
     'rank.title': 'Raider.IO rank in {raid} Mythic: world, region and realm',
 
     'feed.empty': 'No Mythic kills yet.',

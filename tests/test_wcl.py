@@ -77,11 +77,39 @@ def test_earlier_raiderio_kill_beats_a_later_logged_one(rio, config):
     assert g["racePosition"] == 2.9765
 
 
-def test_guild_without_mythic_logs_stays_on_raiderio(rio, config):
-    g = _fetch(rio, config, "RoyalTeam")
-    assert g["sources"] == ["raiderio"]
-    assert g["racePosition"] == 2.0
-    assert g["wclUrl"] == "https://www.warcraftlogs.com/guild/id/665432"
+def _teams(race):
+    return {g["name"]: g for g in race["guilds"] if g.get("team")}
+
+
+def test_royalteam_races_as_two_teams_from_their_own_logs(rio, config):
+    # Raider.IO only knows RoyalTeam; its teams log to their own WCL guilds (recorded 2026-10-05).
+    race = build_race(rio, config, NOW, log=lambda _m: None, wcl=_wcl())
+    teams = _teams(race)
+    assert set(teams) == {"RoyalTeam Crusaders", "RoyalTeam Templars"}
+    assert "RoyalTeam" not in [g["name"] for g in race["guilds"]]
+    cru, tem = teams["RoyalTeam Crusaders"], teams["RoyalTeam Templars"]
+    assert cru["sources"] == ["warcraftlogs"] and cru["team"] == {"of": "RoyalTeam"}
+    assert cru["wclUrl"] == "https://www.warcraftlogs.com/guild/id/744461"
+    assert cru["worldRank"] is None  # Raider.IO ranks the guild, not a team
+    assert cru["mythicKills"] == 1 and cru["current"]["slug"] == "the-lost-explorers"
+    assert cru["current"]["bestPercent"] == 0.49 and len(cru["current"]["pulls"]) == 26
+    assert tem["mythicKills"] == 2 and tem["current"]["slug"] == "entombed-sentinels"
+    assert _boss(tem, "the-lost-explorers")["defeatedAt"].startswith("2026-10-01T20:30")
+
+
+def test_raiderio_rosters_go_to_the_team_whose_kill_matches(rio, config):
+    race = build_race(rio, config, NOW, log=lambda _m: None, wcl=_wcl())
+    fame = {b["slug"]: {t["guild"]: t for t in b["teams"]} for b in race["hallOfFame"]["bosses"]}
+    # Raider.IO's RoyalTeam kills: Nek'zali 14 Sep (Crusaders), The Lost Explorers 1 Oct (Templars).
+    assert fame["nekzali-the-soulcoiler"]["RoyalTeam Crusaders"]["rosterKnown"] is True
+    assert fame["nekzali-the-soulcoiler"]["RoyalTeam Templars"]["rosterKnown"] is False
+    assert fame["the-lost-explorers"]["RoyalTeam Templars"]["rosterKnown"] is True
+
+
+def test_without_wcl_royalteam_races_as_one(rio, config):
+    race = build_race(rio, config, NOW, log=lambda _m: None)
+    names = [g["name"] for g in race["guilds"]]
+    assert "RoyalTeam" in names and not _teams(race)
 
 
 def test_nymrissa_matched_by_encounter_not_zone(rio, config):

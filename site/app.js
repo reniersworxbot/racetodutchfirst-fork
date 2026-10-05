@@ -571,6 +571,8 @@ function mainRanks(data, g) {
 /* Raider.IO's ranks for the CE raid in the board's ribbon: world, region and realm, each its own
  * part, so on a narrow ribbon the realm drops out whole instead of losing half its number. */
 function worldRank(data, g) {
+  // A raid team (RoyalTeam's Crusaders, Templars): Raider.IO ranks only the guild as a whole.
+  if (g.team && g.team.of) return h('span', { class: 'rib__wr' }, h('span', { text: tr('team.of', { guild: g.team.of }) }));
   const r = mainRanks(data, g);
   if (!r.world) return null;
   const parts = [tr('rank.world', { n: num(r.world) }),
@@ -580,6 +582,7 @@ function worldRank(data, g) {
     ...parts.map(p => h('span', { text: p })));
 }
 function rankLine(data, g) {
+  if (g.team && g.team.of) return h('span', { class: 'gs-who__wr', text: tr('team.of', { guild: g.team.of }) });
   const r = mainRanks(data, g);
   if (!r.world) return null;
   // No-break spaces: a rank never splits from its label ("EU 1.405") when the line wraps.

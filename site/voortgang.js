@@ -751,7 +751,17 @@ const Voortgang = (() => {
     const base = n => { const w = n.trim().split(/\s+/); return w.length > 1 ? w.map(x => x[0]) : [...w[0]]; };
     const make = (n, len) => { const w = n.trim().split(/\s+/); return (w.length > 1 && len <= w.length ? w.map(x => x[0]).join('') : n.replace(/\s+/g, '').slice(0, len)).toUpperCase(); };
     const out = new Map();
+    const first = n => n.trim().split(/\s+/)[0].toLowerCase();
     for (const n of names) {
+      // Teams of one guild share their first word (RoyalTeam Crusaders, RoyalTeam Templars):
+      // tag them by the word that tells them apart (CRU, TEM).
+      const words = n.trim().split(/\s+/);
+      if (words.length > 1 && names.some(o => o !== n && first(o) === first(n))) {
+        let tag = words.slice(1).join('').slice(0, 3).toUpperCase(), len = 3;
+        while ([...out.values()].includes(tag) && len < 8) tag = words.slice(1).join('').slice(0, ++len).toUpperCase();
+        out.set(n, tag);
+        continue;
+      }
       let len = Math.max(2, Math.min(3, base(n).length));
       let tag = make(n, len);
       while ([...out.values()].includes(tag) && len < n.length) tag = make(n, ++len);

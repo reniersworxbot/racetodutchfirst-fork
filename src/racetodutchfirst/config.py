@@ -24,6 +24,14 @@ class Guild:
     colour: str
     region: str = "eu"
     wcl_id: int | None = None
+    # A raid team of a bigger guild (RoyalTeam's Crusaders and Templars): it races on its own
+    # Warcraft Logs guild (wcl_id), and borrows only kill rosters from this Raider.IO guild,
+    # which can't tell its teams apart.
+    raiderio: str | None = None
+
+    @property
+    def is_team(self) -> bool:
+        return self.raiderio is not None
 
     @property
     def realm_slug(self) -> str:
@@ -129,11 +137,14 @@ def parse_config(data: dict) -> Config:
             guild = Guild(
                 name=g["name"], realm=g["realm"], colour=g["colour"],
                 region=g.get("region", "eu").lower(), wcl_id=g.get("wcl_id"),
+                raiderio=g.get("raiderio"),
             )
         except KeyError as exc:
             raise ConfigError(f"guild entry {g!r} is missing {exc}") from exc
         if not _HEX_COLOUR.match(guild.colour):
             raise ConfigError(f"{guild.name}: colour must look like #12abef, got {guild.colour!r}")
+        if guild.is_team and not guild.wcl_id:
+            raise ConfigError(f"{guild.name}: a team (raiderio = ...) needs its own wcl_id")
         guilds.append(guild)
     if not guilds:
         raise ConfigError("guilds.toml lists no guilds")

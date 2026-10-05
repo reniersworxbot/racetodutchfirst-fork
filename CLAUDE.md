@@ -135,6 +135,18 @@ that kill (reclears after it don't count); the lowest best %. **Never "WCL wins"
 - Cost: ~120 of 3600 points/hour per run for 5 guilds (measured 2026-10-02). Pulls
   come from WCL for the current-boss curve only when WCL saw more than Raider.IO.
 
+## Raid teams (RoyalTeam)
+
+A guild that raids as several teams can race as those teams: each a `[[guilds]]` entry with its
+own `wcl_id` (the team's own Warcraft Logs guild) and `raiderio = "<the Raider.IO guild>"`
+(RoyalTeam Crusaders 744461 and RoyalTeam Templars 816789). Raider.IO can't tell teams apart, so
+`race.fetch_team()` builds a team's bosses from its own WCL fights only (the same `merge_wcl`,
+dedupe and `best_steps`), and gives a Raider.IO kill roster of the whole guild to the team whose
+logged kill is within 20 min of it (`TEAM_KILL_MATCH_MS`); else the kill's roster is unknown.
+A team has no world/region/realm rank (the page says "team van RoyalTeam"). Without WCL
+(no credentials, WCL down for any of its teams, or a season without a WCL zone, like the Season 1
+archive) the guild races once, as a whole, from Raider.IO. Only what a team logs counts.
+
 ## Hall of fame
 
 `race.hall_of_fame()` turns the `boss-kill` rosters (already fetched for kill dates, so no

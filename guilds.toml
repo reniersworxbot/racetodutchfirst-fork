@@ -32,11 +32,22 @@ realm = "Draenor"
 colour = "#b48cff"
 wcl_id = 30714
 
+# RoyalTeam races as two raid teams, each with its own Warcraft Logs guild. Raider.IO only
+# knows the guild as a whole (raiderio = ...): a team's bosses come from its own logs, and
+# a Raider.IO kill roster goes to the team whose logged kill matches it in time.
 [[guilds]]
-name = "RoyalTeam"
+name = "RoyalTeam Crusaders"
 realm = "Silvermoon"
 colour = "#f472b6"
-wcl_id = 665432
+wcl_id = 744461
+raiderio = "RoyalTeam"
+
+[[guilds]]
+name = "RoyalTeam Templars"
+realm = "Silvermoon"
+colour = "#a3e635"
+wcl_id = 816789
+raiderio = "RoyalTeam"
 
 # The current tier (EU since 2026-08-19): 8 bosses race; Nymrissa (+1) is shown but doesn't count.
 # The first raid is the main one: the fractional race position comes from the
@@ -115,12 +126,12 @@ guild = "Knikkerende Krijgers"
 
 [[streams.channels]]
 twitch = "royalteam90"
-guild = "RoyalTeam"
+guild = "RoyalTeam Crusaders"
 
 [[streams.channels]]
 twitch = "v0lky1"
-guild = "RoyalTeam"
+guild = "RoyalTeam Crusaders"
 
 [[streams.channels]]
 twitch = "ysaria94"
-guild = "RoyalTeam"
+guild = "RoyalTeam Templars"

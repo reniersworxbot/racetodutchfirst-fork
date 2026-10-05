@@ -9,7 +9,7 @@ import httpx
 import pytest
 
 from racetodutchfirst import __main__ as cli
-from racetodutchfirst.config import ConfigError, parse_config
+from racetodutchfirst.config import ConfigError, Guild, parse_config
 from racetodutchfirst.race import (
     best_steps,
     build_race,
@@ -52,17 +52,21 @@ def test_kelderklasse_position_from_fixtures(rio, config):
 
 # -- the live-data traps ----------------------------------------------------
 
+# RoyalTeam races as two teams (guilds.toml); its Raider.IO guild as a whole is still fetched.
+ROYALTEAM = Guild(name="RoyalTeam", realm="Silvermoon", colour="#f472b6")
+
+
 def test_latest_boss_already_dead_is_not_counted_twice(rio, config):
     # RoyalTeam: boss=latest answers The Lost Explorers with isDefeated=true.
     # The old fetcher took that as the current boss and gave 3.0 for 2 kills.
-    g = fetch_guild(rio, guild(config, "RoyalTeam"), config.tier)
+    g = fetch_guild(rio, ROYALTEAM, config.tier)
     assert g["mythicKills"] == 2
     assert g["current"]["slug"] == "entombed-sentinels"  # skipped, still alive
     assert g["racePosition"] == 2.0
 
 
 def test_kill_order_is_not_linear(rio, config):
-    g = fetch_guild(rio, guild(config, "RoyalTeam"), config.tier)
+    g = fetch_guild(rio, ROYALTEAM, config.tier)
     states = {b["slug"]: b["state"] for b in g["bosses"]}
     assert states["nekzali-the-soulcoiler"] == "killed"
     assert states["entombed-sentinels"] == "untouched"

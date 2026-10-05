@@ -402,6 +402,86 @@ def find_winner(guilds: list[dict]) -> dict | None:
     return {"guild": first["name"], "defeatedAt": first["ceKilledAt"]}
 
 
+TEAM_KILL_MATCH_MS = 20 * 60 * 1000  # a Raider.IO kill this close to a team's logged kill is that team's
+
+
+def fetch_team(guild: Guild, tier: Tier, fights: list[dict], parent: dict | None,
+               history: dict[str, dict] | None = None) -> dict:
+    """A raid team that races on its own Warcraft Logs guild: every boss from its logged fights
+    (the same merge as for a Raider.IO guild, starting from nothing). Raider.IO only knows the
+    parent guild; its kill rosters go to the team whose logged kill matches the kill time."""
+    states: dict[str, dict] = {}
+    for raid in tier.raids:
+        for b in raid.bosses:
+            states[b.key] = {"raid": b.raid, "slug": b.slug, "name": b.name, "state": "untouched",
+                             "defeatedAt": None, "pullCount": None, "pullSource": None,
+                             "bestPercent": None}
+    if fights:
+        merge_wcl(states, tier, fights)
+    parent_bosses = {f"{b['raid']}/{b['slug']}": b for b in (parent or {}).get("bosses", [])}
+    parent_rosters = (parent or {}).get("_rosters") or {}
+    raids = {}
+    for raid in tier.raids:
+        raids[raid.slug] = {
+            "mythic": sum(states[b.key]["state"] == "killed" for b in raid.bosses), "heroic": 0,
+            "total": len(raid.bosses), "summary": None,
+            "worldRank": None, "regionRank": None, "realmRank": None,
+        }
+        for b in raid.bosses:  # names as Raider.IO spells them, when the parent has them
+            if b.key in parent_bosses:
+                states[b.key]["name"] = parent_bosses[b.key]["name"]
+    current_boss = _pick_current(tier, states, {})
+    current = None
+    if current_boss:
+        st = states[current_boss.key]
+        current = {
+            "raid": st["raid"], "slug": st["slug"], "name": st["name"],
+            "bestPercent": st["bestPercent"], "pullCount": st["pullCount"] or 0,
+            "pullSource": st["pullSource"],
+            "pulls": _wcl_pulls(st["_wcl"]) if st.get("_wcl") else [],
+        }
+    history = history or {}
+    rosters = {}
+    for key, st in states.items():
+        if st["defeatedAt"]:
+            known = history.get(key)
+            if known and known["defeatedAt"] == st["defeatedAt"]:
+                st["progress"] = known["progress"]
+            else:
+                st["progress"] = best_steps(_wcl_pulls(st.get("_wcl") or []), st["defeatedAt"])
+            pb = parent_bosses.get(key)
+            close = pb and pb.get("defeatedAt") and abs(
+                (_ts(pb["defeatedAt"]) - _ts(st["defeatedAt"])).total_seconds() * 1000) <= TEAM_KILL_MATCH_MS
+            rosters[key] = parent_rosters.get(key) if close else None
+        st.pop("_wcl", None)
+    counted = [raids[r.slug] for r in tier.race_raids]
+    mythic_kills = sum(r["mythic"] for r in counted)
+    kill_times = [states[b.key]["defeatedAt"] for r in tier.race_raids for b in r.bosses
+                  if states[b.key]["defeatedAt"]]
+    ce = states[f"{tier.ce_raid}/{tier.ce_boss}"]
+    return {
+        "name": guild.name,
+        "realm": guild.realm,
+        "region": guild.region.upper(),
+        "colour": guild.colour,
+        "profileUrl": None,
+        "wclUrl": f"https://www.warcraftlogs.com/guild/id/{guild.wcl_id}",
+        "sources": ["warcraftlogs"],
+        "team": {"of": guild.raiderio},
+        "mythicKills": mythic_kills,
+        "heroicKills": 0,
+        "totalBosses": tier.total_bosses,
+        "worldRank": None,
+        "racePosition": race_position(mythic_kills, current),
+        "latestKillAt": max(kill_times, key=_ts) if kill_times else None,
+        "ceKilledAt": ce["defeatedAt"],
+        "raids": raids,
+        "bosses": [states[b.key] for r in tier.raids for b in r.bosses],
+        "current": current,
+        "_rosters": rosters,
+    }
+
+
 def first_kills(guilds: list[dict]) -> dict[str, dict]:
     """Per boss key, the tracked guild that killed it first."""
     firsts: dict[str, dict] = {}
@@ -415,8 +495,8 @@ def first_kills(guilds: list[dict]) -> dict[str, dict]:
     return firsts
 
 
-def wcl_fights_for(wcl: WarcraftLogs, guild: Guild, tier: Tier) -> tuple[int | None, list[dict]]:
-    """(guild id, Mythic fights) from Warcraft Logs; a failure is only a warning."""
+def wcl_fights_for(wcl: WarcraftLogs, guild: Guild, tier: Tier) -> tuple[int | None, list[dict] | None]:
+    """(guild id, Mythic fights) from Warcraft Logs; a failure is only a warning (fights None)."""
     try:
         gid = guild.wcl_id or wcl.guild_id(guild)
         if not gid:
@@ -428,7 +508,7 @@ def wcl_fights_for(wcl: WarcraftLogs, guild: Guild, tier: Tier) -> tuple[int | N
         return gid, fights
     except WCLError as exc:
         _warn(f"{guild.name}: Warcraft Logs overgeslagen ({exc})")
-        return guild.wcl_id, []
+        return guild.wcl_id, None
 
 
 def hall_of_fame(guilds: list[dict], tier: Tier) -> dict:
@@ -491,10 +571,44 @@ def build_race(rio: RaiderIO, config: Config, now: datetime, log=print,
     previous: an earlier race.json of this season, to reuse the progress of bosses already killed."""
     history = history_from(previous, config.tier)
     guilds = []
+    parents: dict[str, dict] = {}  # a team's Raider.IO guild, fetched once for all its teams
+    # Teams race apart only when Warcraft Logs answered for every team of that guild; else
+    # the guild races once, as a whole (from Raider.IO), so it never drops out of the race.
+    team_fights: dict[str, list[dict]] = {}
+    whole: set[str] = set()
+    for guild in config.guilds:
+        if not guild.is_team:
+            continue
+        if not (wcl and config.tier.wcl_zones):
+            whole.add(guild.raiderio)
+            continue
+        _gid, fs = wcl_fights_for(wcl, guild, config.tier)
+        if fs is None:
+            whole.add(guild.raiderio)
+        else:
+            team_fights[guild.name] = fs
     for i, guild in enumerate(config.guilds, start=1):
         log(f"[{i}/{len(config.guilds)}] {guild.name} ({guild.realm})")
+        if guild.is_team and guild.raiderio in whole:
+            # Without Warcraft Logs (no credentials, a season without a WCL zone, or WCL down)
+            # a team can't be told apart: its Raider.IO guild races once, as a whole.
+            if guild.raiderio not in parents:
+                parents[guild.raiderio] = {}
+                as_one = Guild(name=guild.raiderio, realm=guild.realm, colour=guild.colour,
+                               region=guild.region)
+                guilds.append(fetch_guild(rio, as_one, config.tier,
+                                          history=history.get(guild.raiderio.casefold())))
+            continue
+        if guild.is_team:
+            if guild.raiderio not in parents:
+                parent = Guild(name=guild.raiderio, realm=guild.realm, colour=guild.colour,
+                               region=guild.region)
+                parents[guild.raiderio] = fetch_guild(rio, parent, config.tier)
+            guilds.append(fetch_team(guild, config.tier, team_fights[guild.name], parents[guild.raiderio],
+                                     history=history.get(guild.name.casefold())))
+            continue
         gid, fights = wcl_fights_for(wcl, guild, config.tier) if wcl else (guild.wcl_id, [])
-        guilds.append(fetch_guild(rio, guild, config.tier, wcl_fights=fights, wcl_id=gid,
+        guilds.append(fetch_guild(rio, guild, config.tier, wcl_fights=fights or [], wcl_id=gid,
                                   history=history.get(guild.name.casefold())))
     ranked = rank_guilds(guilds)
     firsts = first_kills(ranked)
