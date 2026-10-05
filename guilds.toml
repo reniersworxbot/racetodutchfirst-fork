@@ -120,3 +120,7 @@ guild = "RoyalTeam"
 [[streams.channels]]
 twitch = "v0lky1"
 guild = "RoyalTeam"
+
+[[streams.channels]]
+twitch = "ysaria94"
+guild = "RoyalTeam"
