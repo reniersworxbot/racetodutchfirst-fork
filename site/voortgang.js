@@ -100,7 +100,10 @@ const Voortgang = (() => {
 
   const clampT = t => Math.min(Math.max(t, model.start), model.end);
   const dayNo = t => Math.floor((t - model.tierStart) / DAY) + 1;
-  const go = pos => num(Math.max(0, model.total - pos), 1);
+  // A guild's state the way raiders say it: its kills, and what was left of the boss it was on
+  // after its best pull ("6/8 · nog 69,8%"), instead of a fractional position.
+  const hpLeft = frac => tr('vg.hp', { pct: `${num((1 - frac) * 100, 1)}%` });
+  const killsHp = (st2, total) => `${st2.k}/${total}${st2.frac > 0 && st2.k < total ? ` · ${hpLeft(st2.frac)}` : ''}`;
   function when(t, withTime) {
     return new Date(t).toLocaleString(i18n.locale, withTime
       ? { weekday: 'short', day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' }
@@ -235,7 +238,7 @@ const Voortgang = (() => {
 
       // Line ends: name, count and the way still to go, at the right edge of the view.
       const tEnd = Math.min(d1, model.end);
-      const ends = model.series.map((sr, i) => ({ sr, i, pos: posAt(sr, tEnd), k: sr.kills.filter(x2 => x2.at <= tEnd).length }));
+      const ends = model.series.map((sr, i) => ({ sr, i, ...stateAt(sr, tEnd) }));
       const gap = narrow ? 15 : 19;
       const labels = ends.map(e => ({ ...e, ly: y(e.pos) })).sort((a, b) => a.ly - b.ly);
       labels.forEach((e, i) => { if (i && e.ly - labels[i - 1].ly < gap) e.ly = labels[i - 1].ly + gap; });
@@ -246,8 +249,9 @@ const Voortgang = (() => {
         const label = s('text', { class: 'svg-end', 'data-guild': g.name, x: m.l + pw + gut + 6, y: e.ly - shift + 5 },
           narrow ? '' : `${g.name} `,
           s('tspan', { class: 'svg-end__n', text: `${e.k}/${total}` }),
-          !narrow && !done ? s('tspan', { class: 'svg-end__go', text: ` · ${tr('vg.go', { n: go(e.pos) })}` }) : null,
-          svgTitle(done ? tr('vg.done', { guild: g.name }) : tr('vg.goTitle', { guild: g.name, k: e.k, total, n: go(e.pos) })));
+          !narrow && !done && e.frac > 0 ? s('tspan', { class: 'svg-end__go', text: ` · ${hpLeft(e.frac)}` }) : null,
+          svgTitle(done ? tr('vg.done', { guild: g.name })
+            : `${g.name}: ${e.k}/${total}${e.boss ? ` · ${e.frac > 0 ? tr('vg.left', { boss: e.boss, pct: `${num((1 - e.frac) * 100, 1)}%` }) : `${e.boss} · ${tr('vg.notYet')}`}` : ''}`));
         label.style.setProperty('--guild', colour(g.colour));
         label.addEventListener('click', () => setFocus(g.name));
         svg.append(label);
@@ -635,7 +639,7 @@ const Voortgang = (() => {
       const panels = standingsAt(model.end).map((r, i) => {
         const sr = r.sr;
         const svg = s('svg', { width: pw0, height: H, viewBox: `0 0 ${pw0} ${H}`, role: 'img' },
-          svgTitle(tr('vg.goTitle', { guild: sr.g.name, k: r.k, total, n: go(r.pos) })));
+          svgTitle(`${sr.g.name}: ${killsHp(r, total)}${r.boss ? ` · ${r.boss}` : ''}`));
         svg.append(s('rect', { class: 'svg-finish', x: m.l, y: y(total) - 10, width: pw, height: 10 }));
         svg.append(s('line', { class: 'svg-finish__line', x1: m.l, x2: m.l + pw, y1: y(total), y2: y(total) }));
         for (const o of model.series) if (o !== sr) svg.append(s('path', { d: path(o), class: 'svg-ghost' }));
@@ -653,7 +657,7 @@ const Voortgang = (() => {
             h('span', { class: 'sm__rank mono', text: String(i + 1) }),
             h('b', { class: 'sm__name', text: sr.g.name }),
             h('span', { class: 'sm__k mono', text: `${r.k}/${total}` }),
-            r.pos < total ? h('span', { class: 'sm__go mono', text: tr('vg.go', { n: go(r.pos) }) }) : null),
+            r.frac > 0 && r.k < total ? h('span', { class: 'sm__go mono', title: r.boss || '', text: hpLeft(r.frac) }) : null),
           svg), sr.g);
       });
       el.replaceChildren(h('div', { class: 'sm-grid' }, ...panels));
@@ -726,7 +730,7 @@ const Voortgang = (() => {
     standingsAt(t).forEach((r, i) => {
       const row = ring.rows[i];
       row.style.setProperty('--guild', colour(r.sr.g.colour));
-      row.replaceChildren(`${i + 1}. ${ring.narrow ? r.sr.g.name.split(' ')[0] : r.sr.g.name} `, s('tspan', { class: 'svg-end__n', text: num(r.pos, 1) }));
+      row.replaceChildren(`${i + 1}. ${ring.narrow ? r.sr.g.name.split(' ')[0] : r.sr.g.name} `, s('tspan', { class: 'svg-end__n', text: killsHp(r, model.total) }));
     });
   }
 
@@ -740,6 +744,21 @@ const Voortgang = (() => {
     });
   }
   const guildName = sr => setGuild(h('b', { class: 'log-guild', text: sr.g.name }), sr.g);
+  /* A short tag per guild for the quiet standings line: initials for a name of several words
+   * (Knikkerende Krijgers → KK), else its first three letters (Kelderklasse → KEL); a clash adds
+   * letters until every tag is unique. The full name stays in the tooltip. */
+  function guildTags(names) {
+    const base = n => { const w = n.trim().split(/\s+/); return w.length > 1 ? w.map(x => x[0]) : [...w[0]]; };
+    const make = (n, len) => { const w = n.trim().split(/\s+/); return (w.length > 1 && len <= w.length ? w.map(x => x[0]).join('') : n.replace(/\s+/g, '').slice(0, len)).toUpperCase(); };
+    const out = new Map();
+    for (const n of names) {
+      let len = Math.max(2, Math.min(3, base(n).length));
+      let tag = make(n, len);
+      while ([...out.values()].includes(tag) && len < n.length) tag = make(n, ++len);
+      out.set(n, tag);
+    }
+    return out;
+  }
   /* While Replay or Ronde runs the race again, the log runs with it: only what had happened by the
    * moment on screen, and what just happened lights up once. */
   const logCut = () => (PLAYER.has(st.mode) && st.t !== null ? st.t : Infinity);
@@ -764,6 +783,7 @@ const Voortgang = (() => {
       if (!days.has(key)) days.set(key, []);
       days.get(key).push(e);
     }
+    const tags = guildTags(model.series.map(sr => sr.g.name));
     const all = [...days.entries()];
     const shown = st.logAll ? all : all.slice(0, 3);
     // While the season runs and its end is known: that day heads the log, still to come.
@@ -790,9 +810,10 @@ const Voortgang = (() => {
               e.kind === 'pass' ? '.' : ` (${tr('log.detail', { n: e.n })}${e.k.pullCount ? `, ${pulls(e.k.pullCount)}` : ''}${
                 e.k.slug === data.tier.ceBoss.slug && close !== null && close > e.t ? `, ${i18n.tn('season.before', daysBetween(e.t, close))}` : ''}).`)))),
           h('ol', { class: 'log-stand', 'aria-label': tr('log.stand') }, ...standingsAt(endOfDay).map((r, i) => setGuild(h('li', {},
-            h('span', { class: 'log-stand__rank mono', text: String(i + 1) }),
-            h('span', { text: r.sr.g.name }),
-            h('span', { class: 'mono', text: num(r.pos, 1) })), r.sr.g)))));
+            h('span', { class: 'log-stand__rank mono', text: `${i + 1}.` }),
+            h('i', { class: 'log-stand__dot', 'aria-hidden': 'true' }),
+            h('abbr', { class: 'log-stand__tag', title: r.sr.g.name, text: tags.get(r.sr.g.name) }),
+            h('span', { class: 'mono', title: r.boss || '', text: killsHp(r, model.total) })), r.sr.g)))));
     }) : [h('li', { class: 'muted-note', text: tr('log.empty') })]));
     if (all.length > 3) {
       const b = h('button', { type: 'button', class: 'pill pill--action', text: st.logAll ? tr('log.less') : tr('log.more', { n: all.length }) });

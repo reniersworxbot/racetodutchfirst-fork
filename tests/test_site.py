@@ -53,13 +53,3 @@ def test_share_image_tags_are_absolute():
     image = re.search(r'property="og:image" content="([^"]+)"', html)
     assert image and image.group(1) == "https://racetodutchfirst.bmiest.be/og.png"
     assert (SITE / "og.png").is_file()
-
-
-def test_update_line_schedule_matches_the_workflow():
-    """app.js's CRON (for "volgende normaal om …") is a copy of site.yml's schedule."""
-    workflow = (SITE.parent / ".github" / "workflows" / "site.yml").read_text(encoding="utf-8")
-    app = (SITE / "app.js").read_text(encoding="utf-8")
-    crons = re.findall(r'cron:\s*"([^"]+)"', workflow)
-    copy = re.search(r"const CRON = \[([^\]]*)\]", app)
-    assert crons and copy, "schedule not found"
-    assert re.findall(r"'([^']+)'", copy.group(1)) == crons

@@ -13,9 +13,6 @@ const DATA_URL = 'data/race.json';
 const SITE_URL = 'https://racetodutchfirst.bmiest.be/';
 const SEASON_FILE = /^data\/[a-z0-9-]+\.json$/; // an archived season's file, from race.json's `seasons`
 const REFRESH_MS = 5 * 60 * 1000;
-// The fetcher's schedule: a copy of the cron lines in .github/workflows/site.yml (UTC; minute,
-// hour and weekday fields; test_site.py keeps them equal). GitHub may start a run late or skip it.
-const CRON = ['7 */2 * * *', '7 17-21/2 * * 0,1,3,4', '22,37,52 17-22 * * 0,1,3,4'];
 const LIVE_MIN = 60;   // a pull or kill this close to the fetch = raiding now
 const RECENT_H = 12;   // "raided at 21:57" for this long afterwards
 const FEED_SIZE = 8;
@@ -628,43 +625,12 @@ function renderUpdated() {
     liveBadges.forEach(paintLive);
     return;
   }
-  // When the data was fetched, exactly, and when the schedule normally fetches it next.
+  // When the data was fetched; the exact moment in the tooltip.
   const at = race.generatedAt;
   const today = new Date(at).toDateString() === new Date().toDateString();
   el.textContent = today ? tr('upd.at', { time: clock(at) }) : tr('upd.atDay', { day: day(at), time: clock(at) });
-  const next = nextRun(new Date());
-  if (next) el.append(` · ${tr('upd.next', { time: clock(next) })}`);
-  // The schedule is GitHub's, which runs late at times: "rond" says so, the tooltip explains.
-  el.title = next ? `${dayTime(at)}\n${tr('upd.nextNote', { time: clock(next) })}` : dayTime(at);
+  el.title = dayTime(at);
   liveBadges.forEach(paintLive);
-}
-
-/* The values a cron field allows: *, n, a-b, lists and /steps (enough for site.yml's lines). */
-function cronValues(field, max) {
-  const out = new Set();
-  for (const part of field.split(',')) {
-    const [range, step] = part.split('/');
-    const [a, b] = range === '*' ? [0, max] : range.split('-').map(Number);
-    for (let v = a; v <= (b ?? (step ? max : a)); v += Number(step) || 1) out.add(v);
-  }
-  return out;
-}
-
-// The first scheduled run after `from`, as an ISO string (the cron lines are UTC).
-function nextRun(from) {
-  let best = null;
-  for (const line of CRON) {
-    const [mins, hours, , , dows] = line.split(' ');
-    const ms = cronValues(mins, 59), hs = cronValues(hours, 23), ds = cronValues(dows, 6);
-    for (let d = 0; d < 2; d++) {
-      if (!ds.has((from.getUTCDay() + d) % 7)) continue;
-      for (const hr of hs) for (const mi of ms) {
-        const t = Date.UTC(from.getUTCFullYear(), from.getUTCMonth(), from.getUTCDate() + d, hr, mi);
-        if (t > from.getTime() && (best === null || t < best)) best = t;
-      }
-    }
-  }
-  return best === null ? null : new Date(best).toISOString();
 }
 
 /* ---- motion: news arriving while the page is open ---------------------------------------

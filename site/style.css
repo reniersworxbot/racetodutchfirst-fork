@@ -259,10 +259,13 @@ a:hover { text-decoration-color: var(--jade); }
 .log-t { padding-top: 2px; font-size: 13px; color: var(--ink-300); }
 .log-e--first .log-t { color: var(--gold); }
 .log-e--pass .log-t { color: var(--jade); }
-.log-stand { list-style: none; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 12px; }
-.log-stand li { display: inline-flex; align-items: center; gap: 8px; height: 26px; padding-right: 10px; background: var(--ink-800); font-size: 12px; color: var(--paper-dim); }
-.log-stand li .mono { color: var(--paper); }
-.log-stand__rank { align-self: stretch; display: grid; place-items: center; width: 22px; background: var(--guild); color: var(--ink-900) !important; font-weight: 800; clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 0 100%); }
+.log-stand { list-style: none; display: flex; flex-wrap: wrap; gap: 4px 18px; margin-top: 8px; font-size: 12.5px; color: var(--ink-300); }
+/* The day's standings as a quiet line under the events: a small guild-colour mark, no blocks. */
+.log-stand li { display: inline-flex; align-items: baseline; gap: 6px; white-space: nowrap; }
+.log-stand li .mono { color: var(--ink-200); font-size: 12px; }
+.log-stand__rank { color: var(--ink-400); font-size: 12px; }
+.log-stand__tag { text-decoration: none; font-weight: 700; letter-spacing: .04em; color: var(--ink-200); cursor: help; }
+.log-stand__dot { align-self: center; width: 7px; height: 7px; background: var(--guild); clip-path: polygon(0 0, 100% 0, calc(100% - 2px) 100%, 0 100%); }
 .log-more { margin-top: 6px; }
 .log-day--ahead::before { background: transparent; box-shadow: inset 0 0 0 2px var(--jade); clip-path: none; }
 .log-day--ahead .log-when b { color: var(--jade); }
@@ -395,13 +398,17 @@ body.has-full { overflow: hidden; }
 .gs-cell > span { display: block; }
 .gs-cell__main { font-family: var(--f-mono); font-size: 13px; color: var(--paper); white-space: nowrap; }
 .gs-cell__sub { margin-top: 3px; font-size: 12px; color: var(--ink-300); white-space: nowrap; }
-/* Drawn marks (one stroke family): a check for a kill, a star for the race's first kill. */
+
+.gs-cell--kill .gs-cell__main { display: flex; align-items: center; }
+/* A kill as a seal in the rank-block language: a 16px slanted block in the meaning colour with the
+   mark cut in ink (jade + check; gold + star for the race's first kill). Drawn SVG, not a glyph. */
 .gs-cell--kill .gs-cell__main::before {
-  content: ""; display: inline-block; width: 10px; height: 10px; margin-right: 6px; vertical-align: -1px;
-  background: var(--jade); -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5 5 9.5 10.5 3' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat; mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M2 6.5 5 9.5 10.5 3' fill='none' stroke='%23000' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
+  content: ""; flex: 0 0 16px; width: 16px; height: 16px; margin-right: 8px;
+  background: var(--jade) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4 8.4 6.9 11.2 12.2 5' fill='none' stroke='%230a0b0d' stroke-width='2.4' stroke-linecap='square'/%3E%3C/svg%3E") center / 14px no-repeat;
+  clip-path: polygon(0 0, 100% 0, calc(100% - 3px) 100%, 0 100%);
 }
 .gs-cell--first .gs-cell__main { color: var(--gold); }
-.gs-cell--first .gs-cell__main::before { background: var(--gold); -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1 7.5 4.3 11 4.7 8.4 7 9.1 10.5 6 8.8 2.9 10.5 3.6 7 1 4.7 4.5 4.3Z'/%3E%3C/svg%3E"); mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12'%3E%3Cpath d='M6 1 7.5 4.3 11 4.7 8.4 7 9.1 10.5 6 8.8 2.9 10.5 3.6 7 1 4.7 4.5 4.3Z'/%3E%3C/svg%3E"); }
+.gs-cell--first .gs-cell__main::before { background: var(--gold) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%230a0b0d' d='M8 1.6 10 5.6 14.4 6.2 11.2 9.2 12 13.6 8 11.4 4 13.6 4.8 9.2 1.6 6.2 6 5.6Z'/%3E%3C/svg%3E") center / 14px no-repeat; }
 .gs-meter { height: 5px; margin-top: 5px; background: var(--ink-700); position: relative; }
 .gs-meter i { position: absolute; inset: 0 auto 0 0; width: var(--w, 0%); background: var(--guild); }
 .gs-cell--none { background: transparent; border-style: dashed; border-color: var(--ink-750); }
@@ -476,7 +483,7 @@ body.has-full { overflow: hidden; }
   .gs { min-width: 1120px; }
   .gs-cell { padding: 7px 6px; }
   .gs-cell__main { font-size: 12px; }
-  .gs-cell--kill .gs-cell__main::before { margin-right: 4px; }
+  .gs-cell--kill .gs-cell__main::before { flex-basis: 14px; width: 14px; height: 14px; margin-right: 5px; background-size: 12px; }
   .gs-corner, .gs-who { width: 150px; }
   .gs-pulls-h, .gs-pulls { width: 190px; }
   /* The count goes under the name, so names don't break mid-word. */
